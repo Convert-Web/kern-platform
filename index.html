@@ -1,2327 +1,1353 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kerne Bank</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0A0B0F;
-    --bg2: #13151C;
-    --bg3: #1C1F2A;
-    --bg4: #252836;
-    --gold: #C9A84C;
-    --gold2: #E8C96A;
-    --gold-dim: rgba(201,168,76,0.15);
-    --text: #F0EEE8;
-    --text2: #9A9BAA;
-    --text3: #5A5C6E;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --green: #2ECC8A;
-    --green-dim: rgba(46,204,138,0.12);
-    --red: #E55353;
-    --red-dim: rgba(229,83,83,0.12);
-    --blue: #4A9EFF;
-    --blue-dim: rgba(74,158,255,0.12);
-    --radius: 12px;
-    --radius-lg: 18px;
-    --radius-xl: 24px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    overflow-x: hidden;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: 240px;
-    min-height: 100vh;
-    background: var(--bg2);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0; top: 0;
-    z-index: 100;
-    transition: transform 0.3s ease;
-  }
-
-  .sidebar-logo {
-    padding: 28px 24px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo-mark {
-    width: 36px; height: 36px;
-    background: var(--gold);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 16px; color: var(--bg);
-    letter-spacing: -0.5px;
-    flex-shrink: 0;
-  }
-
-  .logo-text { font-weight: 600; font-size: 18px; letter-spacing: -0.3px; }
-  .logo-sub { font-size: 11px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
-
-  .sidebar-nav {
-    flex: 1;
-    padding: 16px 12px;
-    overflow-y: auto;
-  }
-
-  .nav-section {
-    margin-bottom: 24px;
-  }
-
-  .nav-label {
-    font-size: 10px;
-    color: var(--text3);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 0 12px;
-    margin-bottom: 8px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-size: 14px;
-    color: var(--text2);
-    user-select: none;
-  }
-
-  .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active { background: var(--gold-dim); color: var(--gold); }
-  .nav-item .nav-icon { width: 18px; text-align: center; font-size: 16px; }
-  .nav-badge {
-    margin-left: auto;
-    background: var(--red);
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: 600;
-  }
-
-  .sidebar-footer {
-    padding: 16px 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .user-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .user-card:hover { background: var(--bg3); }
-
-  .avatar {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold), #8B6914);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; color: var(--bg);
-    flex-shrink: 0;
-  }
-
-  .user-name { font-size: 13px; font-weight: 500; }
-  .user-id { font-size: 11px; color: var(--text3); font-family: monospace; }
-
-  /* MAIN CONTENT */
-  .main {
-    margin-left: 240px;
-    flex: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .topbar {
-    height: 64px;
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 32px;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-
-  .topbar-title { font-size: 17px; font-weight: 600; flex: 1; }
-  .topbar-actions { display: flex; gap: 8px; align-items: center; }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .btn-primary {
-    background: var(--gold);
-    color: var(--bg);
-  }
-  .btn-primary:hover { background: var(--gold2); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text2);
-    border: 1px solid var(--border2);
-  }
-  .btn-ghost:hover { background: var(--bg3); color: var(--text); }
-
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
-
-  .notif-btn {
-    width: 36px; height: 36px;
-    border-radius: var(--radius);
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.15s;
-  }
-  .notif-btn:hover { background: var(--bg4); }
-  .notif-dot {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: absolute;
-    top: 6px; right: 6px;
-    border: 2px solid var(--bg2);
-  }
-
-  .content {
-    padding: 32px;
-    flex: 1;
-  }
-
-  /* PAGE VIEWS */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* CARDS */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-  }
-
-  .card-sm { padding: 16px 20px; border-radius: var(--radius); }
-
-  /* BALANCE CARD */
-  .balance-card {
-    background: linear-gradient(135deg, #1A1C26 0%, #0F1118 100%);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: var(--radius-xl);
-    padding: 28px 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .balance-card::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-
-  .balance-card::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; left: 40px;
-    width: 140px; height: 140px;
-    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-
-  .balance-label { font-size: 12px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-  .balance-amount {
-    font-size: 42px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -1.5px;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .balance-amount span { color: var(--gold); }
-  .balance-eur { font-size: 14px; color: var(--text3); margin-bottom: 24px; }
-  .balance-eur strong { color: var(--text2); }
-
-  .balance-id {
-    font-family: monospace;
-    font-size: 13px;
-    color: var(--text3);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: border-color 0.15s;
-  }
-  .balance-id:hover { border-color: var(--border2); }
-
-  /* GRID LAYOUTS */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-
-  .stat-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-  .stat-value { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
-  .stat-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    margin-top: 4px;
-    padding: 2px 6px;
-    border-radius: 6px;
-  }
-  .stat-change.up { background: var(--green-dim); color: var(--green); }
-  .stat-change.down { background: var(--red-dim); color: var(--red); }
-
-  /* TRANSACTIONS */
-  .tx-list { display: flex; flex-direction: column; gap: 2px; }
-
-  .tx-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    transition: background 0.1s;
-    cursor: pointer;
-  }
-  .tx-item:hover { background: var(--bg3); }
-
-  .tx-icon {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .tx-icon.in { background: var(--green-dim); color: var(--green); }
-  .tx-icon.out { background: var(--red-dim); color: var(--red); }
-  .tx-icon.task { background: var(--gold-dim); color: var(--gold); }
-  .tx-icon.trade { background: var(--blue-dim); color: var(--blue); }
-
-  .tx-info { flex: 1; }
-  .tx-title { font-size: 13px; font-weight: 500; }
-  .tx-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
-
-  .tx-amount { font-size: 14px; font-weight: 600; }
-  .tx-amount.in { color: var(--green); }
-  .tx-amount.out { color: var(--red); }
-
-  .tx-status {
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 5px;
-    font-weight: 500;
-    margin-top: 1px;
-    display: inline-block;
-  }
-  .status-ok { background: var(--green-dim); color: var(--green); }
-  .status-pending { background: var(--gold-dim); color: var(--gold); }
-  .status-failed { background: var(--red-dim); color: var(--red); }
-
-  /* KERNE CHART */
-  .chart-container { position: relative; height: 200px; width: 100%; }
-
-  /* SECTION HEADERS */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .section-title { font-size: 15px; font-weight: 600; }
-  .section-link { font-size: 12px; color: var(--gold); cursor: pointer; }
-  .section-link:hover { text-decoration: underline; }
-
-  /* BADGE */
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-  .badge-green { background: var(--green-dim); color: var(--green); }
-  .badge-gold { background: var(--gold-dim); color: var(--gold); }
-  .badge-red { background: var(--red-dim); color: var(--red); }
-  .badge-blue { background: var(--blue-dim); color: var(--blue); }
-  .badge-gray { background: rgba(255,255,255,0.07); color: var(--text2); }
-
-  /* KERNE PRICE TICKER */
-  .price-ticker {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-  .ticker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  /* TASKS */
-  .task-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    transition: border-color 0.15s;
-    cursor: pointer;
-  }
-  .task-card:hover { border-color: rgba(201,168,76,0.3); }
-
-  .task-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
-  .task-title { font-size: 14px; font-weight: 600; }
-  .task-desc { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
-  .task-footer { display: flex; align-items: center; justify-content: space-between; }
-  .task-reward { font-size: 16px; font-weight: 700; color: var(--gold); }
-  .difficulty { display: flex; gap: 3px; }
-  .diff-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .diff-dot.filled { background: var(--gold); }
-  .diff-dot.empty { background: var(--border2); }
-
-  /* KYC BANNER */
-  .kyc-banner {
-    background: linear-gradient(135deg, rgba(74,158,255,0.1), rgba(74,158,255,0.04));
-    border: 1px solid rgba(74,158,255,0.2);
-    border-radius: var(--radius-lg);
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .kyc-icon { font-size: 28px; }
-  .kyc-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-  .kyc-text p { font-size: 13px; color: var(--text2); }
-  .kyc-banner .btn { margin-left: auto; flex-shrink: 0; }
-
-  /* VIREMENT FORM */
-  .form-group { margin-bottom: 18px; }
-  .form-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; display: block; font-weight: 500; }
-  .form-input {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 11px 14px;
-    font-size: 14px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .form-input:focus { border-color: var(--gold); }
-  .form-input::placeholder { color: var(--text3); }
-
-  .recipient-preview {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 8px;
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(4px);
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-xl);
-    padding: 32px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  .modal-title { font-size: 17px; font-weight: 600; }
-  .modal-close { cursor: pointer; color: var(--text3); font-size: 20px; transition: color 0.15s; }
-  .modal-close:hover { color: var(--text); }
-
-  /* EXCHANGE */
-  .exchange-header {
-    background: var(--bg3);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  .exchange-pair {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .asset-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .asset-icon {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-  }
-  .kx-icon { background: var(--gold); color: var(--bg); }
-  .kr-icon { background: var(--blue); color: white; }
-
-  .price-display {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-
-  /* NOTIFICATIONS */
-  .notif-item {
-    display: flex;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    border: 1px solid transparent;
-    transition: all 0.15s;
-    cursor: pointer;
-  }
-  .notif-item.unread { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.1); }
-  .notif-item:hover { background: var(--bg3); }
-  .notif-ico { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .notif-body { flex: 1; }
-  .notif-body p { font-size: 13px; line-height: 1.4; }
-  .notif-time { font-size: 11px; color: var(--text3); margin-top: 3px; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; background: var(--bg3); border-radius: var(--radius); padding: 4px; margin-bottom: 20px; }
-  .tab {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    color: var(--text3);
-    transition: all 0.15s;
-  }
-  .tab.active { background: var(--bg2); color: var(--text); border: 1px solid var(--border2); }
-
-  /* DIVIDER */
-  .divider { height: 1px; background: var(--border); margin: 20px 0; }
-
-  /* QUICK ACTIONS */
-  .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-  .quick-action {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .quick-action:hover { border-color: var(--border2); background: var(--bg3); }
-  .qa-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .qa-label { font-size: 12px; color: var(--text2); text-align: center; }
-
-  /* ADMIN TABLE */
-  .data-table { width: 100%; border-collapse: collapse; }
-  .data-table th {
-    text-align: left;
-    font-size: 11px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .data-table td {
-    padding: 12px 14px;
-    font-size: 13px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-  /* SUPPORT CHAT */
-  .chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 400px;
-    background: var(--bg3);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-  .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-  .chat-msg {
-    max-width: 75%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  .chat-msg.user { background: var(--gold); color: var(--bg); align-self: flex-end; border-bottom-right-radius: 4px; }
-  .chat-msg.agent { background: var(--bg4); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
-  .chat-input-row {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
-    border-top: 1px solid var(--border);
-    background: var(--bg2);
-  }
-  .chat-input-row input {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-  }
-
-  /* LOGIN PAGE */
-  .login-page {
-    width: 100%;
-    min-height: 100vh;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .login-box {
-    width: 400px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 40px;
-  }
-  .login-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  /* PROFILE PAGE */
-  .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 28px;
-  }
-  .profile-avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold), #8B6914);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px; font-weight: 600; color: var(--bg);
-    border: 3px solid rgba(201,168,76,0.3);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; }
-    .grid-4 { grid-template-columns: 1fr 1fr; }
-    .grid-3 { grid-template-columns: 1fr; }
-    .quick-actions { grid-template-columns: repeat(4, 1fr); }
-    .content { padding: 20px; }
-    .topbar { padding: 0 20px; }
-    .mobile-menu-btn { display: flex !important; }
-  }
-
-  @media (max-width: 600px) {
-    .grid-2 { grid-template-columns: 1fr; }
-    .quick-actions { grid-template-columns: repeat(2, 1fr); }
-    .balance-amount { font-size: 32px; }
-  }
-
-  .mobile-menu-btn {
-    display: none;
-    width: 36px; height: 36px;
-    align-items: center; justify-content: center;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 18px;
-  }
-
-  .overlay-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 99;
-    display: none;
-  }
-  .overlay-backdrop.show { display: block; }
-
-  /* SUCCESS TOAST */
-  .toast {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    background: var(--bg2);
-    border: 1px solid var(--green);
-    border-radius: var(--radius);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    z-index: 300;
-    transform: translateY(100px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast-icon { color: var(--green); font-size: 18px; }
-
-  /* NUMBERS */
-  .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
-
-  /* KERNE COIN */
-  .kerne-symbol { font-size: 0.8em; opacity: 0.8; margin-right: 2px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerne Bank V2 - Écosystème Financier Premium</title>
+    <!-- Tailwind CSS pour un design haut de gamme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons pour des icônes vectorielles épurées -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#fbbf24',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            purple: '#8b5cf6',
+                            cardBg: '#09090b',
+                            border: 'rgba(255, 255, 255, 0.08)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030303;
+            color: #ffffff;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Effet 3D de la carte premium */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Scrollbars élégantes */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
-<body>
+<body class="overflow-x-hidden antialiased">
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="login-page" style="display:flex; flex-direction:column;">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="logo-mark">K</div>
-      <div>
-        <div class="logo-text">Kerne Bank</div>
-        <div class="logo-sub">Ecosystem</div>
-      </div>
-    </div>
-    <div id="loginForm">
-      <h2 style="font-size:20px; font-weight:600; margin-bottom:6px;">Connexion</h2>
-      <p style="font-size:13px; color:var(--text2); margin-bottom:28px;">Accédez à votre portefeuille Kerne</p>
-      <div class="form-group">
-        <label class="form-label">Adresse email</label>
-        <input type="email" class="form-input" placeholder="vous@exemple.com" id="loginEmail" value="alice@kerne.io">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" class="form-input" placeholder="••••••••" id="loginPass" value="••••••••">
-      </div>
-      <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-        <span style="font-size:12px; color:var(--gold); cursor:pointer;">Mot de passe oublié ?</span>
-      </div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="login('user')">
-        Se connecter
-      </button>
-      <div class="divider"></div>
-      <button class="btn btn-ghost" style="width:100%; justify-content:center; padding:12px;" onclick="login('admin')">
-        🔑 Accès administrateur (démo)
-      </button>
-      <p style="text-align:center; font-size:12px; color:var(--text3); margin-top:20px;">
-        Pas encore de compte ? <span style="color:var(--gold); cursor:pointer;" onclick="showRegister()">Créer un compte</span>
-      </p>
-    </div>
-    <div id="registerForm" style="display:none;">
-      <h2 style="font-size:20px; font-weight:600; margin-bottom:6px;">Créer un compte</h2>
-      <p style="font-size:13px; color:var(--text2); margin-bottom:28px;">Rejoignez l'écosystème Kerne</p>
-      <div class="form-group">
-        <label class="form-label">Prénom & Nom</label>
-        <input class="form-input" placeholder="Alice Martin">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Adresse email</label>
-        <input type="email" class="form-input" placeholder="vous@exemple.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" class="form-input" placeholder="Minimum 8 caractères">
-      </div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="showToast('Compte créé ! Vérifiez votre email.'); showLogin()">
-        Créer mon compte
-      </button>
-      <p style="text-align:center; font-size:12px; color:var(--text3); margin-top:16px;">
-        <span style="color:var(--gold); cursor:pointer;" onclick="showLogin()">← Retour à la connexion</span>
-      </p>
-    </div>
-  </div>
-  <p style="text-align:center; font-size:11px; color:var(--text3); margin-top:24px;">
-    © 2025 Kerne Bank — Plateforme financière numérique indépendante
-  </p>
-</div>
+    <!-- Notifications Flottantes (Toasts) -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
-<!-- APP -->
-<div id="app" style="display:none; width:100%;">
-
-<!-- MOBILE BACKDROP -->
-<div class="overlay-backdrop" id="backdrop" onclick="closeSidebar()"></div>
-
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-mark">K</div>
-    <div>
-      <div class="logo-text">Kerne Bank</div>
-      <div class="logo-sub">Ecosystem</div>
-    </div>
-  </div>
-
-  <nav class="sidebar-nav">
-    <div class="nav-section" id="userNav">
-      <div class="nav-label">Principal</div>
-      <div class="nav-item active" onclick="showPage('dashboard')">
-        <span class="nav-icon">⬡</span> Tableau de bord
-      </div>
-      <div class="nav-item" onclick="showPage('wallet')">
-        <span class="nav-icon">◈</span> Portefeuille
-      </div>
-      <div class="nav-item" onclick="showPage('transfer')">
-        <span class="nav-icon">⇄</span> Virements
-      </div>
-      <div class="nav-item" onclick="showPage('tasks')">
-        <span class="nav-icon">✦</span> Missions
-        <span class="nav-badge">3</span>
-      </div>
-      <div class="nav-item" onclick="showPage('exchange')">
-        <span class="nav-icon">◎</span> KerneX Exchange
-      </div>
-      <div class="nav-item" onclick="showPage('withdraw')">
-        <span class="nav-icon">↓</span> Retrait €
-      </div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Compte</div>
-      <div class="nav-item" onclick="showPage('notifications')">
-        <span class="nav-icon">◈</span> Notifications
-        <span class="nav-badge">5</span>
-      </div>
-      <div class="nav-item" onclick="showPage('support')">
-        <span class="nav-icon">☎</span> Support
-      </div>
-      <div class="nav-item" onclick="showPage('profile')">
-        <span class="nav-icon">◉</span> Profil & KYC
-      </div>
-    </div>
-    <div class="nav-section" id="adminNav" style="display:none;">
-      <div class="nav-label">Administration</div>
-      <div class="nav-item" onclick="showPage('admin')">
-        <span class="nav-icon">⚙</span> Tableau admin
-      </div>
-      <div class="nav-item" onclick="showPage('admin-kyc')">
-        <span class="nav-icon">✓</span> Validation KYC
-      </div>
-      <div class="nav-item" onclick="showPage('admin-tasks')">
-        <span class="nav-icon">+</span> Gestion missions
-      </div>
-      <div class="nav-item" onclick="showPage('admin-economy')">
-        <span class="nav-icon">~</span> Économie Kerne
-      </div>
-    </div>
-  </nav>
-
-  <div class="sidebar-footer">
-    <div class="user-card" onclick="showPage('profile')">
-      <div class="avatar" id="sidebarAvatar">AM</div>
-      <div>
-        <div class="user-name" id="sidebarName">Alice Martin</div>
-        <div class="user-id" id="sidebarId">KRNE-4821-9307-6154</div>
-      </div>
-    </div>
-    <div style="margin-top:8px;">
-      <div class="nav-item" onclick="logout()" style="color:var(--red);">
-        <span class="nav-icon">⊗</span> Déconnexion
-      </div>
-    </div>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-  <header class="topbar">
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-    <span class="topbar-title" id="topbarTitle">Tableau de bord</span>
-    <div class="topbar-actions">
-      <div class="price-ticker">
-        <div class="ticker-dot"></div>
-        <span style="color:var(--text2);">KRN</span>
-        <span style="font-weight:600; color:var(--gold);" id="kernePrice">€0.847</span>
-        <span class="badge badge-green" style="font-size:10px;" id="kernePriceDelta">+3.2%</span>
-      </div>
-      <div class="notif-btn" onclick="showPage('notifications')">
-        <span style="font-size:16px;">◈</span>
-        <div class="notif-dot"></div>
-      </div>
-    </div>
-  </header>
-
-  <div class="content">
-
-    <!-- DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="kyc-banner">
-        <div class="kyc-icon">🛡️</div>
-        <div class="kyc-text">
-          <h3>Vérification d'identité requise</h3>
-          <p>Soumettez vos documents pour déverrouiller toutes les fonctionnalités de Kerne Bank.</p>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="showPage('profile')">Vérifier mon identité →</button>
-      </div>
-
-      <div class="grid-2" style="margin-bottom:24px;">
-        <div class="balance-card" style="grid-column: 1 / -1;">
-          <div class="balance-label">Solde total</div>
-          <div class="balance-amount"><span class="kerne-symbol">₭</span><span id="dashBalance">12,847.50</span></div>
-          <div class="balance-eur">≈ <strong id="dashEur">€10,881.23</strong> — Kerne à <strong>€0.847</strong></div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <div class="balance-id" onclick="copyId()" title="Cliquer pour copier">
-              <span id="bankId">KRNE-4821-9307-6154</span>
-              <span style="color:var(--gold); font-size:12px;">⊕</span>
-            </div>
-            <span class="badge badge-blue" style="padding:6px 12px;">🛡️ KYC en attente</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="quick-actions">
-        <div class="quick-action" onclick="showPage('transfer')">
-          <div class="qa-icon" style="background:var(--gold-dim); color:var(--gold);">⇄</div>
-          <div class="qa-label">Virement</div>
-        </div>
-        <div class="quick-action" onclick="showPage('tasks')">
-          <div class="qa-icon" style="background:var(--green-dim); color:var(--green);">✦</div>
-          <div class="qa-label">Missions</div>
-        </div>
-        <div class="quick-action" onclick="showPage('exchange')">
-          <div class="qa-icon" style="background:var(--blue-dim); color:var(--blue);">◎</div>
-          <div class="qa-label">KerneX</div>
-        </div>
-        <div class="quick-action" onclick="showPage('withdraw')">
-          <div class="qa-icon" style="background:rgba(229,83,83,0.12); color:var(--red);">↓</div>
-          <div class="qa-label">Retrait €</div>
-        </div>
-      </div>
-
-      <div class="grid-4" style="margin-bottom:24px;">
-        <div class="stat-card">
-          <div class="stat-label">KerneX détenu</div>
-          <div class="stat-value">324.7 <span style="font-size:14px; color:var(--text3);">KX</span></div>
-          <div class="stat-change up">▲ +12.4%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Tâches complétées</div>
-          <div class="stat-value">17</div>
-          <div class="stat-change up">▲ +3 ce mois</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Virements reçus</div>
-          <div class="stat-value">₭ 2,450</div>
-          <div class="stat-change down">▼ -8.1%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Valeur KerneX</div>
-          <div class="stat-value">€ 1,248</div>
-          <div class="stat-change up">▲ +18.3%</div>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <div class="section-header">
-            <div class="section-title">Évolution du Kerne</div>
-            <div>
-              <span class="badge badge-gold" style="cursor:pointer;" id="chartPeriod" onclick="cyclePeriod()">7 jours</span>
-            </div>
-          </div>
-          <div class="card" style="padding:16px;">
-            <div class="chart-container">
-              <canvas id="kerneChart" role="img" aria-label="Graphique d'évolution du prix du Kerne sur 7 jours">Prix Kerne sur 7 jours.</canvas>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="section-header">
-            <div class="section-title">Dernières transactions</div>
-            <div class="section-link" onclick="showPage('wallet')">Voir tout →</div>
-          </div>
-          <div class="card" style="padding:8px;">
-            <div class="tx-list" id="dashTxList"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WALLET -->
-    <div class="page" id="page-wallet">
-      <div class="grid-2" style="margin-bottom:24px;">
-        <div class="balance-card">
-          <div class="balance-label">Solde Kerne</div>
-          <div class="balance-amount"><span class="kerne-symbol">₭</span>12,847.50</div>
-          <div class="balance-eur">≈ <strong>€10,881.23</strong></div>
-          <div style="margin-top:12px; display:flex; gap:8px;">
-            <span class="badge badge-green">+ ₭ 450.00 ce mois</span>
-          </div>
-        </div>
-        <div class="card" style="background: var(--bg2);">
-          <div class="section-header">
-            <div class="section-title">Répartition du patrimoine</div>
-          </div>
-          <div style="position:relative; height: 140px;">
-            <canvas id="walletPieChart" role="img" aria-label="Répartition : Kerne 72%, KerneX 28%">Kerne 72%, KerneX 28%.</canvas>
-          </div>
-          <div style="display:flex; gap:16px; margin-top:12px; justify-content:center; font-size:12px; color:var(--text2);">
-            <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#C9A84C;display:inline-block;"></span>Kerne 72%</span>
-            <span style="display:flex; align-items:center; gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#4A9EFF;display:inline-block;"></span>KerneX 28%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-header">
-        <div class="section-title">Historique des transactions</div>
-        <select class="form-input" style="width:auto; padding:6px 12px; font-size:12px;">
-          <option>Toutes catégories</option>
-          <option>Récompenses</option>
-          <option>Virements</option>
-          <option>KerneX</option>
-          <option>Retraits</option>
-        </select>
-      </div>
-
-      <div class="card" style="padding:8px;">
-        <div class="tx-list" id="walletTxList"></div>
-      </div>
-    </div>
-
-    <!-- TRANSFER -->
-    <div class="page" id="page-transfer">
-      <div class="grid-2">
-        <div>
-          <div class="card">
-            <h3 style="font-size:16px; font-weight:600; margin-bottom:20px;">Envoyer des Kerne</h3>
-            <div class="form-group">
-              <label class="form-label">Identifiant bancaire du destinataire</label>
-              <input class="form-input" placeholder="KRNE-XXXX-XXXX-XXXX" id="recipientId" oninput="checkRecipient(this.value)" style="font-family:monospace; letter-spacing:0.5px;">
-              <div class="recipient-preview" id="recipientPreview" style="display:none;">
-                <div class="avatar" style="width:32px;height:32px;font-size:12px;" id="recAvatar">BM</div>
-                <div>
-                  <div style="font-size:13px; font-weight:500;" id="recName">Bob Martin</div>
-                  <div style="font-size:11px; color:var(--green);">✓ Compte vérifié</div>
+    <div class="min-h-screen flex flex-col">
+        <!-- Barre de Navigation Premium -->
+        <header class="border-b border-brand-border bg-[#050505]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center font-bold text-black text-lg shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                    K
                 </div>
-              </div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-tight">KERNE <span class="text-amber-500 text-sm font-semibold">BANK</span></span>
+                    <span class="text-[9px] text-zinc-500 uppercase tracking-widest block font-mono">v2.0.0 Stable</span>
+                </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Montant (Kerne)</label>
-              <input type="number" class="form-input" placeholder="0.00" id="transferAmount" oninput="updateTransferPreview()">
-              <div style="font-size:12px; color:var(--text3); margin-top:6px;">Disponible : ₭ 12,847.50</div>
+
+            <!-- Sélecteur de Rôle / Navigation de Démonstration -->
+            <div class="flex items-center gap-4">
+                <div class="bg-zinc-900 border border-brand-border rounded-xl p-1 flex gap-1">
+                    <button id="btnRoleUser" onclick="switchRole('USER')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-zinc-800 text-white">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Utilisateur
+                    </button>
+                    <button id="btnRoleAdmin" onclick="switchRole('ADMIN')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-zinc-400 hover:text-white">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i> Administrateur
+                        <span id="adminNotificationBadge" class="hidden w-2 h-2 rounded-full bg-amber-500"></span>
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Note (optionnel)</label>
-              <input class="form-input" placeholder="Raison du virement...">
-            </div>
-            <div id="transferPreview" style="background:var(--bg3); border:1px solid var(--border2); border-radius:var(--radius); padding:14px; margin-bottom:18px; display:none;">
-              <div style="font-size:12px; color:var(--text3); margin-bottom:8px;">Récapitulatif</div>
-              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-                <span style="color:var(--text2);">Montant envoyé</span>
-                <span id="previewAmt" style="font-weight:600;">₭ 0.00</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-                <span style="color:var(--text2);">Frais</span>
-                <span style="color:var(--green);">Gratuit</span>
-              </div>
-              <div class="divider" style="margin:10px 0;"></div>
-              <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:600;">
-                <span>Total débité</span>
-                <span id="previewTotal" style="color:var(--gold);">₭ 0.00</span>
-              </div>
-            </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="executeTransfer()">
-              Envoyer les Kerne ⇄
-            </button>
-          </div>
+        </header>
+
+        <!-- Structure Principale -->
+        <div class="flex flex-1">
+            <!-- Sidebar latérale gauche -->
+            <aside id="sidebar" class="w-64 border-r border-brand-border bg-[#050505] p-6 space-y-8 flex flex-col justify-between">
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono mb-3">Navigation principale</p>
+                        <nav class="space-y-1">
+                            <button onclick="switchTab('dashboard')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition bg-zinc-900 text-white border-l-2 border-amber-500">
+                                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                            </button>
+                            <button onclick="switchTab('exchange')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50">
+                                <i data-lucide="trending-up" class="w-4 h-4"></i> KerneX Exchange
+                            </button>
+                            <button onclick="switchTab('tasks')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50">
+                                <i data-lucide="award" class="w-4 h-4"></i> Missions Rémunérées
+                            </button>
+                            <button onclick="switchTab('transfer')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50">
+                                <i data-lucide="send" class="w-4 h-4"></i> Transfert & QR
+                            </button>
+                            <button onclick="switchTab('withdraw')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50">
+                                <i data-lucide="wallet" class="w-4 h-4"></i> Retraits de Fonds
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono mb-3">Support</p>
+                        <button onclick="switchTab('support')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i> Centre d'Aide
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info Profil -->
+                <div class="p-4 bg-zinc-950 rounded-2xl border border-brand-border">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-white uppercase text-sm border border-white/10" id="avatarLetter">
+                            U
+                        </div>
+                        <div class="overflow-hidden">
+                            <h4 class="text-sm font-bold truncate" id="sideProfileName">Utilisateur</h4>
+                            <p class="text-[10px] text-zinc-400 truncate" id="sideProfileKerneId">KRNE-0000-0000-0000</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between">
+                        <span id="kycBadge" class="px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">KYC En Attente</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Contenu principal fluide -->
+            <main class="flex-1 bg-black p-8 overflow-y-auto" style="max-height: calc(100vh - 73px);">
+                
+                <!-- =============== SECTION USER : DASHBOARD =============== -->
+                <section id="tab-dashboard" class="tab-content space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-brand-border pb-6">
+                        <div>
+                            <h1 class="text-3xl font-extrabold tracking-tight">Tableau de bord</h1>
+                            <p class="text-zinc-500 text-sm mt-1">Gérez vos actifs Kerne et suivez les tendances du marché.</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-zinc-950 p-4 rounded-2xl border border-brand-border">
+                            <div>
+                                <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">VALEUR DU KERNE (Simulée)</span>
+                                <div class="flex items-baseline gap-2 mt-0.5">
+                                    <span class="text-xl font-black font-mono text-emerald-400" id="headerKernePrice">$1.0000</span>
+                                    <span class="text-[10px] font-bold text-emerald-400" id="headerPriceDelta">+0.00%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grille Principale -->
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+                        <!-- Colonne Gauche : Carte 3D & Économie -->
+                        <div class="space-y-6">
+                            <!-- Carte bancaire interactive 3D -->
+                            <div class="perspective-1000 w-full max-w-[380px] h-[240px] mx-auto" onclick="flipCard()">
+                                <div id="kerneCard" class="relative w-full h-full transition-transform duration-700 transform-style-3d cursor-pointer">
+                                    
+                                    <!-- FACE RECTO -->
+                                    <div class="absolute inset-0 rounded-3xl p-6 bg-gradient-to-br from-zinc-900 via-neutral-950 to-black border border-white/10 text-white flex flex-col justify-between shadow-2xl backface-hidden">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <p class="text-[9px] text-zinc-400 uppercase tracking-widest font-mono">Premium Wallet Card</p>
+                                                <h3 class="text-lg font-bold mt-0.5">Kerne Bank</h3>
+                                            </div>
+                                            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 opacity-80 blur-[0.5px]" />
+                                        </div>
+                                        <div class="my-2">
+                                            <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono block">Solde Disponible</span>
+                                            <span class="text-3xl font-black tracking-tight"><span id="cardKerneBalance">0.00</span> <span class="text-sm font-light text-zinc-400">KRNE</span></span>
+                                        </div>
+                                        <div class="flex justify-between items-end">
+                                            <div>
+                                                <p class="text-[8px] text-zinc-500 tracking-wider font-mono">TITULAIRE</p>
+                                                <p class="text-xs font-semibold uppercase tracking-wide" id="cardUserName">Alexandre Kerne</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-[8px] text-zinc-500 tracking-wider font-mono">IDENTIFIANT UNIQUE</p>
+                                                <p class="text-xs font-mono text-zinc-300 font-bold" id="cardKerneId">KRNE-XXXX-XXXX-XXXX</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FACE VERSO -->
+                                    <div class="absolute inset-0 rounded-3xl p-6 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-950 border border-white/10 text-white flex flex-col justify-between shadow-2xl backface-hidden rotate-y-180">
+                                        <div class="w-full h-10 bg-black absolute top-6 left-0" />
+                                        <div class="flex items-center justify-between mt-12 z-10">
+                                            <!-- QR Code simulé par un SVG ultra propre -->
+                                            <div class="bg-white p-1.5 rounded-lg">
+                                                <svg id="qrSvg" class="w-16 h-16" viewBox="0 0 29 29" shape-rendering="crispEdges">
+                                                    <path fill="#ffffff" d="M0 0h29v29H0z"/>
+                                                    <path fill="#000000" d="M0 0h7v7H0zm22 0h7v7h-7zM0 22h7v7H0zm10 0h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm3-6h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm5-12h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm-11-2h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm13 11h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text-right max-w-[160px]">
+                                                <p class="text-[8px] text-zinc-400 italic">Scannez pour exécuter un virement instantané vers ce compte.</p>
+                                                <p class="text-[10px] font-mono mt-2 text-amber-500 font-bold">KRNE SECURITY</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-[8px] text-zinc-600 text-center">
+                                            Kerne Bank V2 © 2026 - Propriété de l'écosystème.
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <p class="text-center text-xs text-zinc-500 italic">Cliquez sur la carte pour l'inverser et voir son QR Code</p>
+
+                            <!-- Statut de l'économie interne -->
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6 space-y-4">
+                                <h3 class="text-sm font-bold tracking-tight uppercase text-zinc-400">Écosystème du Kerne</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-black/50 p-4 rounded-2xl border border-brand-border">
+                                        <span class="text-[8px] text-zinc-500 block uppercase font-mono">Capitalisation</span>
+                                        <span class="text-lg font-bold font-mono mt-1 block" id="ecoMarketcap">$0.00</span>
+                                    </div>
+                                    <div class="bg-black/50 p-4 rounded-2xl border border-brand-border">
+                                        <span class="text-[8px] text-zinc-500 block uppercase font-mono">Volume (24h)</span>
+                                        <span class="text-lg font-bold font-mono mt-1 block" id="ecoVolume">$0.00</span>
+                                    </div>
+                                    <div class="bg-black/50 p-4 rounded-2xl border border-brand-border">
+                                        <span class="text-[8px] text-zinc-500 block uppercase font-mono">Utilisateurs actifs</span>
+                                        <span class="text-lg font-bold font-mono mt-1 block" id="ecoUsers">0</span>
+                                    </div>
+                                    <div class="bg-black/50 p-4 rounded-2xl border border-brand-border">
+                                        <span class="text-[8px] text-zinc-500 block uppercase font-mono">Portefeuille KerneX</span>
+                                        <span class="text-lg font-bold font-mono mt-1 block text-brand-purple" id="userKerneShares">0.00 Parts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne Droite : Graphique live & Historique -->
+                        <div class="xl:col-span-2 space-y-8">
+                            <!-- Graphique Live (Canvas HTML5) -->
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6 relative overflow-hidden">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">Flucutations en temps réel</p>
+                                        <h3 class="text-lg font-bold tracking-tight">Cours Historique Kerne/USD</h3>
+                                    </div>
+                                    <div class="flex items-center gap-1 bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs font-mono font-bold">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> LIVE
+                                    </div>
+                                </div>
+                                <div class="w-full h-64 bg-black/40 rounded-2xl relative border border-brand-border">
+                                    <canvas id="tradingChart" class="w-full h-full"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Historique des Transactions -->
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-bold tracking-tight">Historique des transactions</h3>
+                                    <button class="text-xs text-zinc-400 hover:text-white hover:underline transition">Exporter tout (PDF)</button>
+                                </div>
+                                <div class="space-y-3 max-h-64 overflow-y-auto pr-1" id="transactionsList">
+                                    <!-- Inséré par JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============== SECTION USER : EXCHANGE =============== -->
+                <section id="tab-exchange" class="tab-content hidden space-y-8">
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-tight">KerneX Exchange</h1>
+                        <p class="text-zinc-500 text-sm mt-1">Échangez vos tokens Kerne contre des parts dans la bourse interne pour valoriser vos actifs.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <!-- Graphique d'échange stylisé -->
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                                <h3 class="text-md font-bold mb-4">Valorisation de vos parts</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div class="bg-black/50 p-4 rounded-xl border border-brand-border">
+                                        <p class="text-[10px] text-zinc-500 uppercase font-mono">Nombre de parts détenues</p>
+                                        <p class="text-2xl font-black font-mono mt-1" id="exchangeShares">0.0000</p>
+                                    </div>
+                                    <div class="bg-black/50 p-4 rounded-xl border border-brand-border">
+                                        <p class="text-[10px] text-zinc-500 uppercase font-mono">Prix moyen d'achat</p>
+                                        <p class="text-2xl font-black font-mono mt-1" id="exchangeAvgPrice">$1.00</p>
+                                    </div>
+                                    <div class="bg-black/50 p-4 rounded-xl border border-brand-border">
+                                        <p class="text-[10px] text-zinc-500 uppercase font-mono">Plus/Moins-value latente</p>
+                                        <p class="text-2xl font-black font-mono mt-1 text-emerald-400" id="exchangePl">+$0.00</p>
+                                    </div>
+                                </div>
+                                <div class="h-48 bg-black/40 rounded-xl flex items-center justify-center border border-brand-border">
+                                    <div class="text-center">
+                                        <i data-lucide="trending-up" class="w-8 h-8 text-zinc-600 mx-auto mb-2 animate-bounce"></i>
+                                        <p class="text-xs text-zinc-500">Fluctuations de prix calculées dynamiquement toutes les 3 secondes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panneau de trading -->
+                        <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6 space-y-6">
+                            <h3 class="text-lg font-bold tracking-tight">Passer un ordre</h3>
+                            <div class="grid grid-cols-2 gap-2 bg-black p-1 rounded-xl border border-brand-border">
+                                <button id="btnOrderBuy" onclick="switchOrderType('BUY')" class="py-2 rounded-lg text-xs font-bold bg-zinc-900 text-white transition">ACHETER</button>
+                                <button id="btnOrderSell" onclick="switchOrderType('SELL')" class="py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition">VENDRE</button>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Montant en Kerne (KRNE)</label>
+                                    <input type="number" id="orderAmount" placeholder="Ex: 50" class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 font-mono" oninput="updateOrderEstimate()">
+                                </div>
+                                <div class="bg-black/50 p-4 rounded-xl border border-brand-border space-y-2">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-zinc-500">Estimation des parts</span>
+                                        <span class="font-bold font-mono" id="estimateShares">0.0000 Shares</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs border-t border-brand-border/40 pt-2">
+                                        <span class="text-zinc-500">Prix unitaire</span>
+                                        <span class="font-bold font-mono text-amber-500" id="estimatePrice">$1.0000</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="executeOrder()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-black font-extrabold text-sm rounded-xl transition hover:opacity-90 shadow-lg shadow-amber-500/10">
+                                    Valider l'ordre de trading
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============== SECTION USER : MISSIONS =============== -->
+                <section id="tab-tasks" class="tab-content hidden space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-3xl font-extrabold tracking-tight">Missions Rémunérées</h1>
+                            <p class="text-zinc-500 text-sm mt-1">Exécutez des micro-tâches, déposez vos preuves de travail et gagnez des tokens Kerne.</p>
+                        </div>
+                    </div>
+
+                    <!-- Liste des tâches -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tasksList">
+                        <!-- Inséré par JS -->
+                    </div>
+                </section>
+
+                <!-- =============== SECTION USER : TRANSFERT =============== -->
+                <section id="tab-transfer" class="tab-content hidden space-y-8">
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Transferts de fonds</h1>
+                        <p class="text-zinc-500 text-sm mt-1">Virement instantané de Kerne (KRNE) vers n'importe quel autre titulaire de la plateforme.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Formulaire -->
+                        <div class="lg:col-span-2 bg-zinc-950 border border-brand-border rounded-3xl p-6 space-y-6">
+                            <h3 class="text-lg font-bold tracking-tight">Initier un virement</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Kerne ID du Bénéficiaire</label>
+                                    <input type="text" id="transferTargetId" placeholder="KRNE-XXXX-XXXX-XXXX" class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Montant à transférer</label>
+                                    <input type="number" id="transferAmount" placeholder="Ex: 100" class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 font-mono">
+                                </div>
+                                <button onclick="executeTransfer()" class="w-full py-4 bg-white text-black font-extrabold text-sm rounded-xl transition hover:bg-neutral-200">
+                                    Envoyer le virement instantané
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bénéficiaires favoris simules -->
+                        <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                            <h3 class="text-sm font-bold uppercase text-zinc-400 tracking-wider mb-4">Contacts récents</h3>
+                            <div class="space-y-3">
+                                <button onclick="autofillTransfer('KRNE-ADMIN-0000-0001')" class="w-full flex items-center justify-between p-3 rounded-2xl bg-black/50 border border-brand-border hover:border-white/20 transition text-left">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-brand-purple/20 text-brand-purple font-bold flex items-center justify-center text-xs">A</div>
+                                        <div>
+                                            <p class="text-xs font-bold">Administrateur Kerne</p>
+                                            <p class="text-[9px] text-zinc-500 font-mono">KRNE-ADMIN-0000-0001</p>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-500"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============== SECTION USER : RETRAIT =============== -->
+                <section id="tab-withdraw" class="tab-content hidden space-y-8">
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Retrait de fonds</h1>
+                        <p class="text-zinc-500 text-sm mt-1">Convertissez et retirez vos fonds directement vers vos comptes externes de paiement.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 bg-zinc-950 border border-brand-border rounded-3xl p-6 space-y-6">
+                            <h3 class="text-lg font-bold tracking-tight">Faire une demande de retrait</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Montant à retirer (en KRNE)</label>
+                                    <input type="number" id="withdrawAmount" placeholder="Ex: 50" class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Coordonnées de virement / IBAN / Clé publique</label>
+                                    <textarea id="withdrawDetails" placeholder="Indiquez votre adresse de destination ou coordonnées bancaires..." class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 min-h-[100px]"></textarea>
+                                </div>
+                                <button onclick="executeWithdraw()" class="w-full py-4 bg-zinc-900 text-white font-extrabold text-sm rounded-xl transition hover:bg-zinc-850 border border-brand-border">
+                                    Initier la demande de retrait
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Suivi des retraits -->
+                        <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                            <h3 class="text-lg font-bold mb-4">Suivi de vos demandes</h3>
+                            <div class="space-y-3" id="withdrawalsHistory">
+                                <!-- Inséré par JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============== SECTION USER : SUPPORT =============== -->
+                <section id="tab-support" class="tab-content hidden space-y-8">
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Centre d'aide & Tickets</h1>
+                        <p class="text-zinc-500 text-sm mt-1">Vous rencontrez un problème ? Créez un ticket d'assistance pour échanger avec notre équipe d'administration.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 bg-zinc-950 border border-brand-border rounded-3xl p-6 space-y-4">
+                            <h3 class="text-lg font-bold">Ouvrir un nouveau ticket</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Sujet de votre demande</label>
+                                    <input type="text" id="ticketSubject" placeholder="Ex: Soumission de tâche non créditée" class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-zinc-500 uppercase font-mono block mb-1">Message</label>
+                                    <textarea id="ticketMessage" placeholder="Détaillez au maximum votre demande..." class="w-full bg-black border border-brand-border rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-amber-500 min-h-[120px]"></textarea>
+                                </div>
+                                <button onclick="createTicket()" class="w-full py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-sm rounded-xl transition border border-brand-border">
+                                    Ouvrir le ticket d'assistance
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Historique des tickets -->
+                        <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                            <h3 class="text-lg font-bold mb-4">Vos tickets d'aide</h3>
+                            <div class="space-y-3" id="ticketsList">
+                                <!-- Inséré par JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =============== SECTION ADMIN : INTERFACE DE CONTROLE =============== -->
+                <section id="tab-admin" class="tab-content hidden space-y-8">
+                    <div class="border-b border-brand-border pb-6">
+                        <h1 class="text-3xl font-extrabold tracking-tight text-brand-rose">Panneau d'Administration</h1>
+                        <p class="text-zinc-500 text-sm mt-1">Gérez l'écosystème, validez le KYC des utilisateurs et approuvez les preuves de tâches.</p>
+                    </div>
+
+                    <!-- KPI Administration -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-zinc-950 border border-brand-border rounded-2xl p-6">
+                            <span class="text-[10px] text-zinc-500 uppercase font-mono">Dossiers KYC en attente</span>
+                            <span class="text-3xl font-black font-mono block mt-2 text-amber-500" id="adminKycCount">0</span>
+                        </div>
+                        <div class="bg-zinc-950 border border-brand-border rounded-2xl p-6">
+                            <span class="text-[10px] text-zinc-500 uppercase font-mono">Preuves de tâches à valider</span>
+                            <span class="text-3xl font-black font-mono block mt-2 text-cyan-400" id="adminTasksCount">0</span>
+                        </div>
+                        <div class="bg-zinc-950 border border-brand-border rounded-2xl p-6">
+                            <span class="text-[10px] text-zinc-500 uppercase font-mono">Demandes de retraits</span>
+                            <span class="text-3xl font-black font-mono block mt-2 text-brand-purple" id="adminWithdrawalsCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <!-- Colonne 1 : KYC & Retraits -->
+                        <div class="space-y-8">
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                                <h3 class="text-lg font-bold mb-4">Dossiers d'identité (KYC) à valider</h3>
+                                <div class="space-y-4" id="adminKycList">
+                                    <!-- Inséré par JS -->
+                                </div>
+                            </div>
+
+                            <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                                <h3 class="text-lg font-bold mb-4">Validation des retraits</h3>
+                                <div class="space-y-4" id="adminWithdrawalsList">
+                                    <!-- Inséré par JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne 2 : Preuves de travail -->
+                        <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6">
+                            <h3 class="text-lg font-bold mb-4">Validation des Preuves de travail (Tâches)</h3>
+                            <div class="space-y-4" id="adminSubmissionsList">
+                                <!-- Inséré par JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
         </div>
-        <div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3 style="font-size:14px; font-weight:600; margin-bottom:14px;">Mon identifiant bancaire</h3>
-            <div class="balance-id" style="display:flex; width:100%; justify-content:space-between;" onclick="copyId()">
-              <span style="font-size:14px;">KRNE-4821-9307-6154</span>
-              <span style="color:var(--gold);">⊕ Copier</span>
-            </div>
-            <div style="margin-top:12px; display:flex; justify-content:center;">
-              <div id="qrCode" style="width:120px; height:120px; background:white; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:8px;">
-                <svg width="104" height="104" viewBox="0 0 104 104" fill="none">
-                  <rect width="104" height="104" fill="white"/>
-                  <rect x="4" y="4" width="40" height="40" fill="black"/>
-                  <rect x="8" y="8" width="32" height="32" fill="white"/>
-                  <rect x="12" y="12" width="20" height="20" fill="black"/>
-                  <rect x="60" y="4" width="40" height="40" fill="black"/>
-                  <rect x="64" y="8" width="32" height="32" fill="white"/>
-                  <rect x="68" y="12" width="20" height="20" fill="black"/>
-                  <rect x="4" y="60" width="40" height="40" fill="black"/>
-                  <rect x="8" y="64" width="32" height="32" fill="white"/>
-                  <rect x="12" y="68" width="20" height="20" fill="black"/>
-                  <rect x="56" y="56" width="8" height="8" fill="black"/>
-                  <rect x="68" y="56" width="8" height="8" fill="black"/>
-                  <rect x="56" y="68" width="8" height="8" fill="black"/>
-                  <rect x="68" y="68" width="8" height="8" fill="black"/>
-                  <rect x="80" y="56" width="8" height="8" fill="black"/>
-                  <rect x="92" y="56" width="8" height="8" fill="black"/>
-                  <rect x="80" y="68" width="8" height="8" fill="black"/>
-                  <rect x="56" y="80" width="8" height="8" fill="black"/>
-                  <rect x="80" y="80" width="8" height="8" fill="black"/>
-                  <rect x="92" y="80" width="8" height="8" fill="black"/>
-                  <rect x="56" y="92" width="8" height="8" fill="black"/>
-                  <rect x="68" y="92" width="8" height="8" fill="black"/>
-                  <rect x="92" y="68" width="8" height="8" fill="black"/>
-                  <rect x="92" y="92" width="8" height="8" fill="black"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="section-header"><div class="section-title">Virements récents</div></div>
-          <div class="card" style="padding:8px;">
-            <div class="tx-list" id="transferHistoryList"></div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- TASKS -->
-    <div class="page" id="page-tasks">
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab(this, 'available')">Disponibles</div>
-        <div class="tab" onclick="switchTab(this, 'inprogress')">En cours</div>
-        <div class="tab" onclick="switchTab(this, 'completed')">Complétées</div>
-      </div>
-      <div id="tab-available" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;"></div>
-      <div id="tab-inprogress" style="display:none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;"></div>
-      <div id="tab-completed" style="display:none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;"></div>
-    </div>
+    <!-- Script de l'Écosystème Kerne Bank -->
+    <script>
+        // --- BASE DE DONNÉES SIMULÉE EN CONTEXTE LIVE (STATE) ---
+        let state = {
+            role: "USER", // "USER" ou "ADMIN"
+            currentTab: "dashboard",
+            user: {
+                name: "Alexandre Kerne",
+                kerneId: "KRNE-3498-F02A-8941",
+                kycStatus: "PENDING", // PENDING, VERIFIED, REJECTED
+                kerneBalance: 1250.45,
+                sharesOwned: 15.0,
+                sharesAvgPrice: 1.05
+            },
+            economy: {
+                price: 1.0500,
+                previousPrice: 1.0500,
+                activeUsers: 247,
+                totalVolume: 1250.45,
+                marketCap: 15450.00,
+                history: [1.02, 1.03, 1.01, 1.04, 1.02, 1.05]
+            },
+            transactions: [
+                { id: "TX-REWARD-01", type: "REWARD", title: "Récompense de Tâche", amount: 150.00, status: "COMPLETED", date: "11 Juin 2026" },
+                { id: "TX-TRANSFER-01", type: "TRANSFER", title: "Envoi à KRNE-ADMIN-0001", amount: -50.00, status: "COMPLETED", date: "10 Juin 2026" }
+            ],
+            tasks: [
+                { id: "TSK-01", title: "Rédiger la note blanche de sécurité", desc: "Écrire une note technique de 500 mots sur la mitigation des attaques DDoS sur le noyau.", reward: 75.00, difficulty: "EASY", deadline: "Dans 3 jours", status: "ACTIVE" },
+                { id: "TSK-02", title: "Débogage du connecteur Prisma API", desc: "Identifier et corriger le goulot d'étranglement de requêtes Prisma sur la table de transactions.", reward: 250.00, difficulty: "HARD", deadline: "Dans 1 jour", status: "ACTIVE" }
+            ],
+            submissions: [
+                { id: "SUB-01", taskTitle: "Rédiger la note blanche de sécurité", taskId: "TSK-01", userName: "Alexandre Kerne", userKerneId: "KRNE-3498-F02A-8941", reward: 75.00, status: "PENDING", proofText: "Lien de la preuve : https://github.com/alexandre/kerne-security-doc" }
+            ],
+            withdrawals: [
+                { id: "WTH-01", amount: 100.00, details: "Virement SEPA - FR76 3000...984", status: "PENDING", date: "11 Juin 2026" }
+            ],
+            tickets: [
+                { id: "TCK-01", subject: "Compte non vérifié après soumission", message: "J'ai soumis ma pièce d'identité hier matin mais le statut est toujours en attente.", status: "OPEN", date: "11 Juin 2026" }
+            ],
+            orderType: "BUY" // BUY ou SELL pour l'exchange
+        };
 
-    <!-- EXCHANGE -->
-    <div class="page" id="page-exchange">
-      <div class="grid-2" style="margin-bottom:24px;">
-        <div>
-          <div class="exchange-header">
-            <div class="exchange-pair">
-              <div class="asset-pill"><div class="asset-icon kx-icon">KX</div> KerneX</div>
-              <span style="color:var(--text3);">⇄</span>
-              <div class="asset-pill"><div class="asset-icon kr-icon">₭</div> Kerne</div>
-            </div>
-            <div class="price-display">€<span id="kxPrice">3.847</span></div>
-            <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-              <span class="badge badge-green">▲ +8.3% (24h)</span>
-              <span class="badge badge-gray">Vol. 124K KX</span>
-              <span class="badge badge-gray">Cap. €2.4M</span>
-            </div>
-          </div>
-          <div style="position:relative; height:200px; margin-bottom:20px;">
-            <canvas id="kxChart" role="img" aria-label="Graphique KerneX 30 jours">KerneX 30 jours.</canvas>
-          </div>
+        // --- GRAPHIC ENGINE (CANVAS REALTIME) ---
+        const canvas = document.getElementById('tradingChart');
+        const ctx = canvas.getContext('2d');
 
-          <div class="tabs">
-            <div class="tab active" onclick="switchExTab(this,'buy')">Acheter KX</div>
-            <div class="tab" onclick="switchExTab(this,'sell')">Vendre KX</div>
-          </div>
-
-          <div id="exTab-buy">
-            <div class="form-group">
-              <label class="form-label">Quantité KerneX à acheter</label>
-              <input type="number" class="form-input" placeholder="0.00" id="buyQty" oninput="updateBuyPreview()">
-            </div>
-            <div style="background:var(--bg3); border:1px solid var(--border2); border-radius:var(--radius); padding:14px; margin-bottom:16px;" id="buyPreview" style="display:none;">
-              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
-                <span style="color:var(--text2);">Prix unitaire</span>
-                <span>€3.847 / KX</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
-                <span style="color:var(--text2);">Coût total en Kerne</span>
-                <span id="buyTotal" style="font-weight:600;">₭ 0.00</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:13px;">
-                <span style="color:var(--text2);">Commission</span>
-                <span style="color:var(--green);">0.1%</span>
-              </div>
-            </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="executeBuy()">
-              Acheter KerneX
-            </button>
-          </div>
-          <div id="exTab-sell" style="display:none;">
-            <div class="form-group">
-              <label class="form-label">Quantité KerneX à vendre</label>
-              <input type="number" class="form-input" placeholder="0.00" id="sellQty" max="324.7">
-              <div style="font-size:12px; color:var(--text3); margin-top:5px;">En portefeuille : 324.7 KX</div>
-            </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; background:var(--red);" onclick="executeSell()">
-              Vendre KerneX
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <div class="section-header"><div class="section-title">Mon portefeuille KerneX</div></div>
-          <div class="card" style="margin-bottom:16px;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div>
-                <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Quantité détenue</div>
-                <div style="font-size:20px; font-weight:600;">324.7 <span style="font-size:13px; color:var(--text3);">KX</span></div>
-              </div>
-              <div>
-                <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Valeur actuelle</div>
-                <div style="font-size:20px; font-weight:600;">€1,248.22</div>
-              </div>
-              <div>
-                <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Prix moyen d'achat</div>
-                <div style="font-size:18px; font-weight:600;">€2.91</div>
-              </div>
-              <div>
-                <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Plus-value</div>
-                <div style="font-size:18px; font-weight:600; color:var(--green);">+€299.14</div>
-              </div>
-            </div>
-          </div>
-          <div class="section-header"><div class="section-title">Historique des ordres</div></div>
-          <div class="card" style="padding:8px;" id="orderHistory"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WITHDRAW -->
-    <div class="page" id="page-withdraw">
-      <div class="grid-2">
-        <div class="card">
-          <h3 style="font-size:16px; font-weight:600; margin-bottom:20px;">Conversion Kerne → Euros</h3>
-          <div style="background:var(--bg3); border-radius:var(--radius); padding:14px; margin-bottom:20px;">
-            <div style="font-size:12px; color:var(--text3); margin-bottom:6px;">Taux de conversion actuel</div>
-            <div style="font-size:22px; font-weight:600;">1 ₭ Kerne = <span style="color:var(--gold);">€0.847</span></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Montant en Kerne à convertir</label>
-            <input type="number" class="form-input" placeholder="0.00" id="withdrawKerne" oninput="updateWithdraw()">
-            <div style="font-size:12px; color:var(--text3); margin-top:5px;">Disponible : ₭ 12,847.50</div>
-          </div>
-          <div style="background:var(--bg3); border:1px solid var(--border2); border-radius:var(--radius); padding:14px; margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
-              <span style="color:var(--text2);">Montant en euros</span>
-              <span id="withdrawEur" style="font-weight:600; color:var(--green);">€0.00</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:13px;">
-              <span style="color:var(--text2);">Délai de traitement</span>
-              <span>1-3 jours ouvrés</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">IBAN de destination</label>
-            <input class="form-input" placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" style="font-family:monospace; letter-spacing:0.5px;">
-          </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="executeWithdraw()">
-            Demander le retrait €
-          </button>
-        </div>
-        <div>
-          <div class="section-header"><div class="section-title">Historique des retraits</div></div>
-          <div class="card" style="padding:8px;">
-            <table class="data-table">
-              <thead><tr><th>Date</th><th>Montant KRN</th><th>Euros</th><th>Statut</th></tr></thead>
-              <tbody>
-                <tr><td>12/05/2025</td><td>₭ 1,000</td><td>€847</td><td><span class="badge badge-green">Payé</span></td></tr>
-                <tr><td>03/04/2025</td><td>₭ 500</td><td>€391</td><td><span class="badge badge-green">Payé</span></td></tr>
-                <tr><td>18/03/2025</td><td>₭ 2,000</td><td>€1,560</td><td><span class="badge badge-gold">En cours</span></td></tr>
-                <tr><td>01/02/2025</td><td>₭ 300</td><td>€228</td><td><span class="badge badge-red">Refusé</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NOTIFICATIONS -->
-    <div class="page" id="page-notifications">
-      <div style="max-width:640px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-          <span style="font-size:13px; color:var(--text2);">5 non lues</span>
-          <span style="font-size:12px; color:var(--gold); cursor:pointer;">Tout marquer comme lu</span>
-        </div>
-        <div id="notifList" style="display:flex; flex-direction:column; gap:6px;"></div>
-      </div>
-    </div>
-
-    <!-- SUPPORT -->
-    <div class="page" id="page-support">
-      <div class="grid-2">
-        <div>
-          <div class="tabs">
-            <div class="tab active" onclick="switchTab(this,'chat')">Chat en direct</div>
-            <div class="tab" onclick="switchTab(this,'tickets')">Tickets</div>
-            <div class="tab" onclick="switchTab(this,'faq')">FAQ</div>
-          </div>
-          <div id="tab-chat">
-            <div class="chat-container">
-              <div class="chat-messages" id="chatMessages">
-                <div class="chat-msg agent">Bonjour ! 👋 Bienvenue sur le support Kerne Bank. Comment puis-je vous aider aujourd'hui ?</div>
-              </div>
-              <div class="chat-input-row">
-                <input type="text" placeholder="Tapez votre message..." id="chatInput" onkeydown="if(event.key==='Enter') sendChatMsg()">
-                <button class="btn btn-primary btn-sm" onclick="sendChatMsg()">Envoyer</button>
-              </div>
-            </div>
-          </div>
-          <div id="tab-tickets" style="display:none;">
-            <div class="card" style="padding:8px; margin-bottom:16px;">
-              <table class="data-table">
-                <thead><tr><th>#</th><th>Sujet</th><th>Date</th><th>Statut</th></tr></thead>
-                <tbody>
-                  <tr><td>#1042</td><td>Problème de virement</td><td>10/06</td><td><span class="badge badge-gold">Ouvert</span></td></tr>
-                  <tr><td>#1038</td><td>Question KYC</td><td>05/06</td><td><span class="badge badge-green">Résolu</span></td></tr>
-                  <tr><td>#1021</td><td>Bug interface KerneX</td><td>22/05</td><td><span class="badge badge-green">Résolu</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <button class="btn btn-primary" onclick="showToast('Nouveau ticket créé !')">+ Nouveau ticket</button>
-          </div>
-          <div id="tab-faq" style="display:none;">
-            <div style="display:flex; flex-direction:column; gap:10px;" id="faqList"></div>
-          </div>
-        </div>
-        <div>
-          <div class="section-header"><div class="section-title">Centre d'aide</div></div>
-          <div style="display:grid; gap:12px;">
-            <div class="card card-sm" style="cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="font-size:14px; font-weight:500; margin-bottom:4px;">📋 Guide de démarrage</div>
-              <div style="font-size:12px; color:var(--text2);">Tout ce qu'il faut savoir pour commencer sur Kerne Bank.</div>
-            </div>
-            <div class="card card-sm" style="cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="font-size:14px; font-weight:500; margin-bottom:4px;">🔐 Sécurité & KYC</div>
-              <div style="font-size:12px; color:var(--text2);">Comment vérifier votre identité et sécuriser votre compte.</div>
-            </div>
-            <div class="card card-sm" style="cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="font-size:14px; font-weight:500; margin-bottom:4px;">⚡ KerneX Exchange</div>
-              <div style="font-size:12px; color:var(--text2);">Comment acheter et vendre des actifs KerneX.</div>
-            </div>
-            <div class="card card-sm" style="cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="font-size:14px; font-weight:500; margin-bottom:4px;">💶 Retraits en euros</div>
-              <div style="font-size:12px; color:var(--text2);">Processus et délais pour convertir vos Kerne en euros.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROFILE -->
-    <div class="page" id="page-profile">
-      <div class="grid-2">
-        <div>
-          <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar">AM</div>
-            <div>
-              <div style="font-size:20px; font-weight:600;" id="profileName">Alice Martin</div>
-              <div style="font-size:13px; color:var(--text2); margin-top:3px;" id="profileEmail">alice@kerne.io</div>
-              <div style="margin-top:8px;"><span class="badge badge-blue">🛡️ KYC en attente</span></div>
-            </div>
-          </div>
-
-          <div class="card" style="margin-bottom:16px;">
-            <div class="section-header" style="margin-bottom:16px;"><div class="section-title">Identifiant bancaire Kerne</div></div>
-            <div class="balance-id" style="display:flex; justify-content:space-between; margin-bottom:12px;" onclick="copyId()">
-              <span style="font-size:15px; font-weight:500;">KRNE-4821-9307-6154</span>
-              <span style="color:var(--gold);">⊕</span>
-            </div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-ghost btn-sm" onclick="copyId()">⊕ Copier</button>
-              <button class="btn btn-ghost btn-sm" onclick="showToast('PDF téléchargé !')">↓ PDF</button>
-              <button class="btn btn-ghost btn-sm" onclick="showToast('QR Code affiché !')">◈ QR Code</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="section-header"><div class="section-title">Vérification d'identité (KYC)</div></div>
-            <div style="background:var(--blue-dim); border:1px solid rgba(74,158,255,0.2); border-radius:var(--radius); padding:14px; margin-bottom:16px;">
-              <div style="font-size:13px; font-weight:600; color:var(--blue); margin-bottom:4px;">Statut : En attente de vérification</div>
-              <div style="font-size:12px; color:var(--text2);">Soumettez vos documents pour accéder à toutes les fonctionnalités.</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Pièce d'identité (recto)</label>
-              <div style="border:2px dashed var(--border2); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)'">
-                <div style="font-size:24px; margin-bottom:6px;">📄</div>
-                <div style="font-size:13px; color:var(--text2);">Cliquer pour uploader ou glisser-déposer</div>
-                <div style="font-size:11px; color:var(--text3); margin-top:4px;">JPG, PNG ou PDF — 10Mo max</div>
-              </div>
-            </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="showToast('Documents soumis pour vérification !')">
-              Soumettre pour vérification
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <div class="card" style="margin-bottom:16px;">
-            <div class="section-header"><div class="section-title">Informations personnelles</div></div>
-            <div class="form-group">
-              <label class="form-label">Prénom</label>
-              <input class="form-input" value="Alice">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nom</label>
-              <input class="form-input" value="Martin">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-input" value="alice@kerne.io">
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label">Téléphone</label>
-              <input class="form-input" value="+33 6 12 34 56 78">
-            </div>
-          </div>
-          <div class="card">
-            <div class="section-header"><div class="section-title">Sécurité</div></div>
-            <div class="form-group">
-              <label class="form-label">Mot de passe actuel</label>
-              <input type="password" class="form-input" placeholder="••••••••">
-            </div>
-            <div class="form-group" style="margin-bottom:20px;">
-              <label class="form-label">Nouveau mot de passe</label>
-              <input type="password" class="form-input" placeholder="••••••••">
-            </div>
-            <button class="btn btn-ghost" style="width:100%; justify-content:center; padding:11px;" onclick="showToast('Mot de passe mis à jour !')">
-              Mettre à jour le mot de passe
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ADMIN DASHBOARD -->
-    <div class="page" id="page-admin">
-      <div class="grid-4" style="margin-bottom:24px;">
-        <div class="stat-card">
-          <div class="stat-label">Utilisateurs totaux</div>
-          <div class="stat-value">1,847</div>
-          <div class="stat-change up">▲ +47 ce mois</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">KYC en attente</div>
-          <div class="stat-value" style="color:var(--gold);">23</div>
-          <div class="stat-change" style="background:var(--gold-dim); color:var(--gold);">⚠ Action requise</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Transactions / 24h</div>
-          <div class="stat-value">4,291</div>
-          <div class="stat-change up">▲ +12.3%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Capitalisation totale</div>
-          <div class="stat-value">€2.4M</div>
-          <div class="stat-change up">▲ +8.7%</div>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <div class="section-header"><div class="section-title">Activité de la plateforme</div></div>
-          <div class="card" style="padding:16px;">
-            <div style="position:relative; height:180px;">
-              <canvas id="adminChart" role="img" aria-label="Activité plateforme 7 derniers jours">Activité 7 jours.</canvas>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="section-header"><div class="section-title">Derniers utilisateurs inscrits</div></div>
-          <div class="card" style="padding:8px;">
-            <table class="data-table">
-              <thead><tr><th>Nom</th><th>Email</th><th>KYC</th><th>Action</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td style="font-weight:500;">Thomas R.</td>
-                  <td style="color:var(--text2);">thomas@mail.fr</td>
-                  <td><span class="badge badge-gold">En attente</span></td>
-                  <td><button class="btn btn-ghost btn-sm" onclick="showToast('KYC validé pour Thomas !')">Valider</button></td>
-                </tr>
-                <tr>
-                  <td style="font-weight:500;">Sofia M.</td>
-                  <td style="color:var(--text2);">sofia@mail.fr</td>
-                  <td><span class="badge badge-gold">En attente</span></td>
-                  <td><button class="btn btn-ghost btn-sm" onclick="showToast('KYC validé pour Sofia !')">Valider</button></td>
-                </tr>
-                <tr>
-                  <td style="font-weight:500;">Marc D.</td>
-                  <td style="color:var(--text2);">marc@mail.fr</td>
-                  <td><span class="badge badge-green">Vérifié</span></td>
-                  <td><span style="font-size:12px; color:var(--text3);">—</span></td>
-                </tr>
-                <tr>
-                  <td style="font-weight:500;">Léa K.</td>
-                  <td style="color:var(--text2);">lea@mail.fr</td>
-                  <td><span class="badge badge-red">Rejeté</span></td>
-                  <td><button class="btn btn-ghost btn-sm" onclick="showToast('Nouvelle demande envoyée à Léa.')">Renotifier</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ADMIN KYC -->
-    <div class="page" id="page-admin-kyc">
-      <div class="section-header" style="margin-bottom:20px;">
-        <div class="section-title">Validation KYC — 23 dossiers en attente</div>
-        <div class="badge badge-gold">23 en attente</div>
-      </div>
-      <div class="card" style="padding:8px;">
-        <table class="data-table">
-          <thead><tr><th>Nom</th><th>ID Kerne</th><th>Date soumission</th><th>Documents</th><th>Actions</th></tr></thead>
-          <tbody id="kycTable"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ADMIN TASKS -->
-    <div class="page" id="page-admin-tasks">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <div class="section-title">Gestion des missions</div>
-        <button class="btn btn-primary" onclick="openNewTaskModal()">+ Nouvelle mission</button>
-      </div>
-      <div class="card" style="padding:8px;">
-        <table class="data-table" id="adminTasksTable">
-          <thead><tr><th>Mission</th><th>Récompense</th><th>Difficulté</th><th>Soumissions</th><th>Statut</th><th>Actions</th></tr></thead>
-          <tbody id="adminTasksTbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ADMIN ECONOMY -->
-    <div class="page" id="page-admin-economy">
-      <div class="grid-2">
-        <div class="card">
-          <h3 style="font-size:15px; font-weight:600; margin-bottom:20px;">Gérer le cours du Kerne</h3>
-          <div style="background:var(--bg3); border-radius:var(--radius); padding:14px; margin-bottom:16px;">
-            <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Prix actuel</div>
-            <div style="font-size:28px; font-weight:700; color:var(--gold);">€0.847</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nouveau prix (€)</label>
-            <input type="number" class="form-input" placeholder="0.847" step="0.001" id="newKernePrice">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Raison de l'ajustement</label>
-            <input class="form-input" placeholder="Ex: Augmentation de la demande">
-          </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="updateKernePrice()">
-            Mettre à jour le prix Kerne
-          </button>
-        </div>
-        <div class="card">
-          <h3 style="font-size:15px; font-weight:600; margin-bottom:20px;">Gérer le cours du KerneX</h3>
-          <div style="background:var(--bg3); border-radius:var(--radius); padding:14px; margin-bottom:16px;">
-            <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Prix actuel KerneX</div>
-            <div style="font-size:28px; font-weight:700; color:var(--blue);">€3.847</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nouveau prix KerneX (€)</label>
-            <input type="number" class="form-input" placeholder="3.847" step="0.001" id="newKxPrice">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Notification globale (optionnel)</label>
-            <input class="form-input" placeholder="Message à envoyer aux utilisateurs...">
-          </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="updateKxPrice()">
-            Mettre à jour le prix KerneX
-          </button>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:20px;">
-        <h3 style="font-size:15px; font-weight:600; margin-bottom:16px;">Statistiques économiques</h3>
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-label">Utilisateurs vérifiés</div><div class="stat-value">1,284</div></div>
-          <div class="stat-card"><div class="stat-label">Volume 24h</div><div class="stat-value">₭ 84,200</div></div>
-          <div class="stat-card"><div class="stat-label">Kerne en circulation</div><div class="stat-value">12.4M ₭</div></div>
-          <div class="stat-card"><div class="stat-label">KerneX en circulation</div><div class="stat-value">624K KX</div></div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- end .content -->
-</main>
-</div><!-- end #app -->
-
-<!-- MODAL: Task detail -->
-<div class="modal-overlay" id="taskModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="taskModalTitle">Mission</div>
-      <div class="modal-close" onclick="closeModal('taskModal')">✕</div>
-    </div>
-    <div id="taskModalBody"></div>
-  </div>
-</div>
-
-<!-- MODAL: New Task (Admin) -->
-<div class="modal-overlay" id="newTaskModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Créer une nouvelle mission</div>
-      <div class="modal-close" onclick="closeModal('newTaskModal')">✕</div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Titre de la mission</label>
-      <input class="form-input" placeholder="Ex: Tondre la pelouse">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-input" style="height:80px; resize:vertical;" placeholder="Décrivez la mission en détail..."></textarea>
-    </div>
-    <div class="grid-2">
-      <div class="form-group">
-        <label class="form-label">Récompense (Kerne)</label>
-        <input type="number" class="form-input" placeholder="50">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Difficulté</label>
-        <select class="form-input">
-          <option>Facile</option>
-          <option>Moyenne</option>
-          <option>Difficile</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Date limite</label>
-      <input type="date" class="form-input">
-    </div>
-    <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="createTask()">
-      Publier la mission
-    </button>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="toast-icon">✓</span>
-  <span id="toastMsg">Action effectuée avec succès</span>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-// ─── DATA ─────────────────────────────────────────────────────────────────────
-
-const transactions = [
-  { id:'TX001', type:'in', icon:'task', title:'Récompense — Aspirer le salon', sub:'Mission #21', amount:'+₭ 45.00', date:'Aujourd\'hui, 14:32', status:'ok', cat:'task' },
-  { id:'TX002', type:'in', icon:'in', title:'Virement reçu — Bob Martin', sub:'KRNE-7731-2204-8841', amount:'+₭ 200.00', date:'Hier, 09:15', status:'ok', cat:'transfer' },
-  { id:'TX003', type:'out', icon:'trade', title:'Achat KerneX × 50', sub:'Prix unitaire €3.62', amount:'-₭ 213.00', date:'11/06, 17:22', status:'ok', cat:'exchange' },
-  { id:'TX004', type:'out', icon:'out', title:'Virement envoyé — Clara D.', sub:'KRNE-1102-5594-3378', amount:'-₭ 100.00', date:'10/06, 11:05', status:'ok', cat:'transfer' },
-  { id:'TX005', type:'in', icon:'task', title:'Récompense — Nettoyer les vitres', sub:'Mission #19', amount:'+₭ 30.00', date:'09/06, 16:44', status:'ok', cat:'task' },
-  { id:'TX006', type:'out', icon:'out', title:'Retrait vers IBAN', sub:'FR76 3000 4028...', amount:'-₭ 500.00', date:'05/06, 10:00', status:'ok', cat:'withdraw' },
-  { id:'TX007', type:'in', icon:'in', title:'Bonus de bienvenue', sub:'Kerne Bank', amount:'+₭ 100.00', date:'01/06, 00:00', status:'ok', cat:'bonus' },
-  { id:'TX008', type:'in', icon:'trade', title:'Vente KerneX × 20', sub:'Prix unitaire €3.90', amount:'+₭ 92.07', date:'28/05, 13:50', status:'ok', cat:'exchange' },
-];
-
-const tasks = [
-  { id:1, title:'Aspirer toutes les pièces', desc:'Passer l\'aspirateur dans toutes les pièces du rez-de-chaussée. Photos avant/après requises.', reward:45, difficulty:1, deadline:'15/06/2025', status:'available' },
-  { id:2, title:'Nettoyer les vitres', desc:'Nettoyer toutes les fenêtres intérieures et extérieures avec le produit fourni. Résultat sans trace.', reward:60, difficulty:2, deadline:'18/06/2025', status:'available' },
-  { id:3, title:'Tondre la pelouse', desc:'Tondre la pelouse du jardin et ramasser les tontes. Hauteur cible : 5 cm.', reward:120, difficulty:3, deadline:'20/06/2025', status:'available' },
-  { id:4, title:'Ranger le grenier', desc:'Trier et ranger les cartons dans le grenier. Créer un espace organisé et étiqueté.', reward:200, difficulty:3, deadline:'25/06/2025', status:'inprogress' },
-  { id:5, title:'Faire la vaisselle', desc:'Nettoyer et ranger toute la vaisselle accumulée. Vérifier que tout est correctement séché.', reward:20, difficulty:1, deadline:'12/06/2025', status:'available' },
-  { id:6, title:'Dépoussièrer les meubles', desc:'Nettoyer tous les meubles avec un chiffon microfibre. Inclure les étagères hautes.', reward:35, difficulty:1, deadline:'14/06/2025', status:'completed' },
-];
-
-const notifications = [
-  { icon:'💰', ico_bg:'var(--green-dim)', ico_color:'var(--green)', title:'Virement reçu', msg:'Vous avez reçu ₭ 200.00 de Bob Martin.', time:'Il y a 2 heures', unread:true },
-  { icon:'✅', ico_bg:'var(--gold-dim)', ico_color:'var(--gold)', title:'Mission validée', msg:'Votre mission "Aspirer le salon" a été validée. +₭ 45.00 crédités.', time:'Il y a 5 heures', unread:true },
-  { icon:'📊', ico_bg:'var(--blue-dim)', ico_color:'var(--blue)', title:'Prix KerneX en hausse', msg:'KerneX a progressé de +8.3% sur les dernières 24 heures.', time:'Hier, 09:00', unread:true },
-  { icon:'🛡️', ico_bg:'var(--blue-dim)', ico_color:'var(--blue)', title:'Rappel KYC', msg:'Votre vérification d\'identité est toujours en attente. Complétez-la pour débloquer les retraits.', time:'Hier, 08:00', unread:true },
-  { icon:'🎁', ico_bg:'var(--gold-dim)', ico_color:'var(--gold)', title:'Bonus spécial', msg:'Vous avez reçu un bonus de ₭ 50.00 pour votre activité ce mois-ci !', time:'Il y a 2 jours', unread:true },
-  { icon:'📤', ico_bg:'var(--red-dim)', ico_color:'var(--red)', title:'Virement envoyé', msg:'Vous avez envoyé ₭ 100.00 à Clara D.', time:'Il y a 3 jours', unread:false },
-  { icon:'📈', ico_bg:'var(--green-dim)', ico_color:'var(--green)', title:'Achat KerneX exécuté', msg:'Votre ordre d\'achat de 50 KerneX a été exécuté au prix de €3.62/KX.', time:'Il y a 4 jours', unread:false },
-];
-
-const faqs = [
-  { q:'Comment fonctionne la monnaie Kerne ?', a:'Le Kerne est la monnaie native de l\'écosystème Kerne Bank. Sa valeur évolue selon le nombre d\'utilisateurs, le volume des transactions et la demande globale.' },
-  { q:'Comment compléter ma vérification KYC ?', a:'Rendez-vous dans "Profil & KYC" et uploadez votre pièce d\'identité. L\'équipe valide les dossiers sous 24-48h ouvrées.' },
-  { q:'Comment envoyer des Kerne à quelqu\'un ?', a:'Dans "Virements", saisissez l\'identifiant KRNE de votre destinataire, indiquez le montant et confirmez. Le virement est instantané.' },
-  { q:'Quels sont les délais pour un retrait en euros ?', a:'Les retraits sont traités sous 1 à 3 jours ouvrés après validation par l\'équipe administrative.' },
-  { q:'Qu\'est-ce que le KerneX Exchange ?', a:'KerneX est un actif numérique négociable sur notre bourse interne. Vous pouvez l\'acheter et le vendre contre des Kerne en temps réel.' },
-];
-
-const kycData = [
-  { name:'Thomas Roux', id:'KRNE-8821-3304-7712', date:'10/06/2025' },
-  { name:'Sofia Mendes', id:'KRNE-2241-9918-4402', date:'09/06/2025' },
-  { name:'Jean-Paul V.', id:'KRNE-5514-2278-9903', date:'08/06/2025' },
-  { name:'Marie Leclerc', id:'KRNE-1142-6629-0011', date:'07/06/2025' },
-];
-
-const adminTasksData = [
-  { title:'Aspirer toutes les pièces', reward:45, difficulty:1, subs:3, active:true },
-  { title:'Nettoyer les vitres', reward:60, difficulty:2, subs:1, active:true },
-  { title:'Tondre la pelouse', reward:120, difficulty:3, subs:0, active:true },
-  { title:'Ranger le grenier', reward:200, difficulty:3, subs:2, active:true },
-  { title:'Faire la vaisselle', reward:20, difficulty:1, subs:5, active:false },
-];
-
-// ─── STATE ────────────────────────────────────────────────────────────────────
-
-let currentUser = null;
-let chartPeriodIdx = 1;
-const periods = ['24h','7 jours','30 jours'];
-let priceInterval;
-
-// ─── AUTH ─────────────────────────────────────────────────────────────────────
-
-function login(type) {
-  currentUser = type;
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  if(type === 'admin') {
-    document.getElementById('adminNav').style.display = 'block';
-    document.getElementById('sidebarName').textContent = 'Admin Kerne';
-    document.getElementById('sidebarId').textContent = 'KRNE-0000-0000-0001';
-    document.getElementById('sidebarAvatar').textContent = 'AD';
-  }
-  initApp();
-}
-
-function logout() {
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('loginPage').style.display = 'flex';
-  if(priceInterval) clearInterval(priceInterval);
-}
-
-function showRegister() {
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('registerForm').style.display = 'block';
-}
-function showLogin() {
-  document.getElementById('loginForm').style.display = 'block';
-  document.getElementById('registerForm').style.display = 'none';
-}
-
-// ─── APP INIT ─────────────────────────────────────────────────────────────────
-
-function initApp() {
-  renderTransactions('dashTxList', transactions.slice(0,4));
-  renderTransactions('walletTxList', transactions);
-  renderTransactions('transferHistoryList', transactions.filter(t=>t.cat==='transfer'));
-  renderTasks();
-  renderNotifications();
-  renderFAQ();
-  renderKycTable();
-  renderAdminTasks();
-  renderOrderHistory();
-  initCharts();
-  startPriceTicker();
-  showPage('dashboard');
-}
-
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const pg = document.getElementById('page-' + id);
-  if(pg) pg.classList.add('active');
-
-  const titles = {
-    dashboard:'Tableau de bord', wallet:'Portefeuille Kerne', transfer:'Virements',
-    tasks:'Missions rémunérées', exchange:'KerneX Exchange', withdraw:'Retrait en euros',
-    notifications:'Notifications', support:'Support client', profile:'Profil & KYC',
-    admin:'Tableau administrateur', 'admin-kyc':'Validation KYC',
-    'admin-tasks':'Gestion des missions', 'admin-economy':'Économie Kerne'
-  };
-  document.getElementById('topbarTitle').textContent = titles[id] || id;
-
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) n.classList.add('active');
-  });
-
-  closeSidebar();
-
-  if(id === 'exchange') setTimeout(initExchangeChart, 100);
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('backdrop').classList.toggle('show');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('backdrop').classList.remove('show');
-}
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-
-function renderTransactions(containerId, txs) {
-  const el = document.getElementById(containerId);
-  if(!el) return;
-  el.innerHTML = txs.map(tx => `
-    <div class="tx-item">
-      <div class="tx-icon ${tx.icon}">${tx.icon==='task'?'✦':tx.icon==='in'?'↓':tx.icon==='out'?'↑':'◎'}</div>
-      <div class="tx-info">
-        <div class="tx-title">${tx.title}</div>
-        <div class="tx-sub">${tx.sub} · ${tx.date}</div>
-      </div>
-      <div>
-        <div class="tx-amount ${tx.type}">${tx.amount}</div>
-        <div style="text-align:right;"><span class="tx-status status-${tx.status}">${tx.status==='ok'?'Confirmé':'En attente'}</span></div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderTasks() {
-  ['available','inprogress','completed'].forEach(status => {
-    const el = document.getElementById('tab-' + status);
-    if(!el) return;
-    const filtered = tasks.filter(t => t.status === status);
-    el.innerHTML = filtered.length === 0
-      ? `<div style="padding:40px; text-align:center; color:var(--text3); font-size:14px;">Aucune mission dans cette catégorie</div>`
-      : filtered.map(t => `
-        <div class="task-card" onclick="openTask(${t.id})">
-          <div class="task-header">
-            <div class="task-title">${t.title}</div>
-            <span class="badge ${t.status==='available'?'badge-green':t.status==='inprogress'?'badge-gold':'badge-gray'}">${t.status==='available'?'Disponible':t.status==='inprogress'?'En cours':'Complétée'}</span>
-          </div>
-          <div class="task-desc">${t.desc}</div>
-          <div class="task-footer">
-            <div class="task-reward">+₭ ${t.reward}.00</div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-              <div class="difficulty">
-                ${[1,2,3].map(i=>`<div class="diff-dot ${i<=t.difficulty?'filled':'empty'}"></div>`).join('')}
-              </div>
-              <div style="font-size:11px; color:var(--text3);">Avant le ${t.deadline}</div>
-            </div>
-          </div>
-        </div>
-      `).join('');
-  });
-}
-
-function renderNotifications() {
-  const el = document.getElementById('notifList');
-  if(!el) return;
-  el.innerHTML = notifications.map(n => `
-    <div class="notif-item ${n.unread?'unread':''}">
-      <div class="notif-ico" style="background:${n.ico_bg}; color:${n.ico_color};">${n.icon}</div>
-      <div class="notif-body">
-        <p><strong>${n.title}</strong> — ${n.msg}</p>
-        <div class="notif-time">${n.time}</div>
-      </div>
-      ${n.unread?'<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:4px;flex-shrink:0;"></div>':''}
-    </div>
-  `).join('');
-}
-
-function renderFAQ() {
-  const el = document.getElementById('faqList');
-  if(!el) return;
-  el.innerHTML = faqs.map(f => `
-    <div class="card card-sm" style="cursor:pointer;" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'block':'none'">
-      <div style="font-size:14px; font-weight:500; margin-bottom:0;">${f.q}</div>
-      <div class="faq-ans" style="display:none; font-size:13px; color:var(--text2); margin-top:8px; line-height:1.5;">${f.a}</div>
-    </div>
-  `).join('');
-}
-
-function renderKycTable() {
-  const el = document.getElementById('kycTable');
-  if(!el) return;
-  el.innerHTML = kycData.map(k => `
-    <tr>
-      <td style="font-weight:500;">${k.name}</td>
-      <td class="mono" style="font-size:12px; color:var(--text2);">${k.id}</td>
-      <td style="color:var(--text2);">${k.date}</td>
-      <td><button class="btn btn-ghost btn-sm">Voir docs</button></td>
-      <td style="display:flex; gap:6px;">
-        <button class="btn btn-primary btn-sm" onclick="showToast('KYC validé pour ${k.name}')">✓ Valider</button>
-        <button class="btn btn-ghost btn-sm" style="color:var(--red); border-color:var(--red-dim);" onclick="showToast('KYC refusé pour ${k.name}')">✕ Refuser</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function renderAdminTasks() {
-  const el = document.getElementById('adminTasksTbody');
-  if(!el) return;
-  el.innerHTML = adminTasksData.map((t,i) => `
-    <tr>
-      <td style="font-weight:500;">${t.title}</td>
-      <td style="color:var(--gold); font-weight:600;">₭ ${t.reward}</td>
-      <td><div style="display:flex;gap:3px;">${[1,2,3].map(j=>`<div style="width:8px;height:8px;border-radius:50%;background:${j<=t.difficulty?'var(--gold)':'var(--border2)'};"></div>`).join('')}</div></td>
-      <td><span class="badge badge-blue">${t.subs} soumission${t.subs!==1?'s':''}</span></td>
-      <td><span class="badge ${t.active?'badge-green':'badge-gray'}">${t.active?'Active':'Inactive'}</span></td>
-      <td style="display:flex;gap:6px;">
-        <button class="btn btn-ghost btn-sm" onclick="showToast('Mission modifiée !')">Modifier</button>
-        <button class="btn btn-ghost btn-sm" style="color:var(--red);" onclick="showToast('Mission supprimée !')">Supprimer</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function renderOrderHistory() {
-  const el = document.getElementById('orderHistory');
-  if(!el) return;
-  const orders = [
-    { date:'11/06', type:'Achat', qty:'50 KX', price:'€3.62', total:'₭ 213.5', status:'ok' },
-    { date:'05/06', type:'Achat', qty:'100 KX', price:'€3.10', total:'₭ 365.7', status:'ok' },
-    { date:'28/05', type:'Vente', qty:'20 KX', price:'€3.90', total:'₭ 92.1', status:'ok' },
-    { date:'14/05', type:'Achat', qty:'200 KX', price:'€2.50', total:'₭ 590.1', status:'ok' },
-  ];
-  el.innerHTML = '<table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Quantité</th><th>Prix</th><th>Total</th></tr></thead><tbody>' +
-    orders.map(o => `<tr>
-      <td style="color:var(--text2);">${o.date}</td>
-      <td><span class="badge ${o.type==='Achat'?'badge-green':'badge-red'}">${o.type}</span></td>
-      <td style="font-weight:500;">${o.qty}</td>
-      <td>${o.price}</td>
-      <td style="font-weight:500;">${o.total}</td>
-    </tr>`).join('') + '</tbody></table>';
-}
-
-// ─── CHARTS ───────────────────────────────────────────────────────────────────
-
-let kerneChartInst, kxChartInst, adminChartInst, pieChartInst;
-
-function generatePriceData(days, base, volatility) {
-  const d = [];
-  let p = base;
-  for(let i = 0; i < days; i++) {
-    p += (Math.random() - 0.46) * volatility;
-    p = Math.max(p, base * 0.5);
-    d.push(parseFloat(p.toFixed(4)));
-  }
-  return d;
-}
-
-function initCharts() {
-  setTimeout(() => {
-    const kCtx = document.getElementById('kerneChart');
-    if(kCtx && !kerneChartInst) {
-      const data7 = generatePriceData(7, 0.82, 0.03);
-      kerneChartInst = new Chart(kCtx, {
-        type:'line',
-        data:{
-          labels:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
-          datasets:[{
-            data: data7,
-            borderColor:'#C9A84C',
-            backgroundColor:'rgba(201,168,76,0.08)',
-            borderWidth:2,
-            fill:true,
-            tension:0.4,
-            pointRadius:3,
-            pointBackgroundColor:'#C9A84C',
-          }]
-        },
-        options:{
-          responsive:true, maintainAspectRatio:false,
-          plugins:{ legend:{ display:false } },
-          scales:{
-            x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#5A5C6E', font:{ size:11 } } },
-            y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#5A5C6E', font:{ size:11 }, callback: v=>'€'+v.toFixed(3) } }
-          }
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            drawChart();
         }
-      });
-    }
 
-    const pCtx = document.getElementById('walletPieChart');
-    if(pCtx && !pieChartInst) {
-      pieChartInst = new Chart(pCtx, {
-        type:'doughnut',
-        data:{
-          labels:['Kerne','KerneX'],
-          datasets:[{ data:[72,28], backgroundColor:['#C9A84C','#4A9EFF'], borderWidth:0, hoverOffset:4 }]
-        },
-        options:{
-          responsive:true, maintainAspectRatio:false,
-          cutout:'72%',
-          plugins:{ legend:{ display:false } }
+        function drawChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const data = state.economy.history;
+            if (data.length === 0) return;
+
+            const paddingLeft = 40;
+            const paddingRight = 20;
+            const paddingTop = 40;
+            const paddingBottom = 40;
+
+            const graphWidth = canvas.width - paddingLeft - paddingRight;
+            const graphHeight = canvas.height - paddingTop - paddingBottom;
+
+            const minVal = Math.min(...data) * 0.99;
+            const maxVal = Math.max(...data) * 1.01;
+            const valRange = maxVal - minVal;
+
+            // Dessiner la grille d'arrière-plan
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = paddingTop + (graphHeight / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(paddingLeft, y);
+                ctx.lineTo(canvas.width - paddingRight, y);
+                ctx.stroke();
+            }
+
+            // Déterminer la couleur (Gain ou Perte)
+            const isGain = data[data.length - 1] >= data[0];
+            const colorLine = isGain ? "#10b981" : "#f43f5e";
+            const colorGradientStart = isGain ? "rgba(16, 185, 129, 0.2)" : "rgba(244, 63, 94, 0.2)";
+
+            // Dessiner la courbe boursière
+            ctx.beginPath();
+            ctx.strokeStyle = colorLine;
+            ctx.lineWidth = 2.5;
+            ctx.lineJoin = "round";
+
+            for (let i = 0; i < data.length; i++) {
+                const x = paddingLeft + (graphWidth / (data.length - 1)) * i;
+                const y = paddingTop + graphHeight - ((data[i] - minVal) / valRange) * graphHeight;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Remplissage sous la courbe (Dégradé élégant)
+            ctx.lineTo(paddingLeft + graphWidth, paddingTop + graphHeight);
+            ctx.lineTo(paddingLeft, paddingTop + graphHeight);
+            ctx.closePath();
+            const gradient = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + graphHeight);
+            gradient.addColorStop(0, colorGradientStart);
+            gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Dessiner l'indicateur de prix en direct
+            const liveX = paddingLeft + graphWidth;
+            const liveY = paddingTop + graphHeight - ((data[data.length - 1] - minVal) / valRange) * graphHeight;
+
+            ctx.beginPath();
+            ctx.arc(liveX, liveY, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = colorLine;
+            ctx.fill();
+
+            // Affichage de la valeur en axe Y
+            ctx.fillStyle = "#71717a";
+            ctx.font = "10px monospace";
+            ctx.fillText(`$${maxVal.toFixed(4)}`, paddingLeft - 35, paddingTop);
+            ctx.fillText(`$${minVal.toFixed(4)}`, paddingLeft - 35, paddingTop + graphHeight);
         }
-      });
-    }
 
-    const aCtx = document.getElementById('adminChart');
-    if(aCtx && !adminChartInst) {
-      adminChartInst = new Chart(aCtx, {
-        type:'bar',
-        data:{
-          labels:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
-          datasets:[
-            { label:'Transactions', data:[412,588,342,701,489,612,547], backgroundColor:'rgba(201,168,76,0.6)', borderRadius:6, borderSkipped:false },
-            { label:'Virements', data:[120,189,95,234,167,201,188], backgroundColor:'rgba(74,158,255,0.5)', borderRadius:6, borderSkipped:false },
-          ]
-        },
-        options:{
-          responsive:true, maintainAspectRatio:false,
-          plugins:{ legend:{ display:false } },
-          scales:{
-            x:{ grid:{ display:false }, ticks:{ color:'#5A5C6E', font:{size:11} } },
-            y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#5A5C6E', font:{size:11} } }
-          }
+        // --- ENGINE DE NOTIFICATION TOAST ---
+        function showToast(title, message, type = "success") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let borderCol = "border-zinc-800";
+            let icon = "info";
+            if (type === "success") { borderCol = "border-emerald-500/20 bg-emerald-950/20 text-emerald-400"; icon = "check-circle"; }
+            if (type === "error") { borderCol = "border-rose-500/20 bg-rose-950/20 text-rose-400"; icon = "alert-triangle"; }
+            if (type === "info") { borderCol = "border-amber-500/20 bg-amber-950/20 text-amber-400"; icon = "bell"; }
+
+            toast.className = `p-4 rounded-2xl border ${borderCol} backdrop-blur-md flex gap-3 shadow-2xl transition duration-300 transform translate-x-12 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <div class="flex-1">
+                    <h4 class="text-xs font-bold uppercase tracking-wider">${title}</h4>
+                    <p class="text-xs mt-0.5 opacity-90">${message}</p>
+                </div>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-x-12', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-12', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
-      });
-    }
-  }, 200);
-}
 
-function initExchangeChart() {
-  const kxCtx = document.getElementById('kxChart');
-  if(kxCtx && !kxChartInst) {
-    const data30 = generatePriceData(30, 3.2, 0.15);
-    const labels = Array.from({length:30},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-29+i); return (d.getDate()+'/'+(d.getMonth()+1)); });
-    kxChartInst = new Chart(kxCtx, {
-      type:'line',
-      data:{
-        labels,
-        datasets:[{
-          data: data30,
-          borderColor:'#4A9EFF',
-          backgroundColor:'rgba(74,158,255,0.08)',
-          borderWidth:2,
-          fill:true,
-          tension:0.4,
-          pointRadius:0,
-        }]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ display:false } },
-        scales:{
-          x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#5A5C6E', font:{size:10}, maxTicksLimit:6 } },
-          y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#5A5C6E', font:{size:11}, callback:v=>'€'+v.toFixed(2) } }
+        // --- SIMULATION DU MOTEUR ECONOMIQUE ---
+        function runTokenomicsSimulator() {
+            setInterval(() => {
+                // Le prix du Kerne est simulé en fonction d'un bruit de marché + solde utilisateur
+                state.economy.previousPrice = state.economy.price;
+                const randomNoise = (Math.random() - 0.49) * 0.005; // Léger biais haussier
+                
+                // Formule simulée : balance influe sur l'offre et la demande
+                const currentBalanceFactor = state.user.kerneBalance / 100000;
+                
+                state.economy.price += randomNoise + currentBalanceFactor;
+                if (state.economy.price < 0.01) state.economy.price = 0.01;
+
+                state.economy.history.push(state.economy.price);
+                if (state.economy.history.length > 25) {
+                    state.economy.history.shift();
+                }
+
+                // Mettre à jour la capitalisation
+                state.economy.marketCap = (state.user.kerneBalance + 5000) * state.economy.price;
+
+                renderUI();
+                drawChart();
+            }, 3000);
         }
-      }
-    });
-  }
-}
 
-// ─── PRICE TICKER ─────────────────────────────────────────────────────────────
+        // --- SYSTEME DE ROUTING ET TABS ---
+        function switchTab(tabId) {
+            state.currentTab = tabId;
+            
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            
+            // Afficher l'onglet ciblé
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
 
-function startPriceTicker() {
-  let price = 0.847;
-  priceInterval = setInterval(() => {
-    price += (Math.random() - 0.49) * 0.005;
-    price = Math.max(0.5, Math.min(1.5, price));
-    const delta = ((price - 0.847) / 0.847 * 100);
-    document.getElementById('kernePrice').textContent = '€' + price.toFixed(3);
-    const dEl = document.getElementById('kernePriceDelta');
-    dEl.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1) + '%';
-    dEl.className = 'badge ' + (delta >= 0 ? 'badge-green' : 'badge-red');
-    document.getElementById('dashEur').textContent = '€' + (12847.5 * price).toFixed(2);
-    if(kerneChartInst) {
-      const ds = kerneChartInst.data.datasets[0].data;
-      ds.push(parseFloat(price.toFixed(4)));
-      if(ds.length > 100) ds.shift();
-      kerneChartInst.update('none');
-    }
-  }, 3000);
-}
+            // Mise à jour de l'apparence des boutons de la Sidebar
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.className = "nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-zinc-400 hover:text-white hover:bg-zinc-900/50";
+            });
 
-// ─── INTERACTIONS ─────────────────────────────────────────────────────────────
+            // Trouver le bouton actif
+            const buttons = document.querySelectorAll('.nav-link');
+            buttons.forEach(btn => {
+                if (btn.outerHTML.includes(`switchTab('${tabId}')`)) {
+                    btn.className = "nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition bg-zinc-900 text-white border-l-2 border-amber-500";
+                }
+            });
 
-function copyId() {
-  navigator.clipboard && navigator.clipboard.writeText('KRNE-4821-9307-6154').catch(()=>{});
-  showToast('Identifiant copié dans le presse-papiers !');
-}
+            renderUI();
+            if (tabId === 'dashboard') resizeCanvas();
+        }
 
-function checkRecipient(val) {
-  const preview = document.getElementById('recipientPreview');
-  const clean = val.replace(/\s/g,'').toUpperCase();
-  if(clean.length >= 18 || clean.match(/^KRNE-\d{4}-\d{4}-\d{4}$/)) {
-    preview.style.display = 'flex';
-    document.getElementById('recName').textContent = 'Compte Kerne Bank';
-    document.getElementById('recAvatar').textContent = clean.substring(5,7);
-  } else {
-    preview.style.display = 'none';
-  }
-}
+        function switchRole(role) {
+            state.role = role;
+            const userBtn = document.getElementById('btnRoleUser');
+            const adminBtn = document.getElementById('btnRoleAdmin');
 
-function updateTransferPreview() {
-  const amt = parseFloat(document.getElementById('transferAmount').value) || 0;
-  const preview = document.getElementById('transferPreview');
-  if(amt > 0) {
-    preview.style.display = 'block';
-    document.getElementById('previewAmt').textContent = '₭ ' + amt.toFixed(2);
-    document.getElementById('previewTotal').textContent = '₭ ' + amt.toFixed(2);
-  } else {
-    preview.style.display = 'none';
-  }
-}
+            if (role === 'USER') {
+                userBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-zinc-800 text-white";
+                adminBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-zinc-400 hover:text-white";
+                switchTab('dashboard');
+            } else {
+                adminBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-zinc-800 text-white";
+                userBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-zinc-400 hover:text-white";
+                switchTab('admin');
+            }
+        }
 
-function executeTransfer() {
-  const amt = parseFloat(document.getElementById('transferAmount').value) || 0;
-  const rid = document.getElementById('recipientId').value;
-  if(!rid || amt <= 0) { showToast('Veuillez remplir tous les champs.'); return; }
-  if(amt > 12847.5) { showToast('Solde insuffisant.'); return; }
-  showToast('Virement de ₭ ' + amt.toFixed(2) + ' envoyé avec succès !');
-  document.getElementById('transferAmount').value = '';
-  document.getElementById('recipientId').value = '';
-  document.getElementById('transferPreview').style.display = 'none';
-  document.getElementById('recipientPreview').style.display = 'none';
-}
+        // --- ACTIONS UTILISATEUR (MUTATIONS STATE) ---
+        
+        // Pivotement 3D carte
+        function flipCard() {
+            const card = document.getElementById('kerneCard');
+            card.classList.toggle('[transform:rotateY(180deg)]');
+        }
 
-function updateBuyPreview() {
-  const qty = parseFloat(document.getElementById('buyQty').value) || 0;
-  if(qty > 0) {
-    const kernePrice = qty * 3.847 / 0.847;
-    document.getElementById('buyTotal').textContent = '₭ ' + kernePrice.toFixed(2);
-    document.getElementById('buyPreview').style.display = 'block';
-  }
-}
+        // Autofill du virement
+        function autofillTransfer(id) {
+            document.getElementById('transferTargetId').value = id;
+            showToast("Bénéficiaire ajouté", "L'identifiant a été renseigné dans le formulaire.", "info");
+        }
 
-function executeBuy() {
-  const qty = parseFloat(document.getElementById('buyQty').value) || 0;
-  if(qty <= 0) { showToast('Entrez une quantité valide.'); return; }
-  showToast(qty + ' KerneX achetés avec succès !');
-  document.getElementById('buyQty').value = '';
-}
+        // Virement
+        function executeTransfer() {
+            const targetId = document.getElementById('transferTargetId').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
 
-function executeSell() {
-  const qty = parseFloat(document.getElementById('sellQty').value) || 0;
-  if(qty <= 0) { showToast('Entrez une quantité valide.'); return; }
-  if(qty > 324.7) { showToast('Quantité insuffisante en portefeuille.'); return; }
-  showToast(qty + ' KerneX vendus avec succès !');
-  document.getElementById('sellQty').value = '';
-}
+            if (!targetId || isNaN(amount) || amount <= 0) {
+                showToast("Virement refusé", "Veuillez remplir correctement les champs.", "error");
+                return;
+            }
 
-function updateWithdraw() {
-  const amt = parseFloat(document.getElementById('withdrawKerne').value) || 0;
-  document.getElementById('withdrawEur').textContent = '€' + (amt * 0.847).toFixed(2);
-}
+            if (state.user.kycStatus !== "VERIFIED") {
+                showToast("Action refusée", "Vous devez être vérifié (KYC) pour initier un virement.", "error");
+                return;
+            }
 
-function executeWithdraw() {
-  const amt = parseFloat(document.getElementById('withdrawKerne').value) || 0;
-  if(amt <= 0) { showToast('Entrez un montant valide.'); return; }
-  showToast('Demande de retrait de ₭ ' + amt.toFixed(2) + ' soumise !');
-}
+            if (amount > state.user.kerneBalance) {
+                showToast("Solde insuffisant", "Vous ne disposez pas des fonds nécessaires.", "error");
+                return;
+            }
 
-function cyclePeriod() {
-  chartPeriodIdx = (chartPeriodIdx + 1) % periods.length;
-  document.getElementById('chartPeriod').textContent = periods[chartPeriodIdx];
-  if(!kerneChartInst) return;
-  const days = chartPeriodIdx === 0 ? 24 : chartPeriodIdx === 1 ? 7 : 30;
-  const labels = chartPeriodIdx === 0
-    ? Array.from({length:24},(_,i)=>i+'h')
-    : chartPeriodIdx === 1
-    ? ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']
-    : Array.from({length:30},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-29+i); return d.getDate()+'/'+(d.getMonth()+1); });
-  kerneChartInst.data.labels = labels;
-  kerneChartInst.data.datasets[0].data = generatePriceData(days, 0.82, chartPeriodIdx===0?0.01:chartPeriodIdx===1?0.03:0.08);
-  kerneChartInst.update();
-}
+            // Exécution
+            state.user.kerneBalance -= amount;
+            state.transactions.unshift({
+                id: `TX-TRANSFER-${Date.now().toString().substring(8)}`,
+                type: "TRANSFER",
+                title: `Virement envoyé vers ${targetId.substring(0,9)}...`,
+                amount: -amount,
+                status: "COMPLETED",
+                date: "Aujourd'hui"
+            });
 
-function sendChatMsg() {
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if(!msg) return;
-  const msgs = document.getElementById('chatMessages');
-  msgs.innerHTML += `<div class="chat-msg user">${msg}</div>`;
-  input.value = '';
-  msgs.scrollTop = msgs.scrollHeight;
-  setTimeout(() => {
-    const replies = [
-      'Je comprends votre question. Votre dossier est en cours de traitement.',
-      'Bien noté ! Un conseiller va vous recontacter dans les 24 heures.',
-      'Merci pour votre message. Voici comment procéder : rendez-vous dans la section correspondante.',
-      'Pas de souci ! Je vérifie cela pour vous immédiatement.',
-    ];
-    msgs.innerHTML += `<div class="chat-msg agent">${replies[Math.floor(Math.random()*replies.length)]}</div>`;
-    msgs.scrollTop = msgs.scrollHeight;
-  }, 1200);
-}
+            // Enregistrement d'un virement reçu pour l'historique de simulation
+            state.economy.totalVolume += amount;
 
-function openTask(id) {
-  const t = tasks.find(x=>x.id===id);
-  if(!t) return;
-  document.getElementById('taskModalTitle').textContent = t.title;
-  document.getElementById('taskModalBody').innerHTML = `
-    <div style="background:var(--bg3); border-radius:var(--radius); padding:14px; margin-bottom:16px;">
-      <div style="font-size:12px; color:var(--text3); margin-bottom:4px;">Récompense</div>
-      <div style="font-size:28px; font-weight:700; color:var(--gold);">+₭ ${t.reward}.00</div>
-    </div>
-    <div style="font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:16px;">${t.desc}</div>
-    <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
-      <span class="badge ${t.status==='available'?'badge-green':t.status==='inprogress'?'badge-gold':'badge-gray'}">${t.status==='available'?'Disponible':t.status==='inprogress'?'En cours':'Complétée'}</span>
-      <span class="badge badge-gray">Date limite : ${t.deadline}</span>
-      <span class="badge badge-gray">Difficulté : ${'★'.repeat(t.difficulty)}${'☆'.repeat(3-t.difficulty)}</span>
-    </div>
-    ${t.status==='available'?`
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="acceptTask(${t.id})">
-        Accepter la mission →
-      </button>
-    `:t.status==='inprogress'?`
-      <div class="form-group">
-        <label class="form-label">Joindre une photo preuve</label>
-        <div style="border:2px dashed var(--border2); border-radius:var(--radius); padding:20px; text-align:center; cursor:pointer;">
-          <div style="font-size:20px; margin-bottom:6px;">📷</div>
-          <div style="font-size:13px; color:var(--text2);">Uploader votre preuve</div>
-        </div>
-      </div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="submitTask(${t.id})">
-        Soumettre pour validation
-      </button>
-    `:'<div style="color:var(--green); font-size:14px; text-align:center; padding:20px;">✓ Mission complétée avec succès !</div>'}
-  `;
-  openModal('taskModal');
-}
+            showToast("Virement exécuté", `${amount.toFixed(2)} KRNE ont été envoyés avec succès.`, "success");
+            
+            // Réinitialiser le formulaire
+            document.getElementById('transferTargetId').value = "";
+            document.getElementById('transferAmount').value = "";
 
-function acceptTask(id) {
-  const t = tasks.find(x=>x.id===id);
-  if(t) t.status = 'inprogress';
-  renderTasks();
-  closeModal('taskModal');
-  showToast('Mission acceptée ! Réalisez-la et soumettez votre preuve.');
-}
+            renderUI();
+        }
 
-function submitTask(id) {
-  const t = tasks.find(x=>x.id===id);
-  if(t) t.status = 'completed';
-  renderTasks();
-  closeModal('taskModal');
-  showToast('Preuve soumise ! En attente de validation par l\'administrateur.');
-}
+        // Ordre Exchange
+        function switchOrderType(type) {
+            state.orderType = type;
+            const buyBtn = document.getElementById('btnOrderBuy');
+            const sellBtn = document.getElementById('btnOrderSell');
 
-function switchTab(el, tabId) {
-  const parent = el.parentElement;
-  parent.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  const pageContent = parent.parentElement;
-  pageContent.querySelectorAll('[id^="tab-"]').forEach(t=>{ t.style.display='none'; });
-  const target = pageContent.querySelector('#tab-' + tabId);
-  if(target) target.style.display = tabId === 'available' || tabId === 'inprogress' || tabId === 'completed' ? 'grid' : 'block';
-}
+            if (type === "BUY") {
+                buyBtn.className = "py-2 rounded-lg text-xs font-bold bg-zinc-900 text-white transition";
+                sellBtn.className = "py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition";
+            } else {
+                sellBtn.className = "py-2 rounded-lg text-xs font-bold bg-zinc-900 text-white transition";
+                buyBtn.className = "py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition";
+            }
+            updateOrderEstimate();
+        }
 
-function switchExTab(el, tabId) {
-  const parent = el.parentElement;
-  parent.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  ['buy','sell'].forEach(id => {
-    const el2 = document.getElementById('exTab-'+id);
-    if(el2) el2.style.display = id===tabId?'block':'none';
-  });
-}
+        function updateOrderEstimate() {
+            const amt = parseFloat(document.getElementById('orderAmount').value) || 0;
+            const isBuy = state.orderType === "BUY";
+            
+            const estimate = isBuy ? (amt / state.economy.price) : (amt * state.economy.price);
+            
+            document.getElementById('estimateShares').innerText = isBuy ? `${estimate.toFixed(4)} Parts (Shares)` : `${estimate.toFixed(2)} KRNE`;
+            document.getElementById('estimatePrice').innerText = `$${state.economy.price.toFixed(4)}`;
+        }
 
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function openNewTaskModal() { openModal('newTaskModal'); }
+        function executeOrder() {
+            const amt = parseFloat(document.getElementById('orderAmount').value);
+            if (isNaN(amt) || amt <= 0) {
+                showToast("Données erronées", "Le montant saisi est incorrect.", "error");
+                return;
+            }
 
-function createTask() {
-  closeModal('newTaskModal');
-  showToast('Nouvelle mission publiée avec succès !');
-}
+            const isBuy = state.orderType === "BUY";
 
-function updateKernePrice() {
-  const v = parseFloat(document.getElementById('newKernePrice').value);
-  if(!v || v <= 0) { showToast('Entrez un prix valide.'); return; }
-  document.getElementById('kernePrice').textContent = '€' + v.toFixed(3);
-  showToast('Prix du Kerne mis à jour à €' + v.toFixed(3));
-}
+            if (isBuy) {
+                if (amt > state.user.kerneBalance) {
+                    showToast("Solde insuffisant", "Vous ne disposez pas d'assez de KRNE.", "error");
+                    return;
+                }
+                const sharesGained = amt / state.economy.price;
+                state.user.kerneBalance -= amt;
+                state.user.sharesOwned += sharesGained;
+                
+                state.transactions.unshift({
+                    id: `TX-INVEST-${Date.now().toString().substring(8)}`,
+                    type: "INVESTMENT",
+                    title: "Achat de parts KerneX",
+                    amount: -amt,
+                    status: "COMPLETED",
+                    date: "Aujourd'hui"
+                });
 
-function updateKxPrice() {
-  const v = parseFloat(document.getElementById('newKxPrice').value);
-  if(!v || v <= 0) { showToast('Entrez un prix valide.'); return; }
-  document.getElementById('kxPrice').textContent = v.toFixed(3);
-  showToast('Prix du KerneX mis à jour à €' + v.toFixed(3));
-}
+                showToast("Ordre exécuté", `Vous avez acquis ${sharesGained.toFixed(4)} parts de KerneX.`, "success");
+            } else {
+                if (amt > state.user.sharesOwned) {
+                    showToast("Parts insuffisantes", "Vous n'avez pas assez de parts KerneX à revendre.", "error");
+                    return;
+                }
+                const krneGained = amt * state.economy.price;
+                state.user.sharesOwned -= amt;
+                state.user.kerneBalance += krneGained;
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
+                state.transactions.unshift({
+                    id: `TX-SELL-${Date.now().toString().substring(8)}`,
+                    type: "INVESTMENT",
+                    title: "Vente de parts KerneX",
+                    amount: krneGained,
+                    status: "COMPLETED",
+                    date: "Aujourd'hui"
+                });
 
-// Close modal on backdrop click
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
-});
-</script>
+                showToast("Ordre exécuté", `Vente validée. + ${krneGained.toFixed(2)} KRNE ajoutés.`, "success");
+            }
+
+            document.getElementById('orderAmount').value = "";
+            updateOrderEstimate();
+            renderUI();
+        }
+
+        // Soumission de preuve de tâche
+        function submitTaskProof(taskId) {
+            const proofInput = document.getElementById(`proof-${taskId}`);
+            const proofText = proofInput ? proofInput.value.trim() : "";
+
+            if (!proofText) {
+                showToast("Erreur", "Veuillez joindre une preuve textuelle ou un lien.", "error");
+                return;
+            }
+
+            const task = state.tasks.find(t => t.id === taskId);
+            
+            // Ajouter la preuve en base simulée admin
+            state.submissions.unshift({
+                id: `SUB-${Date.now().toString().substring(8)}`,
+                taskTitle: task.title,
+                taskId: taskId,
+                userName: state.user.name,
+                userKerneId: state.user.kerneId,
+                reward: task.reward,
+                status: "PENDING",
+                proofText: proofText
+            });
+
+            // Changer le statut de la tâche pour l'utilisateur
+            task.status = "PENDING";
+
+            showToast("Preuve soumise !", "L'équipe d'administration analysera votre travail sous peu.", "success");
+            renderUI();
+        }
+
+        // Retraits
+        function executeWithdraw() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const details = document.getElementById('withdrawDetails').value.trim();
+
+            if (isNaN(amount) || amount <= 0 || !details) {
+                showToast("Formulaire invalide", "Veuillez remplir correctement les informations.", "error");
+                return;
+            }
+
+            if (amount > state.user.kerneBalance) {
+                showToast("Solde insuffisant", "Vous ne possédez pas cette somme sur votre portefeuille.", "error");
+                return;
+            }
+
+            state.user.kerneBalance -= amount;
+            state.withdrawals.unshift({
+                id: `WTH-${Date.now().toString().substring(8)}`,
+                amount: amount,
+                details: details,
+                status: "PENDING",
+                date: "Aujourd'hui"
+            });
+
+            showToast("Demande prise en compte", "Le retrait de fonds est en attente de traitement.", "info");
+            
+            document.getElementById('withdrawAmount').value = "";
+            document.getElementById('withdrawDetails').value = "";
+            renderUI();
+        }
+
+        // Support
+        function createTicket() {
+            const subject = document.getElementById('ticketSubject').value.trim();
+            const message = document.getElementById('ticketMessage').value.trim();
+
+            if (!subject || !message) {
+                showToast("Erreur", "Sujet et message requis.", "error");
+                return;
+            }
+
+            state.tickets.unshift({
+                id: `TCK-${Date.now().toString().substring(8)}`,
+                subject: subject,
+                message: message,
+                status: "OPEN",
+                date: "Aujourd'hui"
+            });
+
+            showToast("Ticket ouvert", "Un conseiller répondra sous peu à votre demande.", "success");
+            document.getElementById('ticketSubject').value = "";
+            document.getElementById('ticketMessage').value = "";
+            renderUI();
+        }
+
+
+        // --- ACTIONS DU CONTRÔLEUR ADMIMISTRATEUR ---
+
+        function adminApproveKyc() {
+            state.user.kycStatus = "VERIFIED";
+            showToast("Conformité KYC validée", "L'utilisateur Alexandre Kerne a été authentifié avec succès.", "success");
+            renderUI();
+        }
+
+        function adminRejectKyc() {
+            state.user.kycStatus = "REJECTED";
+            showToast("Dossier KYC rejeté", "Des informations complémentaires ont été demandées.", "error");
+            renderUI();
+        }
+
+        function adminReviewSubmission(subId, isApproved) {
+            const subIndex = state.submissions.findIndex(s => s.id === subId);
+            const sub = state.submissions[subIndex];
+
+            if (isApproved) {
+                // Créditer l'utilisateur
+                state.user.kerneBalance += sub.reward;
+                // Générer la transaction
+                state.transactions.unshift({
+                    id: `TX-REWARD-${sub.id}`,
+                    type: "REWARD",
+                    title: `Récompense : ${sub.taskTitle}`,
+                    amount: sub.reward,
+                    status: "COMPLETED",
+                    date: "Aujourd'hui"
+                });
+
+                // Supprimer de l'affichage de tâche utilisateur ou la marquer complétée
+                const task = state.tasks.find(t => t.id === sub.taskId);
+                if (task) task.status = "COMPLETED";
+
+                showToast("Preuve approuvée !", `La récompense de ${sub.reward} KRNE a été allouée à l'utilisateur.`, "success");
+            } else {
+                const task = state.tasks.find(t => t.id === sub.taskId);
+                if (task) task.status = "ACTIVE"; // redevient disponible
+                showToast("Preuve rejetée", "L'utilisateur a été notifié de la non-conformité de son travail.", "error");
+            }
+
+            // Retirer de la liste admin de traitement
+            state.submissions.splice(subIndex, 1);
+            renderUI();
+        }
+
+        function adminApproveWithdrawal(wthId, isApproved) {
+            const wthIndex = state.withdrawals.findIndex(w => w.id === wthId);
+            const wth = state.withdrawals[wthIndex];
+
+            if (isApproved) {
+                wth.status = "COMPLETED";
+                state.transactions.unshift({
+                    id: `TX-WITH-${wth.id}`,
+                    type: "WITHDRAWAL",
+                    title: `Retrait effectué vers ${wth.details.substring(0,12)}...`,
+                    amount: -wth.amount,
+                    status: "COMPLETED",
+                    date: "Aujourd'hui"
+                });
+                showToast("Retrait validé", "Les fonds ont été comptabilisés vers l'IBAN de destination.", "success");
+            } else {
+                wth.status = "REJECTED";
+                // Recréditer l'utilisateur
+                state.user.kerneBalance += wth.amount;
+                showToast("Retrait refusé", "Le virement externe a échoué. Les fonds ont été restitués.", "error");
+            }
+
+            renderUI();
+        }
+
+        // --- RENDER ENGINE PRINCIPAL (DOM RECONCILIATION) ---
+        function renderUI() {
+            // Profil global
+            document.getElementById('sideProfileName').innerText = state.user.name;
+            document.getElementById('sideProfileKerneId').innerText = state.user.kerneId;
+            document.getElementById('cardUserName').innerText = state.user.name;
+            document.getElementById('cardKerneId').innerText = state.user.kerneId;
+            document.getElementById('avatarLetter').innerText = state.user.name.charAt(0);
+
+            // Badges KYC
+            const kycBadge = document.getElementById('kycBadge');
+            if (state.user.kycStatus === "PENDING") {
+                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20";
+                kycBadge.innerText = "KYC EN ATTENTE";
+            } else if (state.user.kycStatus === "VERIFIED") {
+                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                kycBadge.innerText = "COMPTE VÉRIFIÉ";
+            } else {
+                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                kycBadge.innerText = "Dossier KYC Rejeté";
+            }
+
+            // Soldes & Économie
+            document.getElementById('cardKerneBalance').innerText = state.user.kerneBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+            document.getElementById('userKerneShares').innerText = `${state.user.sharesOwned.toFixed(4)} parts`;
+            
+            // Header Stats Économiques
+            const delta = ((state.economy.price - state.economy.previousPrice) / state.economy.previousPrice) * 100;
+            const deltaSign = delta >= 0 ? "+" : "";
+            const deltaCol = delta >= 0 ? "text-emerald-400" : "text-rose-400";
+            
+            document.getElementById('headerKernePrice').innerText = `$${state.economy.price.toFixed(4)}`;
+            document.getElementById('headerPriceDelta').className = `text-[10px] font-bold ${deltaCol}`;
+            document.getElementById('headerPriceDelta').innerText = `${deltaSign}${delta.toFixed(2)}%`;
+
+            document.getElementById('ecoMarketcap').innerText = `$${state.economy.marketCap.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}`;
+            document.getElementById('ecoVolume').innerText = `$${state.economy.totalVolume.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}`;
+            document.getElementById('ecoUsers').innerText = state.economy.activeUsers;
+
+            // Bourse Exchange
+            document.getElementById('exchangeShares').innerText = state.user.sharesOwned.toFixed(4);
+            document.getElementById('exchangeAvgPrice').innerText = `$${state.user.sharesAvgPrice.toFixed(2)}`;
+            const latentValue = (state.user.sharesOwned * state.economy.price) - (state.user.sharesOwned * state.user.sharesAvgPrice);
+            const plCol = latentValue >= 0 ? "text-emerald-400" : "text-rose-400";
+            document.getElementById('exchangePl').className = `text-2xl font-black font-mono mt-1 ${plCol}`;
+            document.getElementById('exchangePl').innerText = `${latentValue >= 0 ? "+" : ""}$${latentValue.toFixed(2)}`;
+
+            // Historique des Transactions
+            const txContainer = document.getElementById('transactionsList');
+            txContainer.innerHTML = "";
+            state.transactions.forEach(tx => {
+                const isDebit = tx.amount < 0;
+                const sign = isDebit ? "" : "+";
+                const signCol = isDebit ? "text-rose-400" : "text-emerald-400";
+                const bgIcon = isDebit ? "bg-rose-500/10 text-rose-400" : "bg-emerald-500/10 text-emerald-400";
+                const iconName = isDebit ? "arrow-up-right" : "arrow-down-left";
+
+                txContainer.innerHTML += `
+                    <div class="flex justify-between items-center p-3 rounded-2xl bg-black/40 border border-brand-border hover:border-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 rounded-xl ${bgIcon}">
+                                <i data-lucide="${iconName}" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold">${tx.title}</p>
+                                <p class="text-[9px] text-zinc-500 font-mono mt-0.5">${tx.id}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold font-mono ${signCol}">${sign}${tx.amount.toFixed(2)} KRNE</p>
+                            <p class="text-[9px] text-zinc-500 mt-0.5">${tx.date}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Missions / Tâches
+            const tasksContainer = document.getElementById('tasksList');
+            tasksContainer.innerHTML = "";
+            state.tasks.forEach(task => {
+                let badgeCol = "bg-emerald-500/10 text-emerald-400";
+                if (task.difficulty === "HARD") badgeCol = "bg-rose-500/10 text-rose-400";
+
+                let actionSection = `
+                    <div class="mt-4 pt-4 border-t border-brand-border space-y-3">
+                        <label class="text-[10px] text-zinc-500 uppercase font-mono block">Renseigner un lien ou texte justificatif</label>
+                        <input type="text" id="proof-${task.id}" placeholder="Ex: https://github.com/votre-depot" class="w-full bg-black border border-brand-border rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                        <button onclick="submitTaskProof('${task.id}')" class="w-full py-2 bg-white text-black font-extrabold text-xs rounded-xl transition hover:bg-neutral-200">
+                            Déposer ma preuve de travail
+                        </button>
+                    </div>
+                `;
+
+                if (task.status === "PENDING") {
+                    actionSection = `
+                        <div class="mt-4 pt-4 border-t border-brand-border text-center">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-400">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Preuve en attente de validation
+                            </span>
+                        </div>
+                    `;
+                }
+
+                if (task.status === "COMPLETED") {
+                    actionSection = `
+                        <div class="mt-4 pt-4 border-t border-brand-border text-center">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/10 text-emerald-400">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Mission récompensée & archivée
+                            </span>
+                        </div>
+                    `;
+                }
+
+                tasksContainer.innerHTML += `
+                    <div class="bg-zinc-950 border border-brand-border rounded-3xl p-6 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-start gap-2">
+                                <h3 class="text-sm font-bold text-white">${task.title}</h3>
+                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider ${badgeCol}">${task.difficulty}</span>
+                            </div>
+                            <p class="text-xs text-zinc-400 leading-relaxed">${task.desc}</p>
+                            <div class="flex justify-between text-[10px] text-zinc-500 font-mono pt-2">
+                                <span>RÉCOMPENSE : <span class="text-emerald-400 font-bold">${task.reward.toFixed(2)} KRNE</span></span>
+                                <span>DATE LIMITE : ${task.deadline}</span>
+                            </div>
+                        </div>
+                        ${actionSection}
+                    </div>
+                `;
+            });
+
+            // Retraits utilisateur
+            const withdrawalsHistory = document.getElementById('withdrawalsHistory');
+            withdrawalsHistory.innerHTML = "";
+            state.withdrawals.forEach(wth => {
+                let statusBadge = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+                if (wth.status === "COMPLETED") statusBadge = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+                if (wth.status === "REJECTED") statusBadge = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+
+                withdrawalsHistory.innerHTML += `
+                    <div class="p-4 rounded-2xl bg-black/40 border border-brand-border flex justify-between items-center">
+                        <div class="space-y-1">
+                            <p class="text-xs font-bold font-mono">${wth.amount.toFixed(2)} KRNE</p>
+                            <p class="text-[9px] text-zinc-500 truncate max-w-[150px]">${wth.details}</p>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[8px] font-bold uppercase border ${statusBadge}">${wth.status}</span>
+                    </div>
+                `;
+            });
+
+            // Tickets de support
+            const ticketsList = document.getElementById('ticketsList');
+            ticketsList.innerHTML = "";
+            if (state.tickets.length === 0) {
+                ticketsList.innerHTML = `<p class="text-center text-xs text-zinc-500 py-4">Aucun ticket d'aide ouvert.</p>`;
+            } else {
+                state.tickets.forEach(ticket => {
+                    ticketsList.innerHTML += `
+                        <div class="p-4 rounded-2xl bg-black/40 border border-brand-border space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold text-white">${ticket.subject}</h4>
+                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-zinc-800 text-zinc-400 border border-brand-border">${ticket.status}</span>
+                            </div>
+                            <p class="text-xs text-zinc-400 leading-relaxed">${ticket.message}</p>
+                        </div>
+                    `;
+                });
+            }
+
+
+            // --- RENDU PANNEAU D'ADMINISTRATION ---
+            
+            // Badge alerte admin
+            const adminNotificationBadge = document.getElementById('adminNotificationBadge');
+            const totalAdminAlerts = (state.user.kycStatus === "PENDING" ? 1 : 0) + state.submissions.length + state.withdrawals.filter(w => w.status === "PENDING").length;
+            if (totalAdminAlerts > 0) {
+                adminNotificationBadge.classList.remove('hidden');
+            } else {
+                adminNotificationBadge.classList.add('hidden');
+            }
+
+            // KPI Admin
+            document.getElementById('adminKycCount').innerText = state.user.kycStatus === "PENDING" ? "1" : "0";
+            document.getElementById('adminTasksCount').innerText = state.submissions.length;
+            document.getElementById('adminWithdrawalsCount').innerText = state.withdrawals.filter(w => w.status === "PENDING").length;
+
+            // Admin KYC List
+            const adminKycList = document.getElementById('adminKycList');
+            adminKycList.innerHTML = "";
+            if (state.user.kycStatus !== "PENDING") {
+                adminKycList.innerHTML = `<p class="text-center text-xs text-zinc-500 py-4">Aucun dossier d'identité à réviser.</p>`;
+            } else {
+                adminKycList.innerHTML = `
+                    <div class="p-4 rounded-2xl bg-black/40 border border-brand-border space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">${state.user.name}</h4>
+                                <p class="text-[9px] text-zinc-500 font-mono">${state.user.kerneId}</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-amber-500/10 text-amber-400 uppercase tracking-wider">A REVOIR</span>
+                        </div>
+                        <p class="text-xs text-zinc-400 leading-relaxed">Pièce jointe : <a href="#" class="text-cyan-400 underline">passeport_conformite.pdf</a></p>
+                        <div class="flex gap-2 pt-2 border-t border-brand-border">
+                            <button onclick="adminApproveKyc()" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-emerald-500 text-black hover:opacity-90">APPROUVER</button>
+                            <button onclick="adminRejectKyc()" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-zinc-900 text-rose-500 border border-brand-border hover:bg-zinc-800">REJETER</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Admin submissions List
+            const adminSubmissionsList = document.getElementById('adminSubmissionsList');
+            adminSubmissionsList.innerHTML = "";
+            if (state.submissions.length === 0) {
+                adminSubmissionsList.innerHTML = `<p class="text-center text-xs text-zinc-500 py-4">Aucune preuve de travail en attente.</p>`;
+            } else {
+                state.submissions.forEach(sub => {
+                    adminSubmissionsList.innerHTML += `
+                        <div class="p-4 rounded-2xl bg-black/40 border border-brand-border space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xs font-bold text-white">${sub.taskTitle}</h4>
+                                    <p class="text-[9px] text-zinc-400">Soumis par : ${sub.userName} (${sub.userKerneId})</p>
+                                </div>
+                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-cyan-500/10 text-cyan-400 font-mono">${sub.reward.toFixed(2)} KRNE</span>
+                            </div>
+                            <div class="bg-zinc-950 p-3 rounded-xl border border-brand-border">
+                                <p class="text-xs text-zinc-500 uppercase font-mono text-[8px]">Preuve fournie :</p>
+                                <p class="text-xs font-medium text-white mt-1 break-all">${sub.proofText}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="adminReviewSubmission('${sub.id}', true)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-emerald-500 text-black hover:opacity-90">VALIDER</button>
+                                <button onclick="adminReviewSubmission('${sub.id}', false)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-zinc-900 text-rose-500 border border-brand-border hover:bg-zinc-800">REFUSER</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Admin withdrawals List
+            const adminWithdrawalsList = document.getElementById('adminWithdrawalsList');
+            adminWithdrawalsList.innerHTML = "";
+            const pendingAdminWth = state.withdrawals.filter(w => w.status === "PENDING");
+            if (pendingAdminWth.length === 0) {
+                adminWithdrawalsList.innerHTML = `<p class="text-center text-xs text-zinc-500 py-4">Aucun retrait en attente de validation.</p>`;
+            } else {
+                pendingAdminWth.forEach(wth => {
+                    adminWithdrawalsList.innerHTML += `
+                        <div class="p-4 rounded-2xl bg-black/40 border border-brand-border space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xs font-bold font-mono text-white">${wth.amount.toFixed(2)} KRNE</h4>
+                                    <p class="text-[9px] text-zinc-500">${wth.date}</p>
+                                </div>
+                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-amber-500/10 text-amber-400 uppercase tracking-wider">A TRAITER</span>
+                            </div>
+                            <div class="bg-zinc-950 p-3 rounded-xl border border-brand-border">
+                                <p class="text-xs text-zinc-500 uppercase font-mono text-[8px]">Détails du destinataire :</p>
+                                <p class="text-xs font-medium text-white mt-1 break-all">${wth.details}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="adminApproveWithdrawal('${wth.id}', true)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-emerald-500 text-black hover:opacity-90">DÉCAISSER</button>
+                                <button onclick="adminApproveWithdrawal('${wth.id}', false)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-zinc-900 text-rose-500 border border-brand-border hover:bg-zinc-800">REFUSER</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Rafraîchir les icônes vectorielles à chaque réévaluation du DOM
+            lucide.createIcons();
+        }
+
+        // --- LIFECYCLE INITIALIZATION ---
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Initialisation de l'application
+        window.addEventListener('DOMContentLoaded', () => {
+            renderUI();
+            resizeCanvas();
+            runTokenomicsSimulator();
+            showToast("Bienvenue sur Kerne Bank v2", "Modèle financier initialisé et prêt à l'emploi.", "success");
+        });
+    </script>
 </body>
 </html>
