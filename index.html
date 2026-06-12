@@ -1,1317 +1,1114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerne Bank V2 - Écosystème Financier Premium (Light Mode)</title>
-    <!-- Tailwind CSS pour le design aéré et moderne -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons pour des symboles vectoriels épurés -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            indigo: '#4f46e5',
-                            emerald: '#10b981',
-                            rose: '#ef4444',
-                            amber: '#f59e0b',
-                            slateBg: '#f9fafb',
-                            border: '#e2e8f0'
-                        }
-                    },
-                    boxShadow: {
-                        premium: '0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02)',
-                        cardShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.08)'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f9fafb;
-            color: #0f172a;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Convert Web · Sites internet premium pour restaurants</title>
+  <meta name="description" content="Convert Web crée des sites sur-mesure pour restaurants. Commandes en ligne, 0% commission, SEO local. Obtenez notre maquette gratuite sous 24h.">
+  <meta name="theme-color" content="#C4F135">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+    :root {
+      --bg: #080808;
+      --bg-card: #0f0f0f;
+      --bg-elevated: #161616;
+      --border: rgba(255,255,255,0.07);
+      --border-lit: rgba(255,255,255,0.13);
+      --accent: #C4F135;
+      --accent-dim: rgba(196,241,53,0.1);
+      --accent-glow: rgba(196,241,53,0.25);
+      --white: #fff;
+      --text: rgba(255,255,255,0.88);
+      --text-muted: rgba(255,255,255,0.5);
+      --text-dim: rgba(255,255,255,0.28);
+      --red: #FF4F4F;
+      --radius: 20px;
+      --display: 'Syne', sans-serif;
+      --body: 'Instrument Sans', sans-serif;
+      --wrap: 1200px;
+    }
 
-        /* Effet 3D de la carte premium */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-        /* Scrollbars élégantes adaptées au thème clair */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+    /* Grain subtil */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.022;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 20px; }
+    @media (min-width: 768px) { .wrap { padding: 0 40px; } }
+
+    /* ── TYPOGRAPHY ── */
+    h1, h2, h3, h4 { font-family: var(--display); letter-spacing: -0.025em; line-height: 1.1; }
+    h1 { font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 800; }
+    h2 { font-size: clamp(1.9rem, 4vw, 3.4rem); font-weight: 700; }
+    h3 { font-size: 1.15rem; font-weight: 700; color: var(--white); }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .eyebrow::before { content: ''; width: 20px; height: 1.5px; background: var(--accent); display: block; }
+    .sub { font-size: clamp(0.95rem, 1.8vw, 1.05rem); color: var(--text-muted); line-height: 1.75; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--body); font-weight: 600; font-size: 0.9rem;
+      padding: 13px 26px; border-radius: 100px;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: all 0.22s ease; white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #d8ff55; transform: translateY(-2px); box-shadow: 0 10px 28px var(--accent-glow); }
+    .btn-outline { background: transparent; color: var(--white); border: 1.5px solid var(--border-lit); }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    .btn-lg { padding: 16px 34px; font-size: 0.98rem; }
+
+    /* ── REVEAL ── */
+    .rv { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .rv.in { opacity: 1; transform: none; }
+    .rv.d1 { transition-delay: 0.08s; }
+    .rv.d2 { transition-delay: 0.16s; }
+    .rv.d3 { transition-delay: 0.24s; }
+    .rv.d4 { transition-delay: 0.32s; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 18px 0; z-index: 900; transition: all 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); padding: 12px 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-family: var(--display); font-size: 1.2rem; font-weight: 800; color: var(--white); text-decoration: none; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: none; gap: 32px; }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    @media (min-width: 768px) { .hamburger { display: none; } }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: all 0.25s; transform-origin: center; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-drawer { display: none; flex-direction: column; gap: 0; padding: 12px 20px 24px; background: rgba(8,8,8,0.98); border-bottom: 1px solid var(--border); }
+    .mobile-drawer.open { display: flex; }
+    .mobile-drawer a { color: var(--text-muted); text-decoration: none; font-size: 1rem; font-weight: 500; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .mobile-drawer a:last-child { border: none; margin-top: 12px; justify-content: center; border-radius: 100px; }
+    .nav-cta-desktop { display: none; }
+    @media (min-width: 640px) { .nav-cta-desktop { display: block; } }
+
+    /* ── HERO ── */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding: 130px 0 80px; position: relative; overflow: hidden; }
+    .hero-glow { position: absolute; top: 30%; left: 40%; transform: translate(-50%, -50%); width: 700px; height: 500px; background: radial-gradient(ellipse, rgba(196,241,53,0.06) 0%, transparent 65%); pointer-events: none; }
+    .hero-wm {
+      position: absolute; top: 50%; right: -4%;
+      font-family: var(--display); font-size: clamp(200px, 28vw, 380px);
+      font-weight: 800; color: rgba(255,255,255,0.022); line-height: 1;
+      transform: translateY(-50%); pointer-events: none; user-select: none; letter-spacing: -0.04em;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 860px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-dim); border: 1px solid rgba(196,241,53,0.22);
+      border-radius: 100px; padding: 6px 16px;
+      font-size: 0.75rem; font-weight: 600; color: var(--accent); margin-bottom: 28px;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* Hero word reveal */
+    .hero h1 { margin-bottom: 22px; }
+    .w-outer { display: inline-block; overflow: hidden; }
+    .w-inner { display: inline-block; transform: translateY(110%); opacity: 0; transition: transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.4s; }
+    .w-inner.in { transform: none; opacity: 1; }
+    .acc { color: var(--accent); }
+
+    .hero-sub { max-width: 680px; margin-bottom: 32px; font-size: 1.1rem; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+    .hero-stats { display: flex; gap: 28px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--border); }
+    .hstat-num { font-family: var(--display); font-size: 1.9rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .hstat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+
+    /* ── TICKER ── */
+    .ticker-wrap { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; padding: 13px 0; }
+    .ticker-track { display: flex; animation: scroll-left 28s linear infinite; width: max-content; }
+    .ticker-track:hover { animation-play-state: paused; }
+    .tk-item { display: flex; align-items: center; gap: 14px; padding: 0 36px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+    .tk-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    @keyframes scroll-left { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* ── CALCULATOR ── */
+    .calc-section { padding: 90px 0; }
+    .calc-wrap {
+      background: var(--bg-card); border: 1px solid var(--border-lit); border-radius: 26px;
+      padding: 44px 40px; max-width: 800px; margin: 0 auto; position: relative; overflow: hidden;
+    }
+    @media (max-width: 600px) { .calc-wrap { padding: 28px 20px; } }
+    .calc-wrap::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%); }
+    .calc-head { text-align: center; margin-bottom: 36px; }
+    .calc-head h2 { margin-bottom: 10px; }
+    .slider-label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+    .slider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    input[type=range] { -webkit-appearance: none; flex: 1; height: 4px; border-radius: 4px; background: var(--border-lit); outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px var(--accent-dim); cursor: pointer; }
+    .slider-val { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--white); min-width: 90px; text-align: right; }
+    .calc-results { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 30px; }
+    @media (max-width: 580px) { .calc-results { grid-template-columns: 1fr; } }
+    .calc-card {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px 16px; text-align: center;
+    }
+    .calc-card.loss { border-color: rgba(255,79,79,0.25); }
+    .calc-card.gain { border-color: rgba(196,241,53,0.25); }
+    .calc-num { font-family: var(--display); font-size: 1.6rem; font-weight: 800; line-height: 1; margin-bottom: 5px; }
+    .calc-card.loss .calc-num { color: var(--red); }
+    .calc-card.gain .calc-num { color: var(--accent); }
+    .calc-lbl { font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; }
+    .calc-bottom { text-align: center; }
+    .calc-note { font-size: 0.7rem; color: var(--text-dim); margin-top: 10px; }
+
+    /* ── DEMO ── */
+    .demo-section { padding: 90px 0; }
+    .demo-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
+    @media (min-width: 900px) { .demo-grid { grid-template-columns: 1fr 1.2fr; } }
+    .demo-text h2 { margin-bottom: 14px; }
+    .demo-text .sub { margin-bottom: 24px; }
+    .demo-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { background: var(--bg-elevated); border: 1px solid var(--border-lit); border-radius: 100px; padding: 5px 14px; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+    .browser-frame {
+      background: var(--bg-card); border: 1px solid var(--border-lit); border-radius: 20px;
+      overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,0.55);
+    }
+    .browser-bar {
+      background: var(--bg-elevated); padding: 11px 16px;
+      display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border);
+    }
+    .bdots { display: flex; gap: 6px; }
+    .bdot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+    .bdot:nth-child(1) { background: #ff5f56; }
+    .bdot:nth-child(2) { background: #ffbd2e; }
+    .bdot:nth-child(3) { background: #27c93f; }
+    .burl { flex: 1; background: rgba(255,255,255,0.05); border-radius: 6px; padding: 5px 12px; font-size: 0.65rem; color: var(--text-dim); text-align: center; }
+    .frame-box { position: relative; height: 400px; cursor: pointer; }
+    @media (min-width: 768px) { .frame-box { height: 460px; } }
+    .frame-box iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+    .frame-overlay {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(1px);
+      transition: background 0.2s;
+    }
+    .frame-box:hover .frame-overlay { background: rgba(0,0,0,0.2); }
+    .frame-cta { background: var(--accent); color: #000; font-family: var(--body); font-weight: 700; font-size: 0.88rem; padding: 11px 22px; border-radius: 100px; border: none; cursor: pointer; pointer-events: none; }
+
+    /* ── PAIN ── */
+    .pain-section { padding: 90px 0; }
+    .sec-header { text-align: center; max-width: 600px; margin: 0 auto 52px; }
+    .sec-header h2 { margin-bottom: 12px; }
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 16px; }
+    .pain-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; transition: border-color 0.2s;
+    }
+    .pain-card:hover { border-color: var(--border-lit); }
+    .pain-icon { font-size: 1.8rem; margin-bottom: 14px; display: block; }
+    .pain-card h3 { margin-bottom: 8px; }
+    .pain-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── PROCESS ── */
+    .process-section { padding: 90px 0; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2px; margin-top: 52px; }
+    .step {
+      background: var(--bg-card); border: 1px solid var(--border); padding: 32px 26px;
+      transition: border-color 0.2s;
+    }
+    .step:first-child { border-radius: 18px 0 0 18px; }
+    .step:last-child { border-radius: 0 18px 18px 0; }
+    @media (max-width: 640px) { .step { border-radius: 14px !important; } }
+    .step:hover { border-color: rgba(196,241,53,0.25); }
+    .step-n { font-family: var(--display); font-size: 3.2rem; font-weight: 800; color: rgba(196,241,53,0.1); line-height: 1; margin-bottom: 16px; }
+    .step h3 { margin-bottom: 8px; font-size: 0.98rem; }
+    .step p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── PRICING ── */
+    .pricing-section { padding: 90px 0; }
+    .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap: 16px; max-width: 960px; margin: 52px auto 0; }
+    .plan {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 30px 26px; display: flex; flex-direction: column; position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .plan:hover { border-color: var(--border-lit); transform: translateY(-3px); }
+    .plan.featured { border-color: rgba(196,241,53,0.32); background: rgba(196,241,53,0.03); transform: none; }
+    .plan.featured:hover { border-color: rgba(196,241,53,0.5); transform: translateY(-3px); }
+    .plan.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+    .plan-badge { display: inline-block; background: var(--accent); color: #000; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 18px; align-self: flex-start; }
+    .plan-name { font-family: var(--display); font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; }
+    .plan-price { font-family: var(--display); font-size: 2.9rem; font-weight: 800; line-height: 1; }
+    .plan-mo { font-size: 0.8rem; color: var(--text-muted); margin: 5px 0 24px; }
+    .plan-feats { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
+    .plan-feats li { font-size: 0.84rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 10px; }
+    .plan-feats li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; line-height: 1.5; }
+
+    /* ── FOUNDERS ── */
+    .founders-section { padding: 90px 0; }
+    .founders-card {
+      background: var(--bg-card); border: 1px solid var(--border-lit); border-radius: 26px;
+      padding: 52px 48px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 52px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    @media (max-width: 768px) { .founders-card { grid-template-columns: 1fr; padding: 32px 24px; gap: 36px; } }
+    .founders-card::after { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(196,241,53,0.05), transparent 70%); pointer-events: none; }
+    .founders-text h2 { margin-bottom: 14px; }
+    .founders-text p { color: var(--text-muted); font-size: 0.93rem; line-height: 1.8; margin-bottom: 26px; }
+    .perks { display: flex; flex-direction: column; gap: 18px; }
+    .perk { display: flex; align-items: flex-start; gap: 14px; }
+    .perk-ico { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .perk strong { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; color: var(--text); }
+    .perk span { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq-section { padding: 90px 0; }
+    .faq-list { max-width: 720px; margin: 52px auto 0; display: flex; flex-direction: column; gap: 8px; }
+    .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
+    .faq-item.open { border-color: var(--border-lit); }
+    .faq-q { width: 100%; background: none; border: none; padding: 20px 24px; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: var(--body); font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .faq-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; line-height: 1; color: var(--accent); flex-shrink: 0; transition: transform 0.2s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; font-size: 0.87rem; color: var(--text-muted); line-height: 1.75; padding: 0 24px; }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+
+    /* ── CTA SECTION ── */
+    .cta-section { padding: 90px 0; }
+    .cta-box {
+      background: var(--bg-card); border: 1px solid var(--border-lit); border-radius: 26px;
+      padding: 56px 48px; text-align: center; position: relative; overflow: hidden;
+      max-width: 620px; margin: 0 auto;
+    }
+    @media (max-width: 600px) { .cta-box { padding: 36px 22px; } }
+    .cta-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+    .cta-box h2 { margin-bottom: 10px; }
+    .cta-box p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 30px; }
+    .form-stack { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .field { background: var(--bg-elevated); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 18px; font-family: var(--body); font-size: 0.9rem; color: var(--white); outline: none; transition: border-color 0.2s; width: 100%; }
+    .field::placeholder { color: var(--text-dim); }
+    .field:focus { border-color: rgba(196,241,53,0.45); }
+    .form-err { font-size: 0.77rem; color: var(--red); text-align: center; display: none; margin-bottom: 6px; }
+    .form-note { font-size: 0.7rem; color: var(--text-dim); margin-top: 10px; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 52px 0 24px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding-bottom: 36px; }
+    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; gap: 28px; } }
+    .footer-logo { font-family: var(--display); font-size: 1.1rem; font-weight: 800; color: var(--white); margin-bottom: 10px; }
+    .footer-logo span { color: var(--accent); }
+    .footer-brand p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; max-width: 260px; }
+    .footer-col h5 { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+    .footer-col a { display: block; color: var(--text-muted); text-decoration: none; font-size: 0.84rem; line-height: 2; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 0.7rem; color: var(--text-dim); }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: var(--text-muted); }
+
+    /* ── MODALS ── */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); z-index: 9990; align-items: center; justify-content: center; padding: 24px; }
+    .modal.active { display: flex; }
+    .modal-box { background: var(--bg-card); border: 1px solid var(--border-lit); border-radius: 22px; padding: 36px 32px; max-width: 560px; width: 100%; max-height: 82vh; overflow-y: auto; position: relative; }
+    @media (max-width: 480px) { .modal-box { padding: 26px 20px; } }
+    .modal-close { position: absolute; top: 14px; right: 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); transition: color 0.2s; }
+    .modal-close:hover { color: var(--white); }
+    .modal-box h3 { font-family: var(--display); font-size: 1.3rem; font-weight: 700; margin-bottom: 18px; }
+    .modal-box p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 12px; }
+    .modal-box h4 { font-family: var(--display); font-size: 0.9rem; font-weight: 600; color: var(--text); margin: 18px 0 6px; }
+    .modal-box a { color: var(--accent); }
+    .modal-box strong { color: var(--text); }
+
+    /* ── COOKIE ── */
+    .cookie-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(12,12,12,0.97); border-top: 1px solid var(--border-lit); padding: 16px 24px; display: none; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; z-index: 950; backdrop-filter: blur(12px); }
+    .cookie-bar.show { display: flex; }
+    .cookie-txt { font-size: 0.8rem; color: var(--text-muted); flex: 1; min-width: 200px; }
+    .cookie-txt a { color: var(--accent); cursor: pointer; text-decoration: none; }
+    .cookie-btns { display: flex; gap: 10px; }
+
+    /* ── WA FLOAT ── */
+    .wa-float { position: fixed; bottom: 26px; right: 22px; width: 52px; height: 52px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.35); z-index: 800; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; }
+    .wa-float:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.45); }
+  </style>
 </head>
-<body class="overflow-x-hidden antialiased">
+<body>
 
-    <!-- Notifications Flottantes (Toasts) de style épuré -->
-    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
-
-    <div class="min-h-screen flex flex-col">
-        <!-- Barre de Navigation Blanche de style Apple -->
-        <header class="border-b border-slate-100 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-8 py-4 flex justify-between items-center shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white text-lg shadow-sm">
-                    K
-                </div>
-                <div>
-                    <span class="text-lg font-extrabold tracking-tight text-slate-900">KERNE <span class="text-indigo-600 text-sm font-semibold">BANK</span></span>
-                    <span class="text-[9px] text-slate-400 uppercase tracking-widest block font-mono">v2.1.0 Light Premium</span>
-                </div>
-            </div>
-
-            <!-- Sélecteur de Rôle / Mode démonstration clair -->
-            <div class="flex items-center gap-4">
-                <div class="bg-slate-100 rounded-xl p-1 flex gap-1 border border-slate-200/60">
-                    <button id="btnRoleUser" onclick="switchRole('USER')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-indigo-600 shadow-sm border border-slate-200/20">
-                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Utilisateur
-                    </button>
-                    <button id="btnRoleAdmin" onclick="switchRole('ADMIN')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-500 hover:text-slate-800">
-                        <i data-lucide="shield" class="w-3.5 h-3.5"></i> Administrateur
-                        <span id="adminNotificationBadge" class="hidden w-2 h-2 rounded-full bg-indigo-600"></span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Structure Principale -->
-        <div class="flex flex-1">
-            <!-- Sidebar latérale gauche lumineuse -->
-            <aside id="sidebar" class="w-64 border-r border-slate-100 bg-white p-6 space-y-8 flex flex-col justify-between">
-                <div class="space-y-6">
-                    <div>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-mono mb-3">Navigation principale</p>
-                        <nav class="space-y-1">
-                            <button onclick="switchTab('dashboard')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition bg-slate-50 text-slate-900 border-l-2 border-indigo-600">
-                                <i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-600"></i> Dashboard
-                            </button>
-                            <button onclick="switchTab('exchange')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                                <i data-lucide="trending-up" class="w-4 h-4"></i> KerneX Exchange
-                            </button>
-                            <button onclick="switchTab('tasks')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                                <i data-lucide="award" class="w-4 h-4"></i> Missions Rémunérées
-                            </button>
-                            <button onclick="switchTab('transfer')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                                <i data-lucide="send" class="w-4 h-4"></i> Transfert & QR
-                            </button>
-                            <button onclick="switchTab('withdraw')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                                <i data-lucide="wallet" class="w-4 h-4"></i> Retraits de Fonds
-                            </button>
-                        </nav>
-                    </div>
-
-                    <div>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-mono mb-3">Support</p>
-                        <button onclick="switchTab('support')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                            <i data-lucide="help-circle" class="w-4 h-4"></i> Centre d'Aide
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Info Profil en bas de sidebar -->
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center font-bold text-slate-800 uppercase text-sm border border-slate-200" id="avatarLetter">
-                            U
-                        </div>
-                        <div class="overflow-hidden">
-                            <h4 class="text-sm font-bold text-slate-900 truncate" id="sideProfileName">Utilisateur</h4>
-                            <p class="text-[10px] text-slate-400 truncate font-mono" id="sideProfileKerneId">KRNE-0000-0000-0000</p>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between">
-                        <span id="kycBadge" class="px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-amber-500/10 text-amber-600 border border-amber-500/20">KYC En Attente</span>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Contenu principal fluide -->
-            <main class="flex-1 bg-[#f9fafb] p-8 overflow-y-auto" style="max-height: calc(100vh - 73px);">
-                
-                <!-- =============== SECTION USER : DASHBOARD =============== -->
-                <section id="tab-dashboard" class="tab-content space-y-8">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-6">
-                        <div>
-                            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Tableau de bord</h1>
-                            <p class="text-slate-500 text-sm mt-1">Gérez vos actifs Kerne et suivez les tendances du marché.</p>
-                        </div>
-                        <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-premium">
-                            <div>
-                                <span class="text-[9px] text-slate-400 uppercase tracking-widest font-mono">VALEUR DU KERNE (Simulée)</span>
-                                <div class="flex items-baseline gap-2 mt-0.5">
-                                    <span class="text-xl font-black font-mono text-indigo-600" id="headerKernePrice">$1.0000</span>
-                                    <span class="text-[10px] font-bold text-indigo-600" id="headerPriceDelta">+0.00%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Grille Principale -->
-                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
-                        <!-- Colonne Gauche : Carte Apple Titanium & Économie -->
-                        <div class="space-y-6">
-                            <!-- Carte bancaire interactive 3D de style Apple Titanium Card -->
-                            <div class="perspective-1000 w-full max-w-[380px] h-[240px] mx-auto" onclick="flipCard()">
-                                <div id="kerneCard" class="relative w-full h-full transition-transform duration-700 transform-style-3d cursor-pointer">
-                                    
-                                    <!-- FACE RECTO (Apple Card Style : Silver-Opal Holographic) -->
-                                    <div class="absolute inset-0 rounded-3xl p-6 bg-gradient-to-tr from-slate-200 via-slate-50 to-white border border-white text-slate-900 flex flex-col justify-between shadow-cardShadow backface-hidden">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <p class="text-[9px] text-slate-400 uppercase tracking-widest font-mono font-bold">Titanium Wallet Card</p>
-                                                <h3 class="text-lg font-black tracking-tight mt-0.5 text-slate-800">Kerne Bank</h3>
-                                            </div>
-                                            <!-- Puce holographique argentée -->
-                                            <div class="w-10 h-7 rounded-lg bg-gradient-to-br from-slate-300 via-slate-100 to-slate-400 border border-slate-200/80 shadow-sm" />
-                                        </div>
-                                        <div class="my-2">
-                                            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-mono block">Solde Disponible</span>
-                                            <span class="text-3xl font-black tracking-tight text-slate-900"><span id="cardKerneBalance">0.00</span> <span class="text-sm font-light text-slate-500">KRNE</span></span>
-                                        </div>
-                                        <div class="flex justify-between items-end">
-                                            <div>
-                                                <p class="text-[8px] text-slate-400 tracking-wider font-mono">TITULAIRE</p>
-                                                <p class="text-xs font-bold uppercase tracking-wide text-slate-700" id="cardUserName">Alexandre Kerne</p>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-[8px] text-slate-400 tracking-wider font-mono">IDENTIFIANT UNIQUE</p>
-                                                <p class="text-xs font-mono text-slate-800 font-bold" id="cardKerneId">KRNE-XXXX-XXXX-XXXX</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- FACE VERSO -->
-                                    <div class="absolute inset-0 rounded-3xl p-6 bg-white border border-slate-100 text-slate-900 flex flex-col justify-between shadow-cardShadow backface-hidden rotate-y-180">
-                                        <div class="w-full h-10 bg-slate-100 absolute top-6 left-0" />
-                                        <div class="flex items-center justify-between mt-12 z-10">
-                                            <!-- QR Code épuré -->
-                                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                                                <svg id="qrSvg" class="w-16 h-16" viewBox="0 0 29 29" shape-rendering="crispEdges">
-                                                    <path fill="#ffffff" d="M0 0h29v29H0z"/>
-                                                    <path fill="#0f172a" d="M0 0h7v7H0zm22 0h7v7h-7zM0 22h7v7H0zm10 0h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm3-6h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm5-12h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm-11-2h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1zm13 11h1v1h-1zm1 1h1v1h-1zm-1 1h1v1h-1zm1 1h1v1h-1z"/>
-                                                </svg>
-                                            </div>
-                                            <div class="text-right max-w-[160px]">
-                                                <p class="text-[8px] text-slate-400 italic">Scannez pour effectuer un virement instantané vers ce compte.</p>
-                                                <p class="text-[10px] font-mono mt-2 text-indigo-600 font-bold">KRNE SECURITY</p>
-                                            </div>
-                                        </div>
-                                        <div class="text-[8px] text-slate-400 text-center">
-                                            Kerne Bank V2 © 2026 - Propriété exclusive.
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <p class="text-center text-xs text-slate-400 italic">Cliquez sur la carte pour l'inverser et voir son QR Code</p>
-
-                            <!-- Statut de l'économie interne -->
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-premium">
-                                <h3 class="text-xs font-extrabold tracking-wider uppercase text-slate-400">Écosystème du Kerne</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                        <span class="text-[8px] text-slate-400 block uppercase font-mono">Capitalisation</span>
-                                        <span class="text-lg font-bold font-mono mt-1 block text-slate-800" id="ecoMarketcap">$0.00</span>
-                                    </div>
-                                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                        <span class="text-[8px] text-slate-400 block uppercase font-mono">Volume (24h)</span>
-                                        <span class="text-lg font-bold font-mono mt-1 block text-slate-800" id="ecoVolume">$0.00</span>
-                                    </div>
-                                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                        <span class="text-[8px] text-slate-400 block uppercase font-mono">Utilisateurs actifs</span>
-                                        <span class="text-lg font-bold font-mono mt-1 block text-slate-800" id="ecoUsers">0</span>
-                                    </div>
-                                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                        <span class="text-[8px] text-slate-400 block uppercase font-mono">Portefeuille KerneX</span>
-                                        <span class="text-lg font-bold font-mono mt-1 block text-indigo-600" id="userKerneShares">0.00 Parts</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Colonne Droite : Graphique live & Historique -->
-                        <div class="xl:col-span-2 space-y-8">
-                            <!-- Graphique Live (Canvas HTML5 style Stripe) -->
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 relative overflow-hidden shadow-premium">
-                                <div class="flex justify-between items-center mb-4">
-                                    <div>
-                                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-mono">Fluctuations en temps réel</p>
-                                        <h3 class="text-lg font-bold tracking-tight text-slate-800">Cours Historique Kerne/USD</h3>
-                                    </div>
-                                    <div class="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full text-xs font-mono font-bold border border-indigo-100">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span> LIVE
-                                    </div>
-                                </div>
-                                <div class="w-full h-64 bg-slate-50 rounded-2xl relative border border-slate-100">
-                                    <canvas id="tradingChart" class="w-full h-full"></canvas>
-                                </div>
-                            </div>
-
-                            <!-- Historique des Transactions -->
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-bold tracking-tight text-slate-800">Historique des transactions</h3>
-                                    <button class="text-xs text-slate-400 hover:text-slate-800 hover:underline transition font-semibold">Exporter tout (PDF)</button>
-                                </div>
-                                <div class="space-y-3 max-h-64 overflow-y-auto pr-1" id="transactionsList">
-                                    <!-- Inséré par JS -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =============== SECTION USER : EXCHANGE =============== -->
-                <section id="tab-exchange" class="tab-content hidden space-y-8">
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">KerneX Exchange</h1>
-                        <p class="text-slate-500 text-sm mt-1">Échangez vos tokens Kerne contre des parts dans la bourse interne pour valoriser vos actifs.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2 space-y-6">
-                            <!-- Graphique d'échange stylisé -->
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                                <h3 class="text-md font-bold mb-4 text-slate-800">Valorisation de vos parts</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <p class="text-[10px] text-slate-400 uppercase font-mono">Nombre de parts détenues</p>
-                                        <p class="text-2xl font-black font-mono mt-1 text-slate-800" id="exchangeShares">0.0000</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <p class="text-[10px] text-slate-400 uppercase font-mono">Prix moyen d'achat</p>
-                                        <p class="text-2xl font-black font-mono mt-1 text-slate-800" id="exchangeAvgPrice">$1.00</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <p class="text-[10px] text-slate-400 uppercase font-mono">Plus/Moins-value latente</p>
-                                        <p class="text-2xl font-black font-mono mt-1 text-emerald-600" id="exchangePl">+$0.00</p>
-                                    </div>
-                                </div>
-                                <div class="h-48 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100">
-                                    <div class="text-center">
-                                        <i data-lucide="trending-up" class="w-8 h-8 text-indigo-500 mx-auto mb-2 animate-bounce"></i>
-                                        <p class="text-xs text-slate-400 max-w-sm">Les fluctuations de cours boursiers sont recalculées de manière autonome toutes les 3 secondes.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Panneau de trading -->
-                        <div class="bg-white border border-slate-100 rounded-3xl p-6 space-y-6 shadow-premium">
-                            <h3 class="text-lg font-bold tracking-tight text-slate-800">Passer un ordre</h3>
-                            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
-                                <button id="btnOrderBuy" onclick="switchOrderType('BUY')" class="py-2 rounded-lg text-xs font-bold bg-white text-slate-800 shadow-sm transition">ACHETER</button>
-                                <button id="btnOrderSell" onclick="switchOrderType('SELL')" class="py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800 transition">VENDRE</button>
-                            </div>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Montant en Kerne (KRNE)</label>
-                                    <input type="number" id="orderAmount" placeholder="Ex: 50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-800" oninput="updateOrderEstimate()">
-                                </div>
-                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
-                                    <div class="flex justify-between text-xs">
-                                        <span class="text-slate-500">Estimation des parts</span>
-                                        <span class="font-bold font-mono text-slate-800" id="estimateShares">0.0000 Shares</span>
-                                    </div>
-                                    <div class="flex justify-between text-xs border-t border-slate-200 pt-2">
-                                        <span class="text-slate-500">Prix unitaire</span>
-                                        <span class="font-bold font-mono text-indigo-600" id="estimatePrice">$1.0000</span>
-                                    </div>
-                                </div>
-
-                                <button onclick="executeOrder()" class="w-full py-4 bg-indigo-600 text-white font-extrabold text-sm rounded-xl transition hover:bg-indigo-700 shadow-lg shadow-indigo-600/10">
-                                    Valider l'ordre de trading
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =============== SECTION USER : MISSIONS =============== -->
-                <section id="tab-tasks" class="tab-content hidden space-y-8">
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Missions Rémunérées</h1>
-                        <p class="text-slate-500 text-sm mt-1">Exécutez des micro-tâches, déposez vos preuves de travail et gagnez des tokens Kerne.</p>
-                    </div>
-
-                    <!-- Liste des tâches -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tasksList">
-                        <!-- Inséré par JS -->
-                    </div>
-                </section>
-
-                <!-- =============== SECTION USER : TRANSFERT =============== -->
-                <section id="tab-transfer" class="tab-content hidden space-y-8">
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Transferts de fonds</h1>
-                        <p class="text-slate-500 text-sm mt-1">Virement instantané de Kerne (KRNE) vers n'importe quel autre titulaire de la plateforme.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <!-- Formulaire -->
-                        <div class="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 space-y-6 shadow-premium">
-                            <h3 class="text-lg font-bold tracking-tight text-slate-800">Initier un virement</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Kerne ID du Bénéficiaire</label>
-                                    <input type="text" id="transferTargetId" placeholder="KRNE-XXXX-XXXX-XXXX" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-800">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Montant à transférer</label>
-                                    <input type="number" id="transferAmount" placeholder="Ex: 100" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-800">
-                                </div>
-                                <button onclick="executeTransfer()" class="w-full py-4 bg-indigo-600 text-white font-extrabold text-sm rounded-xl transition hover:bg-indigo-700 shadow-md">
-                                    Envoyer le virement instantané
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Contacts -->
-                        <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                            <h3 class="text-xs font-extrabold uppercase text-slate-400 tracking-wider mb-4">Contacts récents</h3>
-                            <div class="space-y-3">
-                                <button onclick="autofillTransfer('KRNE-ADMIN-0000-0001')" class="w-full flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-300 transition text-left">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 font-bold flex items-center justify-center text-xs">A</div>
-                                        <div>
-                                            <p class="text-xs font-bold text-slate-800">Administrateur Kerne</p>
-                                            <p class="text-[9px] text-slate-400 font-mono">KRNE-ADMIN-0000-0001</p>
-                                        </div>
-                                    </div>
-                                    <i data-lucide="plus" class="w-4 h-4 text-slate-400"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =============== SECTION USER : RETRAIT =============== -->
-                <section id="tab-withdraw" class="tab-content hidden space-y-8">
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Retrait de fonds</h1>
-                        <p class="text-slate-500 text-sm mt-1">Convertissez et retirez vos fonds directement vers vos comptes externes de paiement.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 space-y-6 shadow-premium">
-                            <h3 class="text-lg font-bold tracking-tight text-slate-800">Faire une demande de retrait</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Montant à retirer (en KRNE)</label>
-                                    <input type="number" id="withdrawAmount" placeholder="Ex: 50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono text-slate-800">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Coordonnées de virement / IBAN / Clé publique</label>
-                                    <textarea id="withdrawDetails" placeholder="Indiquez votre adresse de destination ou coordonnées bancaires..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 min-h-[100px] text-slate-850"></textarea>
-                                </div>
-                                <button onclick="executeWithdraw()" class="w-full py-4 bg-slate-900 text-white font-extrabold text-sm rounded-xl transition hover:bg-slate-800">
-                                    Initier la demande de retrait
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Suivi des retraits -->
-                        <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                            <h3 class="text-lg font-bold mb-4 text-slate-800">Suivi de vos demandes</h3>
-                            <div class="space-y-3" id="withdrawalsHistory">
-                                <!-- Inséré par JS -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =============== SECTION USER : SUPPORT =============== -->
-                <section id="tab-support" class="tab-content hidden space-y-8">
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Centre d'aide & Tickets</h1>
-                        <p class="text-slate-500 text-sm mt-1">Vous rencontrez un problème ? Créez un ticket d'assistance pour échanger avec notre équipe d'administration.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-premium">
-                            <h3 class="text-lg font-bold text-slate-800">Ouvrir un nouveau ticket</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Sujet de votre demande</label>
-                                    <input type="text" id="ticketSubject" placeholder="Ex: Soumission de tâche non créditée" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-800">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] text-slate-400 uppercase font-mono block mb-1">Message</label>
-                                    <textarea id="ticketMessage" placeholder="Détaillez au maximum votre demande..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 min-h-[120px] text-slate-850"></textarea>
-                                </div>
-                                <button onclick="createTicket()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl transition">
-                                    Ouvrir le ticket d'assistance
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Historique des tickets -->
-                        <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                            <h3 class="text-lg font-bold mb-4 text-slate-800">Vos tickets d'aide</h3>
-                            <div class="space-y-3" id="ticketsList">
-                                <!-- Inséré par JS -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-                <!-- =============== SECTION ADMIN : INTERFACE DE CONTROLE =============== -->
-                <section id="tab-admin" class="tab-content hidden space-y-8">
-                    <div class="border-b border-slate-100 pb-6">
-                        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Panneau d'Administration</h1>
-                        <p class="text-slate-500 text-sm mt-1">Gérez l'écosystème, validez le KYC des utilisateurs et approuvez les preuves de tâches.</p>
-                    </div>
-
-                    <!-- KPI Administration -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-premium">
-                            <span class="text-[10px] text-slate-400 uppercase font-mono">Dossiers KYC en attente</span>
-                            <span class="text-3xl font-black font-mono block mt-2 text-indigo-600" id="adminKycCount">0</span>
-                        </div>
-                        <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-premium">
-                            <span class="text-[10px] text-slate-400 uppercase font-mono">Preuves de tâches à valider</span>
-                            <span class="text-3xl font-black font-mono block mt-2 text-indigo-600" id="adminTasksCount">0</span>
-                        </div>
-                        <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-premium">
-                            <span class="text-[10px] text-slate-400 uppercase font-mono">Demandes de retraits</span>
-                            <span class="text-3xl font-black font-mono block mt-2 text-indigo-600" id="adminWithdrawalsCount">0</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                        <!-- Colonne 1 : KYC & Retraits -->
-                        <div class="space-y-8">
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                                <h3 class="text-lg font-bold mb-4 text-slate-800">Dossiers d'identité (KYC) à valider</h3>
-                                <div class="space-y-4" id="adminKycList">
-                                    <!-- Inséré par JS -->
-                                </div>
-                            </div>
-
-                            <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                                <h3 class="text-lg font-bold mb-4 text-slate-800">Validation des retraits</h3>
-                                <div class="space-y-4" id="adminWithdrawalsList">
-                                    <!-- Inséré par JS -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Colonne 2 : Preuves de travail -->
-                        <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-premium">
-                            <h3 class="text-lg font-bold mb-4 text-slate-800">Validation des Preuves de travail (Tâches)</h3>
-                            <div class="space-y-4" id="adminSubmissionsList">
-                                <!-- Inséré par JS -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </main>
-        </div>
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a class="logo" href="#">Convert<span>Web</span></a>
+      <div class="nav-links">
+        <a href="#demo">Démo interactive</a>
+        <a href="#why-us">Pourquoi nous ?</a>
+        <a href="#method">Notre méthode</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="nav-right">
+        <a href="#contact" class="btn btn-outline nav-cta-desktop" style="padding:9px 20px;">Maquette gratuite sous 24h</a>
+        <button class="hamburger" id="hbg" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
-
-    <!-- Script de l'Écosystème Kerne Bank -->
-    <script>
-        // --- BASE DE DONNÉES SIMULÉE EN CONTEXTE LIVE (STATE) ---
-        let state = {
-            role: "USER",
-            currentTab: "dashboard",
-            user: {
-                name: "Alexandre Kerne",
-                kerneId: "KRNE-3498-F02A-8941",
-                kycStatus: "PENDING", // PENDING, VERIFIED, REJECTED
-                kerneBalance: 1250.45,
-                sharesOwned: 15.0,
-                sharesAvgPrice: 1.05
-            },
-            economy: {
-                price: 1.0500,
-                previousPrice: 1.0500,
-                activeUsers: 247,
-                totalVolume: 1250.45,
-                marketCap: 15450.00,
-                history: [1.02, 1.03, 1.01, 1.04, 1.02, 1.05]
-            },
-            transactions: [
-                { id: "TX-REWARD-01", type: "REWARD", title: "Récompense de Tâche", amount: 150.00, status: "COMPLETED", date: "11 Juin 2026" },
-                { id: "TX-TRANSFER-01", type: "TRANSFER", title: "Envoi à KRNE-ADMIN-0001", amount: -50.00, status: "COMPLETED", date: "10 Juin 2026" }
-            ],
-            tasks: [
-                { id: "TSK-01", title: "Rédiger la note blanche de sécurité", desc: "Écrire une note technique de 500 mots sur la mitigation des attaques DDoS sur le noyau.", reward: 75.00, difficulty: "EASY", deadline: "Dans 3 jours", status: "ACTIVE" },
-                { id: "TSK-02", title: "Débogage du connecteur Prisma API", desc: "Identifier et corriger le goulot d'étranglement de requêtes Prisma sur la table de transactions.", reward: 250.00, difficulty: "HARD", deadline: "Dans 1 jour", status: "ACTIVE" }
-            ],
-            submissions: [
-                { id: "SUB-01", taskTitle: "Rédiger la note blanche de sécurité", taskId: "TSK-01", userName: "Alexandre Kerne", userKerneId: "KRNE-3498-F02A-8941", reward: 75.00, status: "PENDING", proofText: "Lien de la preuve : https://github.com/alexandre/kerne-security-doc" }
-            ],
-            withdrawals: [
-                { id: "WTH-01", amount: 100.00, details: "Virement SEPA - FR76 3000...984", status: "PENDING", date: "11 Juin 2026" }
-            ],
-            tickets: [
-                { id: "TCK-01", subject: "Compte non vérifié après soumission", message: "J'ai soumis ma pièce d'identité hier matin mais le statut est toujours en attente.", status: "OPEN", date: "11 Juin 2026" }
-            ],
-            orderType: "BUY"
-        };
-
-        // --- GRAPHIC ENGINE (CANVAS REALTIME STRIPE STYLE) ---
-        const canvas = document.getElementById('tradingChart');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            drawChart();
-        }
-
-        function drawChart() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const data = state.economy.history;
-            if (data.length === 0) return;
-
-            const paddingLeft = 45;
-            const paddingRight = 20;
-            const paddingTop = 30;
-            const paddingBottom = 40;
-
-            const graphWidth = canvas.width - paddingLeft - paddingRight;
-            const graphHeight = canvas.height - paddingTop - paddingBottom;
-
-            const minVal = Math.min(...data) * 0.99;
-            const maxVal = Math.max(...data) * 1.01;
-            const valRange = maxVal - minVal;
-
-            // Quadrillage très clair
-            ctx.strokeStyle = "rgba(15, 23, 42, 0.03)";
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = paddingTop + (graphHeight / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(paddingLeft, y);
-                ctx.lineTo(canvas.width - paddingRight, y);
-                ctx.stroke();
-            }
-
-            // Couleur Indigo de Stripe
-            const colorLine = "#4f46e5";
-            const colorGradientStart = "rgba(79, 70, 229, 0.08)";
-
-            // Dessiner la ligne de tendance
-            ctx.beginPath();
-            ctx.strokeStyle = colorLine;
-            ctx.lineWidth = 3;
-            ctx.lineJoin = "round";
-
-            for (let i = 0; i < data.length; i++) {
-                const x = paddingLeft + (graphWidth / (data.length - 1)) * i;
-                const y = paddingTop + graphHeight - ((data[i] - minVal) / valRange) * graphHeight;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Remplissage progressif sous la courbe
-            ctx.lineTo(paddingLeft + graphWidth, paddingTop + graphHeight);
-            ctx.lineTo(paddingLeft, paddingTop + graphHeight);
-            ctx.closePath();
-            const gradient = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + graphHeight);
-            gradient.addColorStop(0, colorGradientStart);
-            gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-            ctx.fillStyle = gradient;
-            ctx.fill();
-
-            // Indicateur de fin
-            const liveX = paddingLeft + graphWidth;
-            const liveY = paddingTop + graphHeight - ((data[data.length - 1] - minVal) / valRange) * graphHeight;
-
-            ctx.beginPath();
-            ctx.arc(liveX, liveY, 5, 0, 2 * Math.PI);
-            ctx.fillStyle = colorLine;
-            ctx.fill();
-
-            // Textes des axes (Slate sombre)
-            ctx.fillStyle = "#94a3b8";
-            ctx.font = "10px monospace";
-            ctx.fillText(`$${maxVal.toFixed(4)}`, paddingLeft - 40, paddingTop + 4);
-            ctx.fillText(`$${minVal.toFixed(4)}`, paddingLeft - 40, paddingTop + graphHeight + 4);
-        }
-
-        // --- TOAST NOTIFICATIONS ---
-        function showToast(title, message, type = "success") {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            let borderCol = "border-slate-100 bg-white text-slate-800";
-            if (type === "success") { borderCol = "border-emerald-200 bg-emerald-50 text-emerald-800"; }
-            if (type === "error") { borderCol = "border-rose-200 bg-rose-50 text-rose-800"; }
-            if (type === "info") { borderCol = "border-indigo-200 bg-indigo-50 text-indigo-800"; }
-
-            toast.className = `p-4 rounded-2xl border ${borderCol} shadow-premium flex gap-3 shadow-xl transition duration-300 transform translate-x-12 opacity-0 pointer-events-auto`;
-            toast.innerHTML = `
-                <div class="flex-1">
-                    <h4 class="text-xs font-bold uppercase tracking-wider">${title}</h4>
-                    <p class="text-xs mt-0.5 opacity-90">${message}</p>
-                </div>
-            `;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-x-12', 'opacity-0');
-            }, 50);
-
-            setTimeout(() => {
-                toast.classList.add('translate-x-12', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // --- SIMULATEUR TOKENOMICS ---
-        function runTokenomicsSimulator() {
-            setInterval(() => {
-                state.economy.previousPrice = state.economy.price;
-                const randomNoise = (Math.random() - 0.49) * 0.005; 
-                const currentBalanceFactor = state.user.kerneBalance / 100000;
-                
-                state.economy.price += randomNoise + currentBalanceFactor;
-                if (state.economy.price < 0.01) state.economy.price = 0.01;
-
-                state.economy.history.push(state.economy.price);
-                if (state.economy.history.length > 25) {
-                    state.economy.history.shift();
-                }
-
-                state.economy.marketCap = (state.user.kerneBalance + 5000) * state.economy.price;
-
-                renderUI();
-                drawChart();
-            }, 3000);
-        }
-
-        // --- SYSTEME DE ROUTING CLAIR ---
-        function switchTab(tabId) {
-            state.currentTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            
-            const activeTab = document.getElementById(`tab-${tabId}`);
-            if (activeTab) activeTab.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.className = "nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition text-slate-500 hover:text-slate-900 hover:bg-slate-50";
-            });
-
-            const buttons = document.querySelectorAll('.nav-link');
-            buttons.forEach(btn => {
-                if (btn.outerHTML.includes(`switchTab('${tabId}')`)) {
-                    btn.className = "nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition bg-slate-50 text-slate-900 border-l-2 border-indigo-600";
-                }
-            });
-
-            renderUI();
-            if (tabId === 'dashboard') resizeCanvas();
-        }
-
-        function switchRole(role) {
-            state.role = role;
-            const userBtn = document.getElementById('btnRoleUser');
-            const adminBtn = document.getElementById('btnRoleAdmin');
-
-            if (role === 'USER') {
-                userBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-indigo-600 shadow-sm border border-slate-200/20";
-                adminBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-500 hover:text-slate-800";
-                switchTab('dashboard');
-            } else {
-                adminBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-indigo-600 shadow-sm border border-slate-200/20";
-                userBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-500 hover:text-slate-800";
-                switchTab('admin');
-            }
-        }
-
-        // --- ACTIONS ---
-        function flipCard() {
-            const card = document.getElementById('kerneCard');
-            card.classList.toggle('[transform:rotateY(180deg)]');
-        }
-
-        function autofillTransfer(id) {
-            document.getElementById('transferTargetId').value = id;
-            showToast("Bénéficiaire ajouté", "L'identifiant a été saisi automatiquement.", "info");
-        }
-
-        function executeTransfer() {
-            const targetId = document.getElementById('transferTargetId').value.trim();
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-
-            if (!targetId || isNaN(amount) || amount <= 0) {
-                showToast("Virement refusé", "Veuillez vérifier les informations.", "error");
-                return;
-            }
-
-            if (state.user.kycStatus !== "VERIFIED") {
-                showToast("Action requise", "Votre profil doit être certifié (KYC) pour transférer.", "error");
-                return;
-            }
-
-            if (amount > state.user.kerneBalance) {
-                showToast("Solde insuffisant", "Fonds indisponibles.", "error");
-                return;
-            }
-
-            state.user.kerneBalance -= amount;
-            state.transactions.unshift({
-                id: `TX-TRANSFER-${Date.now().toString().substring(8)}`,
-                type: "TRANSFER",
-                title: `Virement envoyé vers ${targetId.substring(0,9)}...`,
-                amount: -amount,
-                status: "COMPLETED",
-                date: "Aujourd'hui"
-            });
-
-            state.economy.totalVolume += amount;
-            showToast("Transfert validé", `Virement de ${amount.toFixed(2)} KRNE exécuté.`, "success");
-            
-            document.getElementById('transferTargetId').value = "";
-            document.getElementById('transferAmount').value = "";
-            renderUI();
-        }
-
-        function switchOrderType(type) {
-            state.orderType = type;
-            const buyBtn = document.getElementById('btnOrderBuy');
-            const sellBtn = document.getElementById('btnOrderSell');
-
-            if (type === "BUY") {
-                buyBtn.className = "py-2 rounded-lg text-xs font-bold bg-white text-slate-800 shadow-sm transition";
-                sellBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800 transition";
-            } else {
-                sellBtn.className = "py-2 rounded-lg text-xs font-bold bg-white text-slate-800 shadow-sm transition";
-                buyBtn.className = "py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800 transition";
-            }
-            updateOrderEstimate();
-        }
-
-        function updateOrderEstimate() {
-            const amt = parseFloat(document.getElementById('orderAmount').value) || 0;
-            const isBuy = state.orderType === "BUY";
-            const estimate = isBuy ? (amt / state.economy.price) : (amt * state.economy.price);
-            
-            document.getElementById('estimateShares').innerText = isBuy ? `${estimate.toFixed(4)} Parts (Shares)` : `${estimate.toFixed(2)} KRNE`;
-            document.getElementById('estimatePrice').innerText = `$${state.economy.price.toFixed(4)}`;
-        }
-
-        function executeOrder() {
-            const amt = parseFloat(document.getElementById('orderAmount').value);
-            if (isNaN(amt) || amt <= 0) {
-                showToast("Erreur", "Saisissez un montant valide.", "error");
-                return;
-            }
-
-            const isBuy = state.orderType === "BUY";
-
-            if (isBuy) {
-                if (amt > state.user.kerneBalance) {
-                    showToast("Solde insuffisant", "KRNE insuffisants.", "error");
-                    return;
-                }
-                const sharesGained = amt / state.economy.price;
-                state.user.kerneBalance -= amt;
-                state.user.sharesOwned += sharesGained;
-                
-                state.transactions.unshift({
-                    id: `TX-INVEST-${Date.now().toString().substring(8)}`,
-                    type: "INVESTMENT",
-                    title: "Achat de parts KerneX",
-                    amount: -amt,
-                    status: "COMPLETED",
-                    date: "Aujourd'hui"
-                });
-
-                showToast("Parts acquises", `+ ${sharesGained.toFixed(4)} parts de bourse obtenues.`, "success");
-            } else {
-                if (amt > state.user.sharesOwned) {
-                    showToast("Erreur", "Nombre de parts insuffisant.", "error");
-                    return;
-                }
-                const krneGained = amt * state.economy.price;
-                state.user.sharesOwned -= amt;
-                state.user.kerneBalance += krneGained;
-
-                state.transactions.unshift({
-                    id: `TX-SELL-${Date.now().toString().substring(8)}`,
-                    type: "INVESTMENT",
-                    title: "Vente de parts KerneX",
-                    amount: krneGained,
-                    status: "COMPLETED",
-                    date: "Aujourd'hui"
-                });
-
-                showToast("Ordre de vente validé", `+ ${krneGained.toFixed(2)} KRNE crédités.`, "success");
-            }
-
-            document.getElementById('orderAmount').value = "";
-            updateOrderEstimate();
-            renderUI();
-        }
-
-        function submitTaskProof(taskId) {
-            const proofInput = document.getElementById(`proof-${taskId}`);
-            const proofText = proofInput ? proofInput.value.trim() : "";
-
-            if (!proofText) {
-                showToast("Erreur de dépôt", "Veuillez joindre une preuve.", "error");
-                return;
-            }
-
-            const task = state.tasks.find(t => t.id === taskId);
-            
-            state.submissions.unshift({
-                id: `SUB-${Date.now().toString().substring(8)}`,
-                taskTitle: task.title,
-                taskId: taskId,
-                userName: state.user.name,
-                userKerneId: state.user.kerneId,
-                reward: task.reward,
-                status: "PENDING",
-                proofText: proofText
-            });
-
-            task.status = "PENDING";
-            showToast("Preuve envoyée !", "Sera révisée par l'administration.", "success");
-            renderUI();
-        }
-
-        function executeWithdraw() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const details = document.getElementById('withdrawDetails').value.trim();
-
-            if (isNaN(amount) || amount <= 0 || !details) {
-                showToast("Formulaire invalide", "Veuillez remplir tous les champs.", "error");
-                return;
-            }
-
-            if (amount > state.user.kerneBalance) {
-                showToast("Fonds insuffisants", "Fonds indisponibles.", "error");
-                return;
-            }
-
-            state.user.kerneBalance -= amount;
-            state.withdrawals.unshift({
-                id: `WTH-${Date.now().toString().substring(8)}`,
-                amount: amount,
-                details: details,
-                status: "PENDING",
-                date: "Aujourd'hui"
-            });
-
-            showToast("Traitement en cours", "Retrait en attente de validation.", "info");
-            
-            document.getElementById('withdrawAmount').value = "";
-            document.getElementById('withdrawDetails').value = "";
-            renderUI();
-        }
-
-        function createTicket() {
-            const subject = document.getElementById('ticketSubject').value.trim();
-            const message = document.getElementById('ticketMessage').value.trim();
-
-            if (!subject || !message) {
-                showToast("Erreur", "Champs requis manquants.", "error");
-                return;
-            }
-
-            state.tickets.unshift({
-                id: `TCK-${Date.now().toString().substring(8)}`,
-                subject: subject,
-                message: message,
-                status: "OPEN",
-                date: "Aujourd'hui"
-            });
-
-            showToast("Ticket ouvert", "L'administration va traiter votre demande.", "success");
-            document.getElementById('ticketSubject').value = "";
-            document.getElementById('ticketMessage').value = "";
-            renderUI();
-        }
-
-
-        // --- MODERATION ADMIN ---
-
-        function adminApproveKyc() {
-            state.user.kycStatus = "VERIFIED";
-            showToast("Dossier KYC Certifié", "L'utilisateur a été validé.", "success");
-            renderUI();
-        }
-
-        function adminRejectKyc() {
-            state.user.kycStatus = "REJECTED";
-            showToast("KYC Débouté", "Le dossier a été refusé.", "error");
-            renderUI();
-        }
-
-        function adminReviewSubmission(subId, isApproved) {
-            const subIndex = state.submissions.findIndex(s => s.id === subId);
-            const sub = state.submissions[subIndex];
-
-            if (isApproved) {
-                state.user.kerneBalance += sub.reward;
-                state.transactions.unshift({
-                    id: `TX-REWARD-${sub.id}`,
-                    type: "REWARD",
-                    title: `Récompense : ${sub.taskTitle}`,
-                    amount: sub.reward,
-                    status: "COMPLETED",
-                    date: "Aujourd'hui"
-                });
-
-                const task = state.tasks.find(t => t.id === sub.taskId);
-                if (task) task.status = "COMPLETED";
-
-                showToast("Preuve certifiée", `+ ${sub.reward} KRNE octroyés.`, "success");
-            } else {
-                const task = state.tasks.find(t => t.id === sub.taskId);
-                if (task) task.status = "ACTIVE";
-                showToast("Preuve refusée", "L'utilisateur a été notifié.", "error");
-            }
-
-            state.submissions.splice(subIndex, 1);
-            renderUI();
-        }
-
-        function adminApproveWithdrawal(wthId, isApproved) {
-            const wthIndex = state.withdrawals.findIndex(w => w.id === wthId);
-            const wth = state.withdrawals[wthIndex];
-
-            if (isApproved) {
-                wth.status = "COMPLETED";
-                state.transactions.unshift({
-                    id: `TX-WITH-${wth.id}`,
-                    type: "WITHDRAWAL",
-                    title: `Retrait effectué vers ${wth.details.substring(0,12)}...`,
-                    amount: -wth.amount,
-                    status: "COMPLETED",
-                    date: "Aujourd'hui"
-                });
-                showToast("Retrait envoyé", "L'ordre de virement externe a été signé.", "success");
-            } else {
-                wth.status = "REJECTED";
-                state.user.kerneBalance += wth.amount;
-                showToast("Retrait annulé", "Les fonds ont été restitués.", "error");
-            }
-
-            renderUI();
-        }
-
-        // --- DYNAMIC RENDERING ---
-        function renderUI() {
-            // Profils sidebar & cartes
-            document.getElementById('sideProfileName').innerText = state.user.name;
-            document.getElementById('sideProfileKerneId').innerText = state.user.kerneId;
-            document.getElementById('cardUserName').innerText = state.user.name;
-            document.getElementById('cardKerneId').innerText = state.user.kerneId;
-            document.getElementById('avatarLetter').innerText = state.user.name.charAt(0);
-
-            // KYC Status Badge (Light styling)
-            const kycBadge = document.getElementById('kycBadge');
-            if (state.user.kycStatus === "PENDING") {
-                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-amber-100 text-amber-700 border border-amber-200";
-                kycBadge.innerText = "KYC EN ATTENTE";
-            } else if (state.user.kycStatus === "VERIFIED") {
-                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-emerald-100 text-emerald-700 border border-emerald-200";
-                kycBadge.innerText = "COMPTE VÉRIFIÉ";
-            } else {
-                kycBadge.className = "px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-rose-100 text-rose-700 border border-rose-200";
-                kycBadge.innerText = "KYC REJETÉ";
-            }
-
-            // Balances
-            document.getElementById('cardKerneBalance').innerText = state.user.kerneBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
-            document.getElementById('userKerneShares').innerText = `${state.user.sharesOwned.toFixed(4)} parts`;
-            
-            // Economie Live
-            const delta = ((state.economy.price - state.economy.previousPrice) / state.economy.previousPrice) * 100;
-            const deltaSign = delta >= 0 ? "+" : "";
-            const deltaCol = delta >= 0 ? "text-indigo-600" : "text-rose-600";
-            
-            document.getElementById('headerKernePrice').innerText = `$${state.economy.price.toFixed(4)}`;
-            document.getElementById('headerPriceDelta').className = `text-[10px] font-bold ${deltaCol}`;
-            document.getElementById('headerPriceDelta').innerText = `${deltaSign}${delta.toFixed(2)}%`;
-
-            document.getElementById('ecoMarketcap').innerText = `$${state.economy.marketCap.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}`;
-            document.getElementById('ecoVolume').innerText = `$${state.economy.totalVolume.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}`;
-            document.getElementById('ecoUsers').innerText = state.economy.activeUsers;
-
-            // Bourse
-            document.getElementById('exchangeShares').innerText = state.user.sharesOwned.toFixed(4);
-            document.getElementById('exchangeAvgPrice').innerText = `$${state.user.sharesAvgPrice.toFixed(2)}`;
-            const latentValue = (state.user.sharesOwned * state.economy.price) - (state.user.sharesOwned * state.user.sharesAvgPrice);
-            const plCol = latentValue >= 0 ? "text-emerald-600" : "text-rose-600";
-            document.getElementById('exchangePl').className = `text-2xl font-black font-mono mt-1 ${plCol}`;
-            document.getElementById('exchangePl').innerText = `${latentValue >= 0 ? "+" : ""}$${latentValue.toFixed(2)}`;
-
-            // Rendu Transactions (Light Theme)
-            const txContainer = document.getElementById('transactionsList');
-            txContainer.innerHTML = "";
-            state.transactions.forEach(tx => {
-                const isDebit = tx.amount < 0;
-                const sign = isDebit ? "" : "+";
-                const signCol = isDebit ? "text-rose-600" : "text-emerald-600";
-                const bgIcon = isDebit ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-emerald-50 text-emerald-600 border border-emerald-100";
-                const iconName = isDebit ? "arrow-up-right" : "arrow-down-left";
-
-                txContainer.innerHTML += `
-                    <div class="flex justify-between items-center p-3 rounded-2xl bg-white border border-slate-100 hover:border-slate-200 transition shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 rounded-xl ${bgIcon}">
-                                <i data-lucide="${iconName}" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">${tx.title}</p>
-                                <p class="text-[9px] text-slate-400 font-mono mt-0.5">${tx.id}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-bold font-mono ${signCol}">${sign}${tx.amount.toFixed(2)} KRNE</p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">${tx.date}</p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Missions
-            const tasksContainer = document.getElementById('tasksList');
-            tasksContainer.innerHTML = "";
-            state.tasks.forEach(task => {
-                let badgeCol = "bg-indigo-50 text-indigo-600 border border-indigo-100";
-                if (task.difficulty === "HARD") badgeCol = "bg-rose-50 text-rose-600 border border-rose-100";
-
-                let actionSection = `
-                    <div class="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                        <label class="text-[10px] text-slate-400 uppercase font-mono block">Renseigner un justificatif ou URL</label>
-                        <input type="text" id="proof-${task.id}" placeholder="Ex: https://github.com/votre-depot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/15 focus:border-indigo-500 text-slate-800">
-                        <button onclick="submitTaskProof('${task.id}')" class="w-full py-2 bg-indigo-600 text-white font-extrabold text-xs rounded-xl transition hover:bg-indigo-700">
-                            Déposer ma preuve de travail
-                        </button>
-                    </div>
-                `;
-
-                if (task.status === "PENDING") {
-                    actionSection = `
-                        <div class="mt-4 pt-4 border-t border-slate-100 text-center">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Preuve en attente de validation
-                            </span>
-                        </div>
-                    `;
-                }
-
-                if (task.status === "COMPLETED") {
-                    actionSection = `
-                        <div class="mt-4 pt-4 border-t border-slate-100 text-center">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Mission validée & créditée
-                            </span>
-                        </div>
-                    `;
-                }
-
-                tasksContainer.innerHTML += `
-                    <div class="bg-white border border-slate-100 rounded-3xl p-6 flex flex-col justify-between shadow-premium">
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-start gap-2">
-                                <h3 class="text-sm font-bold text-slate-800">${task.title}</h3>
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider ${badgeCol}">${task.difficulty}</span>
-                            </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">${task.desc}</p>
-                            <div class="flex justify-between text-[10px] text-slate-400 font-mono pt-2">
-                                <span>RÉCOMPENSE : <span class="text-indigo-600 font-bold">${task.reward.toFixed(2)} KRNE</span></span>
-                                <span>DATE LIMITE : ${task.deadline}</span>
-                            </div>
-                        </div>
-                        ${actionSection}
-                    </div>
-                `;
-            });
-
-            // Retraits utilisateur
-            const withdrawalsHistory = document.getElementById('withdrawalsHistory');
-            withdrawalsHistory.innerHTML = "";
-            state.withdrawals.forEach(wth => {
-                let statusBadge = "bg-amber-50 text-amber-700 border-amber-200";
-                if (wth.status === "COMPLETED") statusBadge = "bg-emerald-50 text-emerald-700 border-emerald-200";
-                if (wth.status === "REJECTED") statusBadge = "bg-rose-50 text-rose-700 border-rose-200";
-
-                withdrawalsHistory.innerHTML += `
-                    <div class="p-4 rounded-2xl bg-white border border-slate-100 flex justify-between items-center shadow-sm">
-                        <div class="space-y-1">
-                            <p class="text-xs font-bold font-mono text-slate-800">${wth.amount.toFixed(2)} KRNE</p>
-                            <p class="text-[9px] text-slate-400 truncate max-w-[150px]">${wth.details}</p>
-                        </div>
-                        <span class="px-2.5 py-0.5 rounded-full text-[8px] font-bold uppercase border ${statusBadge}">${wth.status}</span>
-                    </div>
-                `;
-            });
-
-            // Tickets
-            const ticketsList = document.getElementById('ticketsList');
-            ticketsList.innerHTML = "";
-            if (state.tickets.length === 0) {
-                ticketsList.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">Aucun ticket d'aide ouvert.</p>`;
-            } else {
-                state.tickets.forEach(ticket => {
-                    ticketsList.innerHTML += `
-                        <div class="p-4 rounded-2xl bg-white border border-slate-100 space-y-2 shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <h4 class="text-xs font-bold text-slate-800">${ticket.subject}</h4>
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-slate-50 text-slate-500 border border-slate-200">${ticket.status}</span>
-                            </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">${ticket.message}</p>
-                        </div>
-                    `;
-                });
-            }
-
-
-            // --- RENDU ADMINISTRATEUR ---
-            const adminNotificationBadge = document.getElementById('adminNotificationBadge');
-            const totalAdminAlerts = (state.user.kycStatus === "PENDING" ? 1 : 0) + state.submissions.length + state.withdrawals.filter(w => w.status === "PENDING").length;
-            if (totalAdminAlerts > 0) {
-                adminNotificationBadge.classList.remove('hidden');
-            } else {
-                adminNotificationBadge.classList.add('hidden');
-            }
-
-            document.getElementById('adminKycCount').innerText = state.user.kycStatus === "PENDING" ? "1" : "0";
-            document.getElementById('adminTasksCount').innerText = state.submissions.length;
-            document.getElementById('adminWithdrawalsCount').innerText = state.withdrawals.filter(w => w.status === "PENDING").length;
-
-            // Admin KYC
-            const adminKycList = document.getElementById('adminKycList');
-            adminKycList.innerHTML = "";
-            if (state.user.kycStatus !== "PENDING") {
-                adminKycList.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">Aucun dossier d'identité en attente.</p>`;
-            } else {
-                adminKycList.innerHTML = `
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3 shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-800">${state.user.name}</h4>
-                                <p class="text-[9px] text-slate-400 font-mono">${state.user.kerneId}</p>
-                            </div>
-                            <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wider">A REVOIR</span>
-                        </div>
-                        <p class="text-xs text-slate-500">Document : <a href="#" class="text-indigo-600 underline">identity_pass.pdf</a></p>
-                        <div class="flex gap-2 pt-2 border-t border-slate-200">
-                            <button onclick="adminApproveKyc()" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-indigo-600 text-white hover:opacity-90">APPROUVER</button>
-                            <button onclick="adminRejectKyc()" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50">REJETER</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Admin submissions
-            const adminSubmissionsList = document.getElementById('adminSubmissionsList');
-            adminSubmissionsList.innerHTML = "";
-            if (state.submissions.length === 0) {
-                adminSubmissionsList.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">Aucune preuve en attente.</p>`;
-            } else {
-                state.submissions.forEach(sub => {
-                    adminSubmissionsList.innerHTML += `
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3 shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="text-xs font-bold text-slate-800">${sub.taskTitle}</h4>
-                                    <p class="text-[9px] text-slate-400">Soumis par : ${sub.userName} (${sub.userKerneId})</p>
-                                </div>
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-indigo-50 text-indigo-600 font-mono border border-indigo-100">${sub.reward.toFixed(2)} KRNE</span>
-                            </div>
-                            <div class="bg-white p-3 rounded-xl border border-slate-200">
-                                <p class="text-xs text-slate-400 uppercase font-mono text-[8px]">Preuve :</p>
-                                <p class="text-xs font-semibold text-slate-700 mt-1 break-all">${sub.proofText}</p>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="adminReviewSubmission('${sub.id}', true)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-indigo-600 text-white hover:opacity-90">VALIDER</button>
-                                <button onclick="adminReviewSubmission('${sub.id}', false)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50">REFUSER</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            // Admin Retraits
-            const adminWithdrawalsList = document.getElementById('adminWithdrawalsList');
-            adminWithdrawalsList.innerHTML = "";
-            const pendingAdminWth = state.withdrawals.filter(w => w.status === "PENDING");
-            if (pendingAdminWth.length === 0) {
-                adminWithdrawalsList.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">Aucun ordre de retrait à traiter.</p>`;
-            } else {
-                pendingAdminWth.forEach(wth => {
-                    adminWithdrawalsList.innerHTML += `
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3 shadow-sm">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="text-xs font-bold font-mono text-slate-800">${wth.amount.toFixed(2)} KRNE</h4>
-                                    <p class="text-[9px] text-slate-400">${wth.date}</p>
-                                </div>
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wider">A TRAITER</span>
-                            </div>
-                            <div class="bg-white p-3 rounded-xl border border-slate-200">
-                                <p class="text-xs text-slate-400 uppercase font-mono text-[8px]">Détails du destinataire :</p>
-                                <p class="text-xs font-semibold text-slate-700 mt-1 break-all">${wth.details}</p>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="adminApproveWithdrawal('${wth.id}', true)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-indigo-600 text-white hover:opacity-90">DÉCAISSER</button>
-                                <button onclick="adminApproveWithdrawal('${wth.id}', false)" class="flex-1 py-1.5 rounded-xl text-[10px] font-bold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50">REFUSER</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            lucide.createIcons();
-        }
-
-        // --- LIFECYCLE ---
-        window.addEventListener('resize', resizeCanvas);
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            renderUI();
-            resizeCanvas();
-            runTokenomicsSimulator();
-            showToast("Interface Remodelée", "Écosystème clair et aéré activé avec succès.", "success");
+  </div>
+</nav>
+<div class="mobile-drawer" id="drawer">
+  <a href="#demo" class="drawer-link">Démonstration</a>
+  <a href="#why-us" class="drawer-link">Pourquoi nous ?</a>
+  <a href="#method" class="drawer-link">Notre méthode</a>
+  <a href="#pricing" class="drawer-link">Tarifs</a>
+  <a href="#faq" class="drawer-link">FAQ</a>
+  <a href="#contact" class="btn btn-primary">📲 Recevoir notre maquette gratuite</a>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-wm">0%</div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        ⚡ OFFRE SPÉCIALE : Maquette personnalisée gratuite sous 24h
+      </div>
+      <h1 id="hero-h1">
+        Des sites internet premium pour restaurants.<br>
+        <span class="acc">Commandes directes &amp; Réservations.</span>
+      </h1>
+      <p class="sub hero-sub">Nous créons des sites internet pour restaurants conçus pour générer davantage de commandes directes et de réservations. Obtenez notre maquette personnalisée gratuite sous 24h, sans engagement.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary btn-lg">Recevoir notre maquette gratuite</a>
+        <a href="#demo" class="btn btn-outline btn-lg">Voir un exemple</a>
+      </div>
+      <div class="hero-stats">
+        <div class="rv">
+          <div class="hstat-num" data-target="0" data-suffix="%">0%</div>
+          <div class="hstat-lbl">commission sur vos ventes</div>
+        </div>
+        <div class="rv d1">
+          <div class="hstat-num" data-target="24" data-suffix="h">24h</div>
+          <div class="hstat-lbl">maquette personnalisée gratuite</div>
+        </div>
+        <div class="rv d2">
+          <div class="hstat-num" data-target="10" data-suffix=" jours">10 jours</div>
+          <div class="hstat-lbl">livraison de votre site actif</div>
+        </div>
+        <div class="rv d3">
+          <div class="hstat-num" data-target="100" data-suffix="%">100%</div>
+          <div class="hstat-lbl">sur-mesure &amp; optimisé localement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="tk-item">0% de commission à vie<span class="tk-dot"></span></span>
+    <span class="tk-item">Maquette gratuite sous 24h<span class="tk-dot"></span></span>
+    <span class="tk-item">Livraison rapide sous 10 jours<span class="tk-dot"></span></span>
+    <span class="tk-item">SEO local intégré pour Google<span class="tk-dot"></span></span>
+    <span class="tk-item">Réservations en direct sans intermédiaire<span class="tk-dot"></span></span>
+    <span class="tk-item">Zéro engagement requis<span class="tk-dot"></span></span>
+    <span class="tk-item">Support réactif par WhatsApp<span class="tk-dot"></span></span>
+    <span class="tk-item">Menu moderne interactif<span class="tk-dot"></span></span>
+    <!-- Duplicate pour loop infini -->
+    <span class="tk-item">0% de commission à vie<span class="tk-dot"></span></span>
+    <span class="tk-item">Maquette gratuite sous 24h<span class="tk-dot"></span></span>
+    <span class="tk-item">Livraison rapide sous 10 jours<span class="tk-dot"></span></span>
+    <span class="tk-item">SEO local intégré pour Google<span class="tk-dot"></span></span>
+    <span class="tk-item">Réservations en direct sans intermédiaire<span class="tk-dot"></span></span>
+    <span class="tk-item">Zéro engagement requis<span class="tk-dot"></span></span>
+    <span class="tk-item">Support réactif par WhatsApp<span class="tk-dot"></span></span>
+    <span class="tk-item">Menu moderne interactif<span class="tk-dot"></span></span>
+  </div>
+</div>
+
+<!-- ── CALCULATOR ── -->
+<section class="calc-section">
+  <div class="wrap">
+    <div class="calc-wrap rv">
+      <div class="calc-head">
+        <span class="eyebrow">Simulateur de rentabilité</span>
+        <h2>Combien épargnez-vous chaque mois&nbsp;?</h2>
+        <p class="sub" style="margin: 10px auto 0; max-width: 520px;">Estimez vos ventes mensuelles générées par les plateformes de livraison (Uber Eats, Deliveroo, etc.) et visualisez instantanément la commission que nous vous aidons à récupérer.</p>
+      </div>
+      <div class="slider-label">Nos ventes mensuelles via plateformes</div>
+      <div class="slider-row">
+        <input type="range" id="rev-slider" min="200" max="8000" step="100" value="2000">
+        <div class="slider-val" id="rev-val">2 000 €/mois</div>
+      </div>
+      <div class="calc-results">
+        <div class="calc-card loss rv d1">
+          <div class="calc-num" id="c-month">—</div>
+          <div class="calc-lbl">Frais de commission perdus<br>ce mois-ci</div>
+        </div>
+        <div class="calc-card loss rv d2">
+          <div class="calc-num" id="c-year">—</div>
+          <div class="calc-lbl">Frais de commission perdus<br>sur 1 an</div>
+        </div>
+        <div class="calc-card gain rv d3">
+          <div class="calc-num" id="c-save">—</div>
+          <div class="calc-lbl">Gain réinvesti avec<br>notre solution</div>
+        </div>
+      </div>
+      <div class="calc-bottom">
+        <a href="#contact" class="btn btn-primary btn-lg">Obtenir notre maquette gratuite</a>
+        <p class="calc-note">* Sur la base d'une commission moyenne de 30% appliquée par les plateformes tierces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── POURQUOI CHOISIR CONVERT WEB ── -->
+<section class="pain-section" id="why-us">
+  <div class="wrap">
+    <div class="sec-header rv">
+      <span class="eyebrow">Pourquoi choisir Convert Web</span>
+      <h2>Conçu exclusivement pour la réussite de votre établissement</h2>
+      <p class="sub" style="max-width: 620px; margin: 10px auto 0;">Nous fusionnons un web design de standing hôtelier et des techniques de conversion avancées pour donner à votre restaurant l'indépendance commerciale qu'il mérite.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card rv">
+        <span class="pain-icon">🎨</span>
+        <h3>Maquette gratuite sous 24h</h3>
+        <p>Visualisez la structure de votre futur site web sans aucun versement initial. Nous concevons une proposition graphique personnalisée sous 24h.</p>
+      </div>
+      <div class="pain-card rv d1">
+        <span class="pain-icon">💎</span>
+        <h3>Design premium sur mesure</h3>
+        <p>Une esthétique immersive, raffinée et sobre qui reflète fidèlement la qualité de votre table, l'atmosphère de votre salle et vos valeurs.</p>
+      </div>
+      <div class="pain-card rv d2">
+        <span class="pain-icon">📱</span>
+        <h3>Interface fluide et mobile-first</h3>
+        <p>Vos clients consultent votre carte en marchant ou dans les transports. Notre structure est pensée pour s'adapter à tous les écrans de smartphones.</p>
+      </div>
+      <div class="pain-card rv">
+        <span class="pain-icon">📅</span>
+        <h3>Réservations de tables intégrées</h3>
+        <p>Vos convives réservent directement sur votre site. L'information vous parvient instantanément, libérant votre personnel du téléphone.</p>
+      </div>
+      <div class="pain-card rv d1">
+        <span class="pain-icon">💰</span>
+        <h3>Commandes directes sans commission</h3>
+        <p>Encaissez vos commandes à emporter ou en livraison en direct sur votre site. Gardez 100% de la valeur de votre travail.</p>
+      </div>
+      <div class="pain-card rv d2">
+        <span class="pain-icon">📍</span>
+        <h3>Optimisation pour le SEO local</h3>
+        <p>Nous configurons votre site et vos balises locales pour positionner votre établissement au sommet des recherches Google à proximité.</p>
+      </div>
+      <div class="pain-card rv">
+        <span class="pain-icon">🛠️</span>
+        <h3>Accompagnement et mises à jour</h3>
+        <p>Un nouveau plat ? Un ajustement de tarif ? Envoyez-nous un simple message WhatsApp, nous mettons votre carte à jour sous 24h.</p>
+      </div>
+      <div class="pain-card rv d1">
+        <span class="pain-icon">⚡</span>
+        <h3>Mise en ligne rapide sous 10 jours</h3>
+        <p>Notre spécialisation dans l'univers de la restauration nous permet de livrer votre site internet opérationnel et finalisé en un temps record.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEMO (EXEMPLE DE RÉALISATION) ── -->
+<section class="demo-section" id="demo">
+  <div class="wrap">
+    <div class="demo-grid">
+      <div class="demo-text rv">
+        <span class="eyebrow">Démonstration interactive</span>
+        <h2>Visualisez la qualité de nos réalisations</h2>
+        <p class="sub">Nous vous présentons un exemple fonctionnel d'un site de restaurant optimisé pour les conversions par nos soins. Explorez l'interface utilisateur, la fluidité du menu interactif et le module de réservation directe.</p>
+        <p class="sub" style="font-size: 0.9rem; margin-top: 14px; border-left: 2px solid var(--accent); padding-left: 14px;"><strong>Note importante :</strong> Il s'agit d'une simulation interactive illustrant notre charte graphique premium et notre parcours de conversion. Votre futur site sera façonné selon l'ADN unique de votre cuisine.</p>
+        <div class="demo-chips" style="margin-top: 24px;">
+          <span class="chip">📱 Navigation responsive</span>
+          <span class="chip">🛒 Panier interactif fluide</span>
+          <span class="chip">💬 Commande en direct</span>
+          <span class="chip">📅 Module de table sans frais</span>
+        </div>
+        <div style="margin-top: 32px;">
+          <a href="#contact" class="btn btn-primary">Obtenir une démonstration personnalisée</a>
+        </div>
+      </div>
+      <div class="rv d1">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="bdots"><div class="bdot"></div><div class="bdot"></div><div class="bdot"></div></div>
+            <div class="burl">🔒 demo.convertweb.fr · Exemple de réalisation</div>
+          </div>
+          <div class="frame-box" onclick="window.open('demo.html','_blank')">
+            <iframe src="demo.html" title="Exemple de site de restaurant par Convert Web" loading="lazy"></iframe>
+            <div class="frame-overlay">
+              <button class="frame-cta">🔍 Découvrir notre proposition en plein écran →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NOTRE MÉTHODE ── -->
+<section class="process-section" id="method">
+  <div class="wrap">
+    <div class="sec-header rv">
+      <span class="eyebrow">Notre méthode</span>
+      <h2>Un accompagnement rigoureux de A à Z</h2>
+      <p class="sub" style="max-width: 580px; margin: 10px auto 0;">Nous avons conçu une méthode de déploiement agile pour assurer la conception de votre site sans empiéter sur votre précieux temps de service.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <div class="step-n">01</div>
+        <h3>Analyse &amp; Immersion</h3>
+        <p>Nous étudions l'identité de votre établissement, votre menu, votre zone de chalandise locale et vos objectifs commerciaux.</p>
+      </div>
+      <div class="step rv d1">
+        <div class="step-n">02</div>
+        <h3>Maquette sous 24h</h3>
+        <p>Nous élaborons une structure visuelle sur-mesure de votre future page d'accueil et nous vous la présentons gratuitement.</p>
+      </div>
+      <div class="step rv d2">
+        <div class="step-n">03</div>
+        <h3>Validation &amp; Ajustements</h3>
+        <p>Nous affinons la maquette selon vos précieux retours pour façonner un produit numérique en accord avec vos exigences.</p>
+      </div>
+      <div class="step rv d3">
+        <div class="step-n">04</div>
+        <h3>Développement &amp; SEO</h3>
+        <p>Nous programmons votre site, intégrons vos systèmes de commande/réservation directs et optimisons le SEO local sur Google.</p>
+      </div>
+      <div class="step rv d4">
+        <div class="step-n">05</div>
+        <h3>Suivi et Évolution</h3>
+        <p>Nous gérons la maintenance technique, l'hébergement sécurisé et mettons à jour votre carte à la demande par simple message.</p>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 48px;" class="rv">
+      <a href="#contact" class="btn btn-primary btn-lg">Voir ce que pourrait devenir notre site</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── NOTRE ENGAGEMENT (GARANTIES) ── -->
+<section class="pain-section" style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="wrap">
+    <div class="sec-header rv" style="text-align: center; max-width: 600px; margin: 0 auto 52px;">
+      <span class="eyebrow">Notre engagement</span>
+      <h2>Des garanties fermes pour une sérénité absolue</h2>
+      <p class="sub">Nous croyons fermement en l'impact de nos réalisations. C'est pourquoi nous annulons tous vos risques financiers.</p>
+    </div>
+    <div class="pain-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      <div class="pain-card rv" style="background: var(--bg-elevated);">
+        <span class="pain-icon">🛡️</span>
+        <h3>Maquette gratuite, sans carte bancaire</h3>
+        <p>Nous réalisons l'étude et la maquette graphique initiale de votre restaurant sans exiger de paiement. Vous ne vous engagez que si le visuel vous séduit.</p>
+      </div>
+      <div class="pain-card rv d1" style="background: var(--bg-elevated);">
+        <span class="pain-icon">🚫</span>
+        <h3>Zéro commission sur vos transactions</h3>
+        <p>Chaque euro payé par vos clients en direct vous appartient. Nous ne prélevons aucune commission sur vos commandes en ligne.</p>
+      </div>
+      <div class="pain-card rv d2" style="background: var(--bg-elevated);">
+        <span class="pain-icon">⚡</span>
+        <h3>Modifications illimitées avant livraison</h3>
+        <p>Durant toute la phase d'ajustement, nous retravaillons les éléments de design et de contenu autant de fois que requis pour atteindre la perfection.</p>
+      </div>
+      <div class="pain-card rv d3" style="background: var(--bg-elevated);">
+        <span class="pain-icon">🤝</span>
+        <h3>Support technique réactif sous 24h</h3>
+        <p>Vous disposez d'un canal direct de communication. Nous résolvons vos demandes et appliquons vos changements de carte en un temps record.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NOTRE MISSION ── -->
+<section class="process-section">
+  <div class="wrap" style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div class="rv">
+      <span class="eyebrow" style="justify-content: center;">Notre mission</span>
+      <h2 style="margin-bottom: 20px;">Permettre aux restaurateurs de se réapproprier leur présence en ligne</h2>
+      <p class="sub" style="font-size: 1.15rem; line-height: 1.8; color: var(--text);">Nous aidons les restaurants à reprendre le contrôle de leur présence en ligne grâce à des sites rapides, élégants et conçus pour convertir les visiteurs en clients.</p>
+      <p class="sub" style="margin-top: 18px; font-size: 0.95rem;">À l'ère de la dépendance aux plateformes de livraison centralisées et de leurs taux de commission exorbitants, nous offrons aux professionnels de la table une alternative solide, accessible et ultra-qualitative pour valoriser leur savoir-faire en direct.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing-section" id="pricing">
+  <div class="wrap">
+    <div class="sec-header rv">
+      <span class="eyebrow">Nos offres de lancement</span>
+      <h2>Des tarifs transparents, sans engagement</h2>
+      <p class="sub" style="margin: 12px auto 0;">Nous lançons notre activité — vous profitez ainsi d'un soin d'orfèvre à des tarifs ultra-compétitifs et fixes.</p>
+    </div>
+    <div class="plans">
+      <div class="plan rv">
+        <div class="plan-name">Essentiel</div>
+        <div class="plan-price">195€</div>
+        <div class="plan-mo">+ 19€/mois · Sans engagement</div>
+        <ul class="plan-feats">
+          <li>Site responsive haut de gamme</li>
+          <li>Menu interactif moderne</li>
+          <li>Optimisation SEO locale de base</li>
+          <li>Hébergement cloud sécurisé inclus</li>
+          <li>Mises à jour de carte réactives</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="width:100%;">Sélectionner l'offre Essentiel</a>
+      </div>
+      <div class="plan featured rv d1">
+        <div class="plan-badge">⭐ Recommandé</div>
+        <div class="plan-name">Restaurant Pro</div>
+        <div class="plan-price">295€</div>
+        <div class="plan-mo">+ 35€/mois · Sans engagement</div>
+        <ul class="plan-feats">
+          <li>Tout l'écosystème de l'offre Essentiel, plus :</li>
+          <li>Commandes en ligne directes par WhatsApp</li>
+          <li>Réservations de tables intégrées sans commission</li>
+          <li>Avis clients Google synchronisés en temps réel</li>
+          <li>Intégration optimisée Google Maps</li>
+          <li>Support client prioritaire par WhatsApp</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary" style="width:100%;">Sélectionner l'offre Pro</a>
+      </div>
+      <div class="plan rv d2">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">495€</div>
+        <div class="plan-mo">+ 49€/mois · Sans engagement</div>
+        <ul class="plan-feats">
+          <li>Tout l'écosystème de l'offre Restaurant Pro, plus :</li>
+          <li>Audit de performance et SEO avancé</li>
+          <li>Mises à jour prioritaires sous 12h</li>
+          <li>Rapports de performance mensuels détaillés</li>
+          <li>Assistance stratégique conversion directe</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="width:100%;">Sélectionner l'offre Premium</a>
+      </div>
+    </div>
+    <p style="text-align:center; font-size:0.72rem; color:var(--text-dim); margin-top:20px;">🔒 Paiement uniquement à la livraison finale du site validé. Mensualité de maintenance résiliable à tout moment, sans aucun frais caché.</p>
+  </div>
+</section>
+
+<!-- ── FOUNDERS / SOCIAL PROOF WORKAROUND ── -->
+<section class="founders-section">
+  <div class="wrap">
+    <div class="founders-card rv">
+      <div class="founders-text">
+        <span class="eyebrow">Offre Fondateurs</span>
+        <h2>Nous démarrons.<br>Vous en profitez.</h2>
+        <p>Convert Web est une agence en cours de structuration. C'est pour votre restaurant une chance rare : vous bénéficiez de notre attention technique et créative la plus rigoureuse, de tarifs préférentiels figés et d'une proximité directe avec nos fondateurs — sans commercial ou gestionnaire de compte intermédiaire.</p>
+        <a href="#contact" class="btn btn-primary">Devenir client fondateur</a>
+      </div>
+      <div class="perks">
+        <div class="perk">
+          <div class="perk-ico">👥</div>
+          <div>
+            <strong>Interlocuteurs uniques fondateurs</strong>
+            <span>Pas de bureaucratie. Nos fondateurs pilotent eux-mêmes l'intégralité du processus de conception et de codage de votre site.</span>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-ico">💰</div>
+          <div>
+            <strong>Prix de lancement historiques</strong>
+            <span>Ces tarifs constituent les prix les plus bas que nous proposerons. Ils resteront garantis et sans hausse pour nos clients de la première heure.</span>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-ico">🎯</div>
+          <div>
+            <strong>Focalisation maximale sur votre marque</strong>
+            <span>Nous limitons volontairement notre flux de projets actifs pour accorder un niveau de qualité et de détail sans concession.</span>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-ico">🔒</div>
+          <div>
+            <strong>Livraison avant facturation</strong>
+            <span>Nous concevons, développons et vous présentons votre site web finalisé. Vous ne réglez la facture qu'une fois pleinement satisfait.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section" id="faq">
+  <div class="wrap">
+    <div class="sec-header rv">
+      <span class="eyebrow">FAQ</span>
+      <h2>Nous répondons à vos interrogations</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Combien de temps faut-il pour créer notre site ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Nous livrons notre proposition de maquette graphique sous 24h. Suite à votre validation, le développement et la mise en ligne complète sur votre nom de domaine prennent entre 5 et 10 jours ouvrés.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Pouvons-nous modifier notre carte et nos tarifs nous-mêmes ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Afin de vous faire économiser un temps précieux et vous éviter des erreurs de manipulation, nous prenons l'intégralité des modifications en charge. Il vous suffit de nous transmettre une photo ou un document par WhatsApp, et notre équipe applique la modification sous 24h — ce service est totalement inclus dans votre forfait mensuel.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Y a-t-il un engagement sur notre abonnement ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Absolument aucun. L'abonnement mensuel dédié aux services d'hébergement, de support, de mises à jour de carte et de sécurité est résiliable à tout moment par simple demande par e-mail ou WhatsApp.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Notre site sera-t-il correctement indexé sur Google ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Oui. L'intégralité de nos sites intègre des optimisations structurelles pointues pour le SEO local. Nous configurons vos métadonnées, structurons votre code pour la recherche géographique de proximité, et intégrons un module de synchronisation avec votre profil d'établissement Google.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Comment fonctionnent les commandes directes sans commission ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a">Vos clients consultent votre carte interactive et sélectionnent leurs plats directement sur votre site web. La commande vous est acheminée de manière instantanée et structurée sur votre canal de prédilection (numéro WhatsApp de votre restaurant ou boîte e-mail). Aucun intermédiaire ne prélève de pourcentage sur votre chiffre d'affaires.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA / CONTACT FORM ── -->
+<section class="cta-section" id="contact">
+  <div class="wrap">
+    <div class="cta-box rv">
+      <span class="eyebrow" style="justify-content: center;">🎁 Offre de lancement sans risque</span>
+      <h2>Recevoir notre maquette gratuite sous 24h</h2>
+      <p>Renseignez les informations de votre établissement ci-dessous. Nous concevrons et vous ferons parvenir une étude visuelle personnalisée sous 24h, sans aucun engagement ni coordonnées bancaires.</p>
+      <div class="form-stack">
+        <input class="field" type="text" id="f-name" placeholder="Prénom du responsable" autocomplete="given-name">
+        <input class="field" type="text" id="f-resto" placeholder="Nom du restaurant">
+        <input class="field" type="tel" id="f-tel" placeholder="Numéro de téléphone de contact" autocomplete="tel">
+        <input class="field" type="text" id="f-ville" placeholder="Ville d'implantation">
+      </div>
+      <div class="form-err" id="f-err">Merci de remplir correctement tous les champs requis.</div>
+      <button onclick="sendLead()" class="btn btn-primary btn-lg" style="width:100%;">Découvrir notre proposition →</button>
+      <p class="form-note">Vos données restent confidentielles et ne feront l'objet d'aucun usage commercial tiers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Convert<span>Web</span></div>
+        <p>Création de sites internet sur-mesure et optimisés pour la conversion pour restaurants. 0% commission, 100% à votre image.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <a href="#demo">Démo interactive</a>
+        <a href="#why-us">Pourquoi nous ?</a>
+        <a href="#method">Notre méthode</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h5>Nous contacter</h5>
+        <a href="mailto:contact.convertweb@gmail.com">📧 contact.convertweb@gmail.com</a>
+        <a href="https://wa.me/33763676191" target="_blank" rel="noopener noreferrer">💬 Support WhatsApp direct</a>
+        <a href="tel:+33763676191">📞 07 63 67 61 91</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Convert Web — Tous droits réservés</span>
+      <div class="footer-legal">
+        <a href="#" id="openLegal">Mentions légales</a>
+        <a href="#" id="openPrivacy">Politique de confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── MODAL MENTIONS LÉGALES ── -->
+<div id="legalModal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('legalModal')">✕</button>
+    <h3>Mentions légales</h3>
+    <p><strong>Convert Web</strong><br>
+    Édité par <strong>Wissam AIT ELHAJ</strong>, entrepreneur individuel (micro-entreprise en cours d'immatriculation).<br>
+    Adresse professionnelle : <strong>Montereau-Fault-Yonne (77130)</strong> – adresse complète disponible sur simple demande.<br>
+    Téléphone : <a href="tel:+33763676191">07 63 67 61 91</a><br>
+    E-mail : <a href="mailto:contact.convertweb@gmail.com">contact.convertweb@gmail.com</a></p>
+    <h4>Statut juridique</h4>
+    <p>L'activité est actuellement en cours d'immatriculation sous le régime de la micro-entreprise. Numéro SIRET et TVA intracommunautaire : <strong>non encore attribués (en cours)</strong>. Capital social : 0 € (entreprise individuelle).</p>
+    <h4>Directeur de la publication</h4>
+    <p>Wissam AIT ELHAJ</p>
+    <h4>Hébergement</h4>
+    <p>Le site est hébergé par GitHub, Inc. — 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis. <a href="https://pages.github.com/" target="_blank" rel="noopener">https://pages.github.com/</a></p>
+    <h4>Propriété intellectuelle</h4>
+    <p>L'ensemble des éléments présents sur ce site sont la propriété exclusive de Wissam AIT ELHAJ / Convert Web. Toute reproduction est interdite sans autorisation préalable.</p>
+    <h4>Responsabilité</h4>
+    <p>Convert Web s'efforce de fournir des informations exactes et à jour. En cas d'erreur, d'indisponibilité ou de dommage lié à l'utilisation du site, la responsabilité de l'éditeur ne saurait être engagée.</p>
+    <div style="margin-top:24px;">
+      <button class="btn btn-outline" onclick="closeModal('legalModal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CONFIDENTIALITÉ ── -->
+<div id="privacyModal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('privacyModal')">✕</button>
+    <h3>Politique de confidentialité</h3>
+    <p>Chez Convert Web, la protection de vos données personnelles est essentielle.</p>
+    <h4>1. Données collectées</h4>
+    <p>Lors de l'utilisation de notre formulaire de contact ou d'un message WhatsApp, nous pouvons recueillir : votre nom, adresse e-mail, numéro de téléphone, et toute information que vous nous transmettez librement. Nous ne collectons aucune donnée bancaire.</p>
+    <h4>2. Utilisation des données</h4>
+    <p>Ces données sont utilisées uniquement pour vous répondre, vous accompagner et exécuter nos prestations. Aucune donnée n'est vendue à des tiers.</p>
+    <h4>3. Cookies</h4>
+    <p>Ce site n'utilise pas de cookies publicitaires ou de traçage tiers. Seuls des cookies strictement nécessaires au bon fonctionnement peuvent être déposés.</p>
+    <h4>4. Vos droits (RGPD)</h4>
+    <p>Conformément au RGPD, vous pouvez accéder, rectifier ou supprimer vos données en écrivant à : <a href="mailto:contact.convertweb@gmail.com">contact.convertweb@gmail.com</a></p>
+    <h4>5. Sécurité</h4>
+    <p>Vos données sont conservées uniquement le temps nécessaire à la gestion de votre demande et ne sont jamais partagées.</p>
+    <div style="margin-top:24px;">
+      <button class="btn btn-outline" onclick="closeModal('privacyModal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── COOKIE BANNER ── -->
+<div class="cookie-bar" id="cookieBar">
+  <div class="cookie-txt">🍪 Nous utilisons uniquement des cookies essentiels. <a id="cookiePolicyLink">En savoir plus</a></div>
+  <div class="cookie-btns">
+    <button class="btn btn-outline" style="padding:9px 18px;" onclick="setCookie('refused')">Refuser</button>
+    <button class="btn btn-primary" style="padding:9px 18px;" onclick="setCookie('accepted')">Accepter</button>
+  </div>
+</div>
+
+<!-- ── WA FLOAT ── -->
+<a href="https://wa.me/33763676191" target="_blank" rel="noopener noreferrer" class="wa-float" aria-label="Nous contacter sur WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+</a>
+
+<script>
+  /* ── NAV scroll ── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  /* ── HAMBURGER ── */
+  const hbg = document.getElementById('hbg');
+  const drawer = document.getElementById('drawer');
+  hbg.addEventListener('click', () => {
+    hbg.classList.toggle('open');
+    drawer.classList.toggle('open');
+  });
+  drawer.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hbg.classList.remove('open');
+      drawer.classList.remove('open');
+    });
+  });
+
+  /* ── HERO WORD REVEAL ── */
+  (function() {
+    const h1 = document.getElementById('hero-h1');
+    if (!h1) return;
+    function splitWords(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach(part => {
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else if (part) {
+            const outer = document.createElement('span');
+            outer.className = 'w-outer';
+            const inner = document.createElement('span');
+            inner.className = 'w-inner';
+            inner.textContent = part;
+            outer.appendChild(inner);
+            frag.appendChild(outer);
+          }
         });
-    </script>
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'BR') {
+        Array.from(node.childNodes).forEach(splitWords);
+      }
+    }
+    splitWords(h1);
+    setTimeout(() => {
+      h1.querySelectorAll('.w-inner').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), i * 70);
+      });
+    }, 100);
+  })();
+
+  /* ── REVEAL ON SCROLL ── */
+  const rvObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rvObs.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
+
+  /* ── STAT COUNTERS ── */
+  function animCount(el, target, suffix, dur) {
+    let start = null;
+    const step = ts => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const el = e.target.querySelector('.hstat-num');
+        if (!el || el.dataset.done) return;
+        el.dataset.done = '1';
+        const t = parseInt(el.dataset.target);
+        const s = el.dataset.suffix;
+        animCount(el, t, s, 900);
+        statObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.hero-stats > div').forEach(el => statObs.observe(el));
+
+  /* ── CALCULATOR ── */
+  const slider = document.getElementById('rev-slider');
+  const revVal = document.getElementById('rev-val');
+  const cMonth = document.getElementById('c-month');
+  const cYear  = document.getElementById('c-year');
+  const cSave  = document.getElementById('c-save');
+
+  function fmt(n) {
+    return n.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  }
+
+  function updateCalc() {
+    const rev = parseInt(slider.value);
+    const comm = Math.round(rev * 0.30);
+    const annual = comm * 12;
+    const saved = annual - (35 * 12);
+    revVal.textContent = fmt(rev) + '/mois';
+    cMonth.textContent = '-' + fmt(comm);
+    cYear.textContent  = '-' + fmt(annual);
+    cSave.textContent  = '≈ ' + fmt(Math.max(0, saved));
+  }
+
+  slider.addEventListener('input', updateCalc);
+  updateCalc();
+
+  /* ── FAQ ── */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  /* ── SMOOTH SCROLL ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (!href || href === '#') return;
+      try {
+        const target = document.querySelector(href);
+        if (target && !this.closest('.modal-box')) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch(_) {}
+    });
+  });
+
+  /* ── MODALS ── */
+  function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
+  window.addEventListener('click', e => {
+    if (e.target.classList.contains('modal')) closeModal(e.target.id);
+  });
+  document.getElementById('openLegal')?.addEventListener('click', e => { e.preventDefault(); openModal('legalModal'); });
+  document.getElementById('openPrivacy')?.addEventListener('click', e => { e.preventDefault(); openModal('privacyModal'); });
+  document.getElementById('cookiePolicyLink')?.addEventListener('click', e => { e.preventDefault(); openModal('privacyModal'); });
+
+  /* ── COOKIES ── */
+  function setCookie(choice) {
+    localStorage.setItem('cwConsent', choice);
+    document.getElementById('cookieBar').classList.remove('show');
+  }
+  if (!localStorage.getItem('cwConsent')) {
+    document.getElementById('cookieBar').classList.add('show');
+  }
+
+  /* ── LEAD FORM → WHATSAPP ── */
+  function sendLead() {
+    const name  = document.getElementById('f-name').value.trim();
+    const resto = document.getElementById('f-resto').value.trim();
+    const tel   = document.getElementById('f-tel').value.trim();
+    const ville = document.getElementById('f-ville').value.trim();
+    const err   = document.getElementById('f-err');
+
+    if (!name || !resto || !tel || !ville) {
+      err.textContent = 'Merci de remplir tous les champs.';
+      err.style.display = 'block';
+      return;
+    }
+    const clean = tel.replace(/[\s\-\.]/g, '');
+    if (!/^(\+33|0033|0)[1-9](\d{8})$/.test(clean)) {
+      err.textContent = 'Numéro de téléphone invalide (ex: 06 12 34 56 78).';
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+
+    const msg = encodeURIComponent(
+      `Bonjour Convert Web 👋\n\nNous souhaitons recevoir une proposition de maquette gratuite pour notre restaurant « ${resto} » situé à ${ville}.\nNotre contact direct : ${name} (${tel})\n\nMerci !`
+    );
+    window.open(`https://wa.me/33763676191?text=${msg}`, '_blank', 'noopener,noreferrer');
+  }
+</script>
 </body>
 </html>
