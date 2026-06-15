@@ -47,8 +47,8 @@ const PRODUCTS = [
   { id: 10, category: 'menus-sandwiches', name: 'Menu Sandwich Kefta',              price: 10.40, desc: '2 steaks, viande hachée et fromage.',                                              popular: false },
   { id: 11, category: 'menus-sandwiches', name: 'Menu Sandwich Brochette d\'Agneau',price: 10.40, desc: 'Brochette d\'agneau et fromage.',                                                  popular: false },
   { id: 12, category: 'menus-sandwiches', name: 'Menu Sandwich Américain',          price: 10.40, desc: '2 steaks 45 g, œuf et fromage.',                                                   popular: true  },
-  { id: 13, category: 'menus-sandwiches', name: 'Menu Sandwich Forma',              price: 11.05, desc: 'Viande au choix, crème fraîche, fromage râpé, lardons, œuf et GPT.',              popular: false },
-  { id: 14, category: 'menus-sandwiches', name: 'Menu Sandwich Zinger Rolo',        price: 11.05, desc: 'Pita poulet façon KFC, bacon de dinde, steak 45 g, 1 GPT et fromage.',            popular: false },
+  { id: 13, category: 'menus-sandwiches', name: 'Menu Sandwich Forma',              price: 11.05, desc: 'Viande au choix, crème fraîche, fromage râpé, lardons, œuf et frites.',           popular: false },
+  { id: 14, category: 'menus-sandwiches', name: 'Menu Sandwich Zinger Rolo',        price: 11.05, desc: 'Pita poulet façon KFC, bacon de dinde, steak 45 g et fromage.',                   popular: false },
   { id: 15, category: 'menus-sandwiches', name: 'Menu Sandwich Spécial',            price: 11.05, desc: 'Pita, viande marinée au choix, oignons frits, borcha et cordon bleu.',            popular: false },
 
   /* ── MENUS PANINIS ── */
@@ -60,12 +60,12 @@ const PRODUCTS = [
 
   /* ── MENUS TACOS ── */
   { id: 21, category: 'menus-tacos', name: 'Menu Tacos L',  price: 11.05, desc: '1 viande au choix.',  popular: false },
-  { id: 22, category: 'menus-tacos', name: 'Menu Tacos XL', price: 13.00, desc: '2 viandes au choix.', popular: true  },
+  { id: 22, category: 'menus-tacos', name: 'Menu Tacos XL', price: 13.00, desc: '2 viandes au choix.', popular: true, badge: '🧨 Lourd' },
 
   /* ── MENUS BURGERS ── */
-  { id: 23, category: 'menus-burgers', name: 'Menu Double Big Burger',      price: 13.00, desc: '2 steaks 180 g, 2 fromages, salade et tomates.',          popular: false },
+  { id: 23, category: 'menus-burgers', name: 'Menu Double Big Burger',      price: 13.00, desc: '2 steaks 180 g, 2 fromages, salade et tomates.',          popular: false, badge: '🧨 Lourd' },
   { id: 24, category: 'menus-burgers', name: 'Menu Big Burger',             price: 10.40, desc: '1 steak 180 g, 2 fromages, salade et tomates.',           popular: false },
-  { id: 25, category: 'menus-burgers', name: 'Menu Double Big Burger Plus', price: 15.60, desc: '2 steaks 180 g, GPT, œuf et 2 fromages.',                popular: false },
+  { id: 25, category: 'menus-burgers', name: 'Menu Double Big Burger Plus', price: 15.60, desc: '2 steaks 180 g, œuf et 2 fromages.',                      popular: false, badge: '🧨 Lourd' },
   { id: 26, category: 'menus-burgers', name: 'Menu Cheese Burger',          price: 7.15,  desc: '1 steak et fromage.',                                     popular: true  },
   { id: 27, category: 'menus-burgers', name: 'Menu Double Cheeseburger',    price: 8.45,  desc: '2 steaks et 2 fromages.',                                 popular: true  },
   { id: 28, category: 'menus-burgers', name: 'Menu Chicken Burger',         price: 7.80,  desc: 'Chicken pané et fromage.',                                popular: false },
@@ -106,13 +106,13 @@ const PRODUCTS = [
   { id: 53, category: 'pizzas', name: 'Pizza 3 Viandes',    price: 9.75, desc: 'Base et 3 viandes au choix et fromage. Taille sénior.',                                         popular: false },
 
   /* ── TACOS ── */
-  { id: 54, category: 'tacos', name: 'Tacos L',  price: 9.10,  desc: '1 viande au choix.',  popular: false },
-  { id: 55, category: 'tacos', name: 'Tacos XL', price: 10.40, desc: '2 viandes au choix.', popular: false },
+  { id: 54, category: 'tacos', name: 'Tacos L',  price: 9.10,  desc: '1 viande au choix.',  popular: false, badge: '👑 Classique' },
+  { id: 55, category: 'tacos', name: 'Tacos XL', price: 10.40, desc: '2 viandes au choix.', popular: false, badge: '🧨 Lourd' },
 
   /* ── BURGERS ── */
-  { id: 56, category: 'burgers', name: 'Double Big Burger',       price: 10.40, desc: '2 steaks 180 g, 2 fromages, salade et tomates.',                           popular: false },
-  { id: 57, category: 'burgers', name: 'Big Burger',              price: 7.80,  desc: '1 steak 180 g, 2 fromages, salade et tomates.',                            popular: false },
-  { id: 58, category: 'burgers', name: 'Double Big Burger Plus',  price: 13.00, desc: '2 steaks 180 g, GPT, œuf et 2 fromages.',                                 popular: false },
+  { id: 56, category: 'burgers', name: 'Double Big Burger',       price: 10.40, desc: '2 steaks 180 g, 2 fromages, salade et tomates.',                           popular: false, badge: '🧨 Lourd' },
+  { id: 57, category: 'burgers', name: 'Big Burger',              price: 7.80,  desc: '1 steak 180 g, 2 fromages, salade et tomates.',                            popular: false, badge: '👑 Classique' },
+  { id: 58, category: 'burgers', name: 'Double Big Burger Plus',  price: 13.00, desc: '2 steaks 180 g, œuf et 2 fromages.',                                       popular: false, badge: '🧨 Lourd' },
   { id: 59, category: 'burgers', name: 'Cheese Burger',           price: 3.90,  desc: '1 steak et fromage.',                                                      popular: true  },
   { id: 60, category: 'burgers', name: 'Double Cheeseburger',     price: 5.20,  desc: '2 steaks et 2 fromages.',                                                  popular: true  },
   { id: 61, category: 'burgers', name: 'Chicken Burger',          price: 5.20,  desc: 'Chicken pané et fromage.',                                                 popular: false },
@@ -123,7 +123,7 @@ const PRODUCTS = [
 
   /* ── SANDWICHES ── */
   { id: 66, category: 'sandwiches', name: 'Sandwich Chicken Curry',      price: 7.80, desc: 'Poulet mariné, sauce curry et fromage.',                                          popular: false },
-  { id: 67, category: 'sandwiches', name: 'Sandwich Kebab',              price: 7.80, desc: 'Viande kebab, salade, tomates et oignons.',                                       popular: false },
+  { id: 67, category: 'sandwiches', name: 'Sandwich Kebab',              price: 7.80, desc: 'Viande kebab, salade, tomates et oignons.',                                       popular: false, badge: '👑 Classique' },
   { id: 68, category: 'sandwiches', name: 'Sandwich Paprika',            price: 7.80, desc: 'Poulet mariné, paprika et crème fraîche.',                                        popular: false },
   { id: 69, category: 'sandwiches', name: 'Sandwich Mixte',              price: 7.80, desc: '2 viandes au choix et fromage.',                                                  popular: false },
   { id: 70, category: 'sandwiches', name: 'Sandwich Cordon Bleu',        price: 6.50, desc: 'Poulet mariné, sauce curry et fromage.',                                          popular: true  },
@@ -134,8 +134,8 @@ const PRODUCTS = [
   { id: 75, category: 'sandwiches', name: 'Sandwich Kefta',              price: 7.80, desc: '2 steaks, viande hachée et fromage.',                                            popular: false },
   { id: 76, category: 'sandwiches', name: 'Sandwich Brochette d\'Agneau',price: 7.80, desc: 'Brochette d\'agneau et fromage.',                                                popular: false },
   { id: 77, category: 'sandwiches', name: 'Sandwich Américain',          price: 9.10, desc: '2 steaks 45 g, œuf et fromage.',                                                 popular: true  },
-  { id: 78, category: 'sandwiches', name: 'Sandwich Forma',              price: 9.10, desc: 'Viande au choix, crème fraîche, fromage râpé, lardons, œuf et GPT.',            popular: false },
-  { id: 79, category: 'sandwiches', name: 'Sandwich Zinger Rolo',        price: 9.10, desc: 'Pita poulet façon KFC, bacon de dinde, steak 45 g, 1 GPT et fromage.',          popular: false },
+  { id: 78, category: 'sandwiches', name: 'Sandwich Forma',              price: 9.10, desc: 'Viande au choix, crème fraîche, fromage râpé, lardons, œuf et frites.',         popular: false },
+  { id: 79, category: 'sandwiches', name: 'Sandwich Zinger Rolo',        price: 9.10, desc: 'Pita poulet façon KFC, bacon de dinde, steak 45 g et fromage.',                popular: false },
   { id: 80, category: 'sandwiches', name: 'Sandwich Spécial',            price: 9.10, desc: 'Pita, viande marinée au choix, oignons frits, borcha et cordon bleu.',          popular: false },
 
   /* ── ASSIETTES ── */
@@ -177,6 +177,7 @@ const PRODUCTS = [
 let cart     = [];          // [{ product, qty }]
 let activeCategory = 'all';
 let searchQuery    = '';
+let orderMode      = 'emporter'; // 'emporter' | 'livraison'
 
 /* ══════════════════════════════════════════════
    3. HELPERS
@@ -314,6 +315,7 @@ function renderCartItems() {
 function buildOrderMessage() {
   const name    = (document.getElementById('customerName')?.value  || '').trim();
   const address = (document.getElementById('customerAddress')?.value || '').trim();
+  const mode    = document.querySelector('input[name="orderMode"]:checked')?.value || orderMode;
 
   if (!name) {
     showToast('⚠️ Merci d\'indiquer votre prénom');
@@ -321,25 +323,33 @@ function buildOrderMessage() {
     return null;
   }
 
+  if (mode === 'livraison' && !address) {
+    showToast('⚠️ Merci d\'indiquer votre adresse de livraison');
+    document.getElementById('customerAddress')?.focus();
+    return null;
+  }
+
   const lines = cart.map(item => `• ${item.product.name} x${item.qty} — ${formatPrice(item.product.price * item.qty)}`);
   const total = formatPrice(getCartTotal());
+  const modeLabel = mode === 'livraison' ? 'Livraison 🛵' : 'À emporter 🛍️';
 
-  const msg = [
-    'Bonjour,',
+  const msgParts = [
+    'Salut Le Touareg 👋',
     '',
-    'Je souhaite commander :',
-    '',
+    'Commande :',
     ...lines,
     '',
-    `Total : ${total}`,
-    '',
     `Nom : ${name}`,
-    `Adresse : ${address || '(à emporter)'}`,
-    '',
-    'Merci.',
-  ].join('\n');
+    `Mode : ${modeLabel}`,
+  ];
 
-  return msg;
+  if (mode === 'livraison' && address) {
+    msgParts.push(`Adresse : ${address}`);
+  }
+
+  msgParts.push('', `Total : ${total}`, '', 'Merci.');
+
+  return msgParts.join('\n');
 }
 
 function openWhatsApp() {
@@ -398,12 +408,19 @@ function filterProducts() {
   return results;
 }
 
+function getBadgeHtml(product) {
+  if (product.badge === '🧨 Lourd')     return '<span class="product-pop-badge badge-lourd" aria-label="Lourd">🧨 Lourd</span>';
+  if (product.badge === '👑 Classique') return '<span class="product-pop-badge badge-classique" aria-label="Classique">👑 Classique</span>';
+  if (product.popular)                   return '<span class="product-pop-badge badge-pop" aria-label="Populaire">🔥 Populaire</span>';
+  return '';
+}
+
 function buildProductCard(product) {
   return `
     <article class="product-card" aria-label="${esc(product.name)}">
       <div class="product-card-visual">
         <span aria-hidden="true">${getEmoji(product.category)}</span>
-        ${product.popular ? '<span class="product-pop-badge" aria-label="Populaire">★ Populaire</span>' : ''}
+        ${getBadgeHtml(product)}
       </div>
       <div class="product-card-body">
         <h3 class="product-card-name">${esc(product.name)}</h3>
@@ -758,6 +775,17 @@ function initEventListeners() {
 
   /* WhatsApp order */
   document.getElementById('whatsappOrderBtn')?.addEventListener('click', openWhatsApp);
+
+  /* Order mode toggle */
+  document.querySelectorAll('input[name="orderMode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      orderMode = radio.value;
+      const addrWrap = document.getElementById('addressWrap');
+      if (addrWrap) {
+        addrWrap.style.display = orderMode === 'livraison' ? 'block' : 'none';
+      }
+    });
+  });
 }
 
 /* ══════════════════════════════════════════════
