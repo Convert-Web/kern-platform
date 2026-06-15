@@ -672,11 +672,13 @@ function showToast(message) {
 ══════════════════════════════════════════════ */
 
 function bumpBadge() {
-  const badge = document.getElementById('cartBadge');
-  if (!badge) return;
-  badge.classList.remove('bump');
-  void badge.offsetWidth; /* reflow to restart */
-  badge.classList.add('bump');
+  ['cartBadge', 'fabBadge'].forEach(id => {
+    const badge = document.getElementById(id);
+    if (!badge) return;
+    badge.classList.remove('bump');
+    void badge.offsetWidth; /* reflow to restart */
+    badge.classList.add('bump');
+  });
 }
 
 /* ══════════════════════════════════════════════
@@ -806,4 +808,199 @@ document.addEventListener('DOMContentLoaded', () => {
   initEventListeners();
   initAccessibility();
   updateCartUI();
+
+  /* ── Level 2: Live & Interactive ── */
+  initScrollProgress();
+  updateOpenStatus();
+  initCountUp();
+  initCardTilt();
+  initLiveCounter();
 });
+
+/* ══════════════════════════════════════════════
+   21. SCROLL PROGRESS BAR
+══════════════════════════════════════════════ */
+function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  const update = () => {
+    const d   = document.documentElement;
+    const pct = (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+/* ══════════════════════════════════════════════
+   22. REAL-TIME OPEN / CLOSED STATUS
+══════════════════════════════════════════════ */
+function isOpenNow() {
+  const h = new Date().getHours();
+  return h >= 11 && h < 23;
+}
+
+function updateOpenStatus() {
+  const pill = document.getElementById('openStatusPill');
+  const dot  = pill?.querySelector('.hero-badge-dot');
+  const text = pill?.querySelector('.open-text');
+  if (!pill) return;
+
+  if (isOpenNow()) {
+    pill.className = 'info-pill pill-open';
+    if (dot) dot.style.display = '';
+    if (text) text.textContent = 'Ouvert maintenant';
+  } else {
+    pill.className = 'info-pill pill-closed';
+    if (dot) dot.style.display = 'none';
+    if (text) {
+      const nextOpen = new Date().getHours() < 11 ? 'Ouvre à 11h' : 'Ouvre demain à 11h';
+      text.textContent = '🔴 Fermé · ' + nextOpen;
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════
+   23. COUNT-UP ANIMATION (stats)
+══════════════════════════════════════════════ */
+function runCountUp(el) {
+  const raw      = el.dataset.count;
+  if (!raw) return;
+  const target   = parseFloat(raw);
+  const suffix   = el.dataset.suffix   ?? '';
+  const decimals = parseInt(el.dataset.decimals ?? '0', 10);
+  const duration = 1400;
+  const start    = performance.now();
+
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+  const tick = now => {
+    const progress = Math.min((now - start) / duration, 1);
+    const val      = (target * easeOut(progress)).toFixed(decimals);
+    el.textContent = val + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else {
+      el.textContent = target.toFixed(decimals) + suffix;
+      el.classList.add('counted');
+    }
+  };
+  requestAnimationFrame(tick);
+}
+
+function initCountUp() {
+  const els = document.querySelectorAll('[data-count]');
+  if (!els.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = '1';
+        runCountUp(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  els.forEach(el => observer.observe(el));
+}
+
+/* ══════════════════════════════════════════════
+   24. 3D CARD TILT (desktop only)
+══════════════════════════════════════════════ */
+function initCardTilt() {
+  // Skip on touch devices
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  let activeCard = null;
+
+  document.addEventListener('mousemove', e => {
+    const card = e.target.closest('.product-card, .classique-card');
+    if (!card) {
+      if (activeCard) {
+        activeCard.style.transition = 'transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s ease';
+        activeCard.style.transform  = '';
+        activeCard = null;
+      }
+      return;
+    }
+
+    if (card !== activeCard) {
+      if (activeCard) {
+        activeCard.style.transition = 'transform .35s cubic-bezier(.25,.46,.45,.94)';
+        activeCard.style.transform  = '';
+      }
+      activeCard = card;
+      card.style.transition = 'box-shadow .2s ease';
+    }
+
+    const rect  = card.getBoundingClientRect();
+    const x     = e.clientX - rect.left;
+    const y     = e.clientY - rect.top;
+    const cx    = rect.width  / 2;
+    const cy    = rect.height / 2;
+    const rotX  = ((y - cy) / cy) * -6;
+    const rotY  = ((x - cx) / cx) *  6;
+
+    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
+    card.style.boxShadow = `0 20px 50px rgba(191,17,32,.18), 0 8px 20px rgba(0,0,0,.4)`;
+  });
+
+  document.addEventListener('mouseleave', () => {
+    if (activeCard) {
+      activeCard.style.transition = 'transform .4s cubic-bezier(.25,.46,.45,.94)';
+      activeCard.style.transform  = '';
+      activeCard.style.boxShadow  = '';
+      activeCard = null;
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════
+   25. LIVE ORDER COUNTER
+══════════════════════════════════════════════ */
+function initLiveCounter() {
+  const el   = document.getElementById('liveOrderCount');
+  const wrap = document.getElementById('liveCounterWrap');
+  if (!el) return;
+
+  if (!isOpenNow()) {
+    // Replace with a static "fermé" number
+    el.textContent = '0';
+    const dot = wrap?.querySelector('.live-dot');
+    if (dot) { dot.style.background = '#555'; dot.style.animation = 'none'; }
+    return;
+  }
+
+  const now       = new Date();
+  const hoursOpen = Math.max(0, now.getHours() - 11);
+  let   base      = Math.max(2, Math.floor(hoursOpen * 3.8 + Math.random() * 6));
+  el.textContent  = base;
+
+  const bump = () => {
+    if (!isOpenNow()) return;
+    if (Math.random() > 0.65) {
+      base++;
+      el.textContent = base;
+      el.classList.remove('bump');
+      void el.offsetWidth; // reflow
+      el.classList.add('bump');
+      setTimeout(() => el.classList.remove('bump'), 600);
+    }
+    setTimeout(bump, 7000 + Math.random() * 13000);
+  };
+
+  setTimeout(bump, 4000 + Math.random() * 8000);
+}
+
+/* ══════════════════════════════════════════════
+   26. CART BADGE MICRO-ANIMATION
+══════════════════════════════════════════════ */
+function triggerCartBump() {
+  const fabBadge  = document.getElementById('fabBadge');
+  const cartBadge = document.getElementById('cartBadge');
+  [fabBadge, cartBadge].forEach(badge => {
+    if (!badge) return;
+    badge.classList.remove('bump');
+    void badge.offsetWidth;
+    badge.classList.add('bump');
+  });
+}

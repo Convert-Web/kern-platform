@@ -111,6 +111,9 @@
 
 <body>
 
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <!-- ══════════════════════════════════════
        HEADER
   ══════════════════════════════════════ -->
@@ -233,9 +236,9 @@
 
       <div class="hero-content container">
         <div class="hero-info-strip" aria-label="Infos rapides">
-          <span class="info-pill pill-open">
+          <span class="info-pill pill-open" id="openStatusPill">
             <span class="hero-badge-dot" aria-hidden="true"></span>
-            Ouvert maintenant
+            <span class="open-text">Ouvert maintenant</span>
           </span>
           <span class="info-pill">⭐ 4,1 — Google</span>
           <span class="info-pill">🛵 Livraison disponible</span>
@@ -276,22 +279,25 @@
           <div class="stat-item reveal">
             <span class="stat-icon" aria-hidden="true">⭐</span>
             <div class="stat-content">
-              <strong class="stat-value">4,1<span>/5</span></strong>
+              <strong class="stat-value" data-count="4.1" data-decimals="1" data-suffix="/5">4,1<span>/5</span></strong>
               <span class="stat-label">Note Google</span>
             </div>
           </div>
           <div class="stat-item reveal">
             <span class="stat-icon" aria-hidden="true">💬</span>
             <div class="stat-content">
-              <strong class="stat-value">109</strong>
+              <strong class="stat-value" data-count="109" data-suffix="">109</strong>
               <span class="stat-label">Avis clients</span>
             </div>
           </div>
           <div class="stat-item reveal">
-            <span class="stat-icon" aria-hidden="true">🛵</span>
+            <span class="stat-icon" aria-hidden="true">🔥</span>
             <div class="stat-content">
-              <strong class="stat-value">Livraison</strong>
-              <span class="stat-label">Disponible</span>
+              <div class="live-counter-wrap" id="liveCounterWrap">
+                <span class="live-dot" aria-hidden="true"></span>
+                <strong class="stat-value live-count" id="liveOrderCount">–</strong>
+              </div>
+              <span class="stat-label">Commandes ce soir</span>
             </div>
           </div>
           <div class="stat-item reveal">
