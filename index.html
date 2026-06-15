@@ -2,155 +2,548 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LE TOUAREG | Street Food Elite - Montereau</title>
-  
-  <!-- SEO & META -->
-  <meta name="description" content="Le Touareg : Tacos, Burgers, Kebab et Pizzas à Montereau-Fault-Yonne. L'expérience Street Food ultime.">
-  
-  <!-- FONTS : BEBAS POUR L'IMPACT, INTER POUR LE PRO -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ══════════════ SEO ══════════════ -->
+  <title>Le Touareg | Tacos, Kebab, Burgers & Pizzas — Montereau-Fault-Yonne</title>
+  <meta name="description" content="Le Touareg à Montereau-Fault-Yonne. Tacos, kebab, burgers, sandwiches, pizzas. Commandez en ligne sur WhatsApp. Ouvert tous les jours de 11h à 23h. Livraison disponible." />
+  <meta name="keywords" content="Le Touareg Montereau-Fault-Yonne, Tacos Montereau-Fault-Yonne, Kebab Montereau-Fault-Yonne, Burger Montereau-Fault-Yonne, Restaurant rapide Montereau-Fault-Yonne, pizza Montereau, sandwich Montereau" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://letouareg.fr/" />
+
+  <!-- ══════════════ OPEN GRAPH ══════════════ -->
+  <meta property="og:type" content="restaurant" />
+  <meta property="og:title" content="Le Touareg | Tacos, Kebab, Burgers & Pizzas" />
+  <meta property="og:description" content="Restaurant rapide à Montereau-Fault-Yonne. Tacos, kebab, burgers, pizzas. Commandez directement sur WhatsApp." />
+  <meta property="og:url" content="https://letouareg.fr/" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Le Touareg" />
+
+  <!-- ══════════════ TWITTER CARDS ══════════════ -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Le Touareg | Tacos, Kebab, Burgers & Pizzas" />
+  <meta name="twitter:description" content="Restaurant rapide à Montereau-Fault-Yonne. Commandez sur WhatsApp." />
+
+  <!-- ══════════════ SCHEMA.ORG ══════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Le Touareg",
+    "url": "https://letouareg.fr",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "11 Bis Place Diderot",
+      "addressLocality": "Montereau-Fault-Yonne",
+      "postalCode": "77130",
+      "addressCountry": "FR"
+    },
+    "telephone": "+33164248754",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "11:00",
+        "closes": "23:00"
+      }
+    ],
+    "servesCuisine": ["Kebab","Tacos","Burgers","Pizza","Street Food"],
+    "priceRange": "€",
+    "hasMap": "https://maps.google.com/?q=11+Bis+Place+Diderot+77130+Montereau-Fault-Yonne",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.1",
+      "reviewCount": "109",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  }
+  </script>
+
+  <!-- ══════════════ FONTS ══════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <!-- Texture de grain sur tout le site pour le côté "Street" -->
-  <div class="grain"></div>
+  <!-- ══════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════ -->
+  <header class="header" id="header">
+    <div class="header-inner container">
 
-  <!-- LOADER ÉLITE -->
-  <div id="loader">
-    <div class="loader-content">
-      <span class="loader-text">LE TOUAREG</span>
-      <div class="loader-bar"></div>
-    </div>
-  </div>
+      <a href="#hero" class="logo" aria-label="Le Touareg — Accueil">
+        <span class="logo-le">LE</span>
+        <span class="logo-name">TOUAREG</span>
+      </a>
 
-  <!-- HEADER NAVIGATION -->
-  <header class="header">
-    <div class="container header-inner">
-      <div class="brand">
-        <span class="logo-touareg">LE TOUAREG</span>
-        <span class="location-tag">MONTEREAU 77</span>
-      </div>
+      <nav class="nav-desktop" aria-label="Navigation principale">
+        <a href="#populaires" class="nav-link">Populaires</a>
+        <a href="#menu" class="nav-link">Menu</a>
+        <a href="#avis" class="nav-link">Avis</a>
+        <a href="#localisation" class="nav-link">Localisation</a>
+      </nav>
+
       <div class="header-actions">
-        <button class="cart-trigger" id="cartToggle">
-          <span class="cart-icon">🛒</span>
-          <span class="cart-count" id="cartBadge">0</span>
+        <a href="https://wa.me/33164248754" class="btn btn-wa btn-wa-nav" target="_blank" rel="noopener" aria-label="Commander sur WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Commander
+        </a>
+        <button class="cart-toggle" id="cartToggle" aria-label="Ouvrir le panier">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-badge" id="cartBadge" aria-live="polite">0</span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
         </button>
       </div>
+
+    </div>
+
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menu mobile" aria-hidden="true">
+      <nav>
+        <a href="#populaires" class="mobile-nav-link">Populaires</a>
+        <a href="#menu" class="mobile-nav-link">Menu</a>
+        <a href="#avis" class="mobile-nav-link">Avis</a>
+        <a href="#localisation" class="mobile-nav-link">Localisation</a>
+      </nav>
+      <a href="https://wa.me/33164248754" class="btn btn-wa btn-full btn-lg" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Commander sur WhatsApp
+      </a>
     </div>
   </header>
 
-  <!-- HERO : L'IMPACT VISUEL IMMÉDIAT -->
-  <section class="hero" id="home">
-    <div class="hero-video-fallback"></div>
-    <div class="container hero-content">
-      <div class="status-badge reveal">
-        <span class="dot"></span> OUVERT JUSQU'À 23H
-      </div>
-      <h1 class="hero-title reveal">
-        <span class="line-1">STREET FOOD</span>
-        <span class="line-2 t-red">NO LIMIT.</span>
-      </h1>
-      <p class="hero-desc reveal">Tacos, Burgers, Pizzas. On fait pas les choses à moitié. Tu commandes, on livre, tu valides.</p>
-      <div class="hero-btns reveal">
-        <a href="#menu" class="btn btn-main">VOIR LA CARTE</a>
-        <a href="tel:0164248754" class="btn btn-outline">APPELER</a>
-      </div>
+  <!-- ══════════════════════════════════════
+       CART PANEL
+  ══════════════════════════════════════ -->
+  <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+
+  <aside class="cart-panel" id="cartPanel" aria-label="Panier de commande" aria-hidden="true">
+    <div class="cart-panel-header">
+      <h2 class="cart-panel-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Mon Panier
+      </h2>
+      <button class="cart-close" id="cartClose" aria-label="Fermer le panier">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <div class="hero-scroll-indicator"></div>
-  </section>
 
-  <!-- MARQUEE (BANDE DÉFILANTE TYPE NIKE/OFF-WHITE) -->
-  <div class="marquee">
-    <div class="marquee-inner">
-      <span>TACOS LOURD • SAUCE FROMAGÈRE MAISON • BURGER FAT • PIZZA SIGNATURE • KEBAB VRAI • </span>
-      <span>TACOS LOURD • SAUCE FROMAGÈRE MAISON • BURGER FAT • PIZZA SIGNATURE • KEBAB VRAI • </span>
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Votre panier est vide</p>
+        <a href="#menu" class="btn btn-primary btn-sm" id="goToMenuBtn">Voir le menu</a>
+      </div>
+      <ul class="cart-items" id="cartItems" aria-label="Articles dans le panier"></ul>
     </div>
-  </div>
 
-  <!-- MENU INTERACTIF TYPE UBEREATS -->
-  <nav class="category-bar" id="categoryBar">
-    <div class="container cat-inner" id="catNav">
-      <button class="cat-link active" data-cat="all">TOUT</button>
-      <!-- Injecté par JS -->
-    </div>
-  </nav>
-
-  <section class="menu-section" id="menu">
-    <div class="container">
-      <div class="menu-header">
-        <h2 class="section-title">CHOISIS TON CAMP 🔥</h2>
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Rechercher un produit...">
-        </div>
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span class="cart-total-price" id="cartTotalPrice">0,00 €</span>
       </div>
-
-      <div class="products-grid" id="productsGrid">
-        <!-- Les 97 produits arrivent ici -->
+      <div class="cart-form">
+        <label for="customerName" class="sr-only">Votre prénom</label>
+        <input type="text" id="customerName" class="cart-input" placeholder="Votre prénom *" autocomplete="given-name" />
+        <label for="customerAddress" class="sr-only">Votre adresse</label>
+        <input type="text" id="customerAddress" class="cart-input" placeholder="Votre adresse (livraison)" autocomplete="street-address" />
       </div>
-    </div>
-  </section>
-
-  <!-- PANIER LATÉRAL TYPE APP NATIVE -->
-  <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-panel" id="cartPanel">
-    <div class="cart-panel-inner">
-      <div class="cart-header">
-        <h3>TON PANIER</h3>
-        <button id="cartClose" class="close-btn">×</button>
-      </div>
-      
-      <div class="cart-items-container" id="cartItems">
-        <!-- Vide au début -->
-      </div>
-
-      <div class="cart-footer">
-        <div class="total-row">
-          <span>TOTAL</span>
-          <span id="cartTotalPrice">0,00 €</span>
-        </div>
-        
-        <div class="order-form">
-          <input type="text" id="customerName" placeholder="Ton Prénom *" class="order-input">
-          <div class="mode-selector">
-            <label class="mode-option">
-              <input type="radio" name="orderMode" value="Emporter" checked>
-              <span class="mode-box">EMPORTER</span>
-            </label>
-            <label class="mode-option">
-              <input type="radio" name="orderMode" value="Livraison">
-              <span class="mode-box">LIVRAISON</span>
-            </label>
-          </div>
-          <input type="text" id="customerAddress" placeholder="Adresse (Si livraison)" class="order-input">
-        </div>
-
-        <button class="whatsapp-btn" id="whatsappOrderBtn">
-          COMMANDER VIA WHATSAPP 👋
-        </button>
-      </div>
+      <button class="btn btn-wa btn-full btn-lg" id="whatsappOrderBtn" aria-label="Envoyer la commande sur WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Commander sur WhatsApp
+      </button>
     </div>
   </aside>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+  <!-- ══════════════════════════════════════
+       MAIN
+  ══════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ─── HERO ─── -->
+    <section id="hero" class="hero" aria-label="Bienvenue au Touareg">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-ghost-text">TOUAREG</div>
+        <div class="hero-slash"></div>
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+      </div>
+
+      <div class="hero-content container">
+        <div class="hero-badge" aria-label="Ouvert aujourd'hui de 11h à 23h">
+          <span class="hero-badge-dot" aria-hidden="true"></span>
+          Ouvert aujourd'hui · 11h – 23h
+        </div>
+
+        <h1 class="hero-title" aria-label="Le Touareg">
+          <span class="hero-le" aria-hidden="true">LE</span>
+          <span class="hero-touareg">TOUAREG</span>
+        </h1>
+
+        <p class="hero-sub">Tacos &middot; Kebab &middot; Burgers &middot; Pizzas</p>
+        <p class="hero-text">Repas sur place, à emporter ou en livraison.<br>Ouvert tous les jours de 11h à 23h.</p>
+
+        <div class="hero-actions">
+          <a href="#menu" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Voir le menu
+          </a>
+          <a href="https://wa.me/33164248754" class="btn btn-wa btn-lg" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Commander sur WhatsApp
+          </a>
+          <a href="https://maps.google.com/?q=Le+Touareg+11+Bis+Place+Diderot+77130+Montereau-Fault-Yonne" class="btn btn-outline btn-lg" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Itinéraire
+          </a>
+        </div>
+      </div>
+
+      <a href="#stats" class="hero-scroll" aria-label="Défiler vers le bas">
+        <span class="hero-scroll-arrow" aria-hidden="true"></span>
+      </a>
+    </section>
+
+    <!-- ─── STATS ─── -->
+    <section id="stats" class="stats-section" aria-label="Chiffres clés">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item reveal">
+            <span class="stat-icon" aria-hidden="true">⭐</span>
+            <div class="stat-content">
+              <strong class="stat-value">4,1<span>/5</span></strong>
+              <span class="stat-label">Note Google</span>
+            </div>
+          </div>
+          <div class="stat-item reveal">
+            <span class="stat-icon" aria-hidden="true">💬</span>
+            <div class="stat-content">
+              <strong class="stat-value">109</strong>
+              <span class="stat-label">Avis clients</span>
+            </div>
+          </div>
+          <div class="stat-item reveal">
+            <span class="stat-icon" aria-hidden="true">🛵</span>
+            <div class="stat-content">
+              <strong class="stat-value">Livraison</strong>
+              <span class="stat-label">Disponible</span>
+            </div>
+          </div>
+          <div class="stat-item reveal">
+            <span class="stat-icon" aria-hidden="true">🕒</span>
+            <div class="stat-content">
+              <strong class="stat-value">11h–23h</strong>
+              <span class="stat-label">Tous les jours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── POPULAIRES ─── -->
+    <section id="populaires" class="section populaires-section">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-eyebrow reveal">Les favoris</span>
+          <h2 class="section-title reveal">Les Incontournables</h2>
+        </header>
+        <div class="populaires-scroll">
+          <div class="populaires-grid" id="populairesGrid" aria-label="Produits populaires">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── MENU ─── -->
+    <section id="menu" class="section menu-section">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-eyebrow reveal">Commandez directement sur WhatsApp</span>
+          <h2 class="section-title reveal">Notre Menu</h2>
+        </header>
+
+        <!-- Search -->
+        <div class="search-bar reveal" role="search">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="searchInput" class="search-input" placeholder="Rechercher un produit…" aria-label="Rechercher dans le menu" autocomplete="off" />
+          <button class="search-clear" id="searchClear" aria-label="Effacer la recherche" hidden>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="filters-track-wrapper" role="tablist" aria-label="Catégories du menu">
+          <div class="filters-track" id="filtersTrack">
+            <button class="filter-btn active" data-category="all" role="tab" aria-selected="true">Tout voir</button>
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Products -->
+        <div class="products-grid" id="productsGrid" aria-label="Liste des produits"></div>
+        <div class="menu-empty" id="menuEmpty" hidden>
+          <span aria-hidden="true">🔍</span>
+          <p>Aucun produit trouvé pour "<span id="emptySearchTerm"></span>".</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── AVIS ─── -->
+    <section id="avis" class="section reviews-section">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-eyebrow reveal">Google · 109 avis</span>
+          <h2 class="section-title reveal">Ce Qu'ils Disent</h2>
+          <div class="reviews-rating reveal" aria-label="Note moyenne 4,1 sur 5">
+            <div class="stars" aria-hidden="true">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span class="star-half">★</span>
+            </div>
+            <strong>4,1</strong> / 5
+          </div>
+        </header>
+
+        <div class="reviews-grid">
+          <article class="review-card reveal" aria-label="Avis client">
+            <div class="review-stars" aria-label="5 étoiles" aria-hidden="true">★★★★★</div>
+            <blockquote class="review-text">"Tout est au top"</blockquote>
+            <footer class="review-author">
+              <div class="review-avatar" aria-hidden="true">G</div>
+              <cite>Avis Google</cite>
+            </footer>
+          </article>
+          <article class="review-card reveal" aria-label="Avis client">
+            <div class="review-stars" aria-label="5 étoiles" aria-hidden="true">★★★★★</div>
+            <blockquote class="review-text">"Je recommande fortement"</blockquote>
+            <footer class="review-author">
+              <div class="review-avatar" aria-hidden="true">G</div>
+              <cite>Avis Google</cite>
+            </footer>
+          </article>
+          <article class="review-card reveal" aria-label="Avis client">
+            <div class="review-stars" aria-label="4 étoiles" aria-hidden="true">★★★★<span style="opacity:.3">★</span></div>
+            <blockquote class="review-text">"Le tacos et la galette kebab"</blockquote>
+            <footer class="review-author">
+              <div class="review-avatar" aria-hidden="true">G</div>
+              <cite>Avis Google</cite>
+            </footer>
+          </article>
+          <article class="review-card reveal" aria-label="Avis client">
+            <div class="review-stars" aria-label="4 étoiles" aria-hidden="true">★★★★<span style="opacity:.3">★</span></div>
+            <blockquote class="review-text">"Aujourd'hui je teste le burger"</blockquote>
+            <footer class="review-author">
+              <div class="review-avatar" aria-hidden="true">G</div>
+              <cite>Avis Google</cite>
+            </footer>
+          </article>
+        </div>
+
+        <div class="reviews-cta reveal">
+          <a href="https://www.google.com/maps/search/Le+Touareg+Montereau-Fault-Yonne" class="btn btn-outline" target="_blank" rel="noopener" aria-label="Voir tous les avis sur Google">
+            Voir les 109 avis sur Google ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GALERIE ─── -->
+    <section class="section gallery-section" aria-label="Galerie du restaurant">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-eyebrow reveal">Le restaurant</span>
+          <h2 class="section-title reveal">La Carte en Images</h2>
+        </header>
+        <div class="gallery-masonry reveal" aria-hidden="true">
+          <div class="gallery-item gi-tall" style="--g1:#BF1120;--g2:#0a0a0a">
+            <span class="gallery-emoji">🌮</span>
+            <span class="gallery-label">Tacos</span>
+          </div>
+          <div class="gallery-item" style="--g1:#E8520A;--g2:#BF1120">
+            <span class="gallery-emoji">🍔</span>
+            <span class="gallery-label">Burgers</span>
+          </div>
+          <div class="gallery-item" style="--g1:#1a1a1a;--g2:#2a2a2a">
+            <span class="gallery-emoji">🍕</span>
+            <span class="gallery-label">Pizzas</span>
+          </div>
+          <div class="gallery-item gi-wide" style="--g1:#E8520A;--g2:#f48c06">
+            <span class="gallery-emoji">🥙</span>
+            <span class="gallery-label">Sandwiches & Kebab</span>
+          </div>
+          <div class="gallery-item" style="--g1:#222;--g2:#BF1120">
+            <span class="gallery-emoji">🥗</span>
+            <span class="gallery-label">Salades</span>
+          </div>
+          <div class="gallery-item" style="--g1:#BF1120;--g2:#E8520A">
+            <span class="gallery-emoji">🍰</span>
+            <span class="gallery-label">Desserts</span>
+          </div>
+        </div>
+        <p class="gallery-note reveal">Les vraies photos arrivent bientôt — à remplacer par vos visuels.</p>
+      </div>
+    </section>
+
+    <!-- ─── LOCALISATION ─── -->
+    <section id="localisation" class="section location-section">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-eyebrow reveal">11 Bis Place Diderot</span>
+          <h2 class="section-title reveal">Où Nous Trouver</h2>
+        </header>
+
+        <div class="location-grid">
+          <div class="location-info">
+            <div class="location-card reveal">
+              <div class="location-card-icon" aria-hidden="true">📍</div>
+              <div>
+                <h3>Adresse</h3>
+                <address>
+                  11 Bis Place Diderot<br>
+                  77130 Montereau-Fault-Yonne
+                </address>
+                <a href="https://maps.google.com/?q=Le+Touareg+11+Bis+Place+Diderot+77130+Montereau-Fault-Yonne" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+                  Obtenir l'itinéraire
+                </a>
+              </div>
+            </div>
+            <div class="location-card reveal">
+              <div class="location-card-icon" aria-hidden="true">🕒</div>
+              <div>
+                <h3>Horaires</h3>
+                <p>Tous les jours<br><strong>11h00 – 23h00</strong></p>
+              </div>
+            </div>
+            <div class="location-card reveal">
+              <div class="location-card-icon" aria-hidden="true">📞</div>
+              <div>
+                <h3>Téléphone</h3>
+                <a href="tel:+33164248754" class="location-phone">01 64 24 87 54</a>
+              </div>
+            </div>
+            <div class="location-card reveal">
+              <div class="location-card-icon" aria-hidden="true">✅</div>
+              <div>
+                <h3>Services</h3>
+                <ul class="services-list">
+                  <li>Repas sur place</li>
+                  <li>Vente à emporter</li>
+                  <li>Livraison</li>
+                  <li>Livraison sans contact</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="location-map reveal">
+            <iframe
+              src="https://maps.google.com/maps?q=11+Bis+Place+Diderot+77130+Montereau-Fault-Yonne&output=embed&hl=fr"
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Carte - Le Touareg, 11 Bis Place Diderot, Montereau-Fault-Yonne"
+              aria-label="Carte Google Maps de l'emplacement du Touareg"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-info">
-          <h4 class="logo-touareg">LE TOUAREG</h4>
-          <p>11 Bis Place Diderot<br>77130 Montereau-Fault-Yonne</p>
+
+        <div class="footer-brand">
+          <div class="footer-logo" aria-label="Le Touareg">
+            <span>LE</span> TOUAREG
+          </div>
+          <p>Tacos · Kebab · Burgers · Pizzas<br>Montereau-Fault-Yonne</p>
+          <a href="https://wa.me/33164248754" class="btn btn-wa" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Commander maintenant
+          </a>
         </div>
-        <div class="footer-links">
-          <p>Ouvert 7j/7</p>
-          <p>11:00 — 23:00</p>
+
+        <div class="footer-col">
+          <h4>Informations</h4>
+          <ul>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              11 Bis Place Diderot, 77130 Montereau
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7 19.79 19.79 0 0 1 1.61 4.1 2 2 0 0 1 3.6 1.93h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.5a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2z"/></svg>
+              <a href="tel:+33164248754">01 64 24 87 54</a>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              11h00 – 23h00 · Tous les jours
+            </li>
+          </ul>
         </div>
+
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li>Repas sur place</li>
+            <li>Vente à emporter</li>
+            <li>Livraison à domicile</li>
+            <li>Livraison sans contact</li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Menu</h4>
+          <ul>
+            <li><a href="#menu" data-cat-link="menus-sandwiches">Menus Sandwiches</a></li>
+            <li><a href="#menu" data-cat-link="menus-tacos">Menus Tacos</a></li>
+            <li><a href="#menu" data-cat-link="menus-burgers">Menus Burgers</a></li>
+            <li><a href="#menu" data-cat-link="pizzas">Pizzas</a></li>
+            <li><a href="#menu" data-cat-link="boissons">Boissons</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> Le Touareg — 11 Bis Place Diderot, 77130 Montereau-Fault-Yonne</p>
+        <p class="footer-rating">
+          <span aria-hidden="true">⭐</span>
+          <span>4,1/5 · 109 avis Google</span>
+        </p>
       </div>
     </div>
   </footer>
+
+  <!-- ══════════════════════════════════════
+       FLOATING ACTIONS
+  ══════════════════════════════════════ -->
+  <div class="floating-actions" role="complementary" aria-label="Actions rapides">
+    <button class="fab fab-cart" id="fabCart" aria-label="Ouvrir le panier">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="fab-badge" id="fabBadge" aria-live="polite">0</span>
+    </button>
+    <a href="https://wa.me/33164248754" class="fab fab-wa" target="_blank" rel="noopener" aria-label="Commander sur WhatsApp">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <script src="script.js"></script>
 </body>
