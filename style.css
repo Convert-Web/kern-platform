@@ -99,13 +99,13 @@
 
 /* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   font-family: var(--font-body);
   background: var(--black);
   color: var(--off-white);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -1056,12 +1056,10 @@ blockquote, cite { font-style: normal; }
 /* ═══════════════════════════════════════════════════
    POPULAIRES SECTION
 ═══════════════════════════════════════════════════ */
-.populaires-section { background: var(--surface); }
+.populaires-section { background: var(--surface); overflow: hidden; }
 .populaires-scroll {
   overflow-x: auto;
   padding-bottom: var(--s4);
-  margin: 0 calc(-1 * var(--s6));
-  padding-inline: var(--s6);
 }
 .populaires-scroll::-webkit-scrollbar { height: 3px; }
 .populaires-scroll::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
@@ -1147,7 +1145,7 @@ blockquote, cite { font-style: normal; }
 /* ═══════════════════════════════════════════════════
    MENU SECTION
 ═══════════════════════════════════════════════════ */
-.menu-section { background: var(--black); }
+.menu-section { background: var(--black); overflow-x: clip; }
 
 /* Search */
 .search-bar {
@@ -1193,8 +1191,6 @@ blockquote, cite { font-style: normal; }
   margin-bottom: var(--s10);
   padding-bottom: var(--s3);
   scrollbar-width: none;
-  margin-inline: calc(-1 * var(--s6));
-  padding-inline: var(--s6);
 }
 .filters-track-wrapper::-webkit-scrollbar { display: none; }
 .filters-track {
@@ -1228,7 +1224,7 @@ blockquote, cite { font-style: normal; }
 /* Products grid */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr));
   gap: var(--s4);
   perspective: 1200px;
 }
