@@ -457,6 +457,69 @@ img{display:block; max-width:100%;}
 .modal-footer{ display:flex; align-items:center; gap:12px; padding:14px 20px; border-top:1px solid var(--border); }
 .composer-count{ margin-left:auto; font-size:13px; color:var(--ink-faint); }
 
+/* ============ COMPOSER MULTI-IMAGES ============ */
+.composer-image-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
+.composer-image-grid:empty{ display:none; }
+.composer-image-cell{ position:relative; border-radius:14px; overflow:hidden; aspect-ratio:1; background:var(--bg); }
+.composer-image-cell img{ width:100%; height:100%; object-fit:cover; }
+
+/* ============ POST IMAGE GRID ============ */
+.post-image-grid{ display:grid; gap:4px; border-radius:16px; overflow:hidden; margin-bottom:12px; }
+.post-image-count-1{ grid-template-columns:1fr; }
+.post-image-count-1 .post-image-cell{ aspect-ratio:16/10; }
+.post-image-count-2{ grid-template-columns:1fr 1fr; }
+.post-image-count-2 .post-image-cell{ aspect-ratio:1; }
+.post-image-count-3{ grid-template-columns:2fr 1fr; }
+.post-image-count-3 .post-image-cell:first-child{ grid-row:span 2; aspect-ratio:auto; }
+.post-image-count-3 .post-image-cell:not(:first-child){ aspect-ratio:1; }
+.post-image-count-4{ grid-template-columns:1fr 1fr; }
+.post-image-count-4 .post-image-cell{ aspect-ratio:1; }
+.post-image-cell{ overflow:hidden; background:var(--bg); }
+.post-image-cell img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 400ms var(--ease-out); }
+.post-image-cell:hover img{ transform:scale(1.03); }
+
+/* ============ RICH TEXT (hashtags & mentions) ============ */
+.rich-tag, .rich-mention{ color:var(--accent); font-weight:600; }
+.rich-tag:hover, .rich-mention:hover{ text-decoration:underline; }
+
+/* ============ REACTIONS ============ */
+.reaction-wrap{ position:relative; }
+.reaction-picker{
+  position:absolute; bottom:calc(100% + 8px); left:0; display:flex; gap:4px;
+  background:var(--surface); border:1px solid var(--border); border-radius:20px;
+  padding:6px; box-shadow:var(--shadow-md); z-index:10;
+  animation:pickerIn 160ms var(--ease-spring);
+}
+.reaction-picker[hidden]{ display:none; }
+@keyframes pickerIn{ from{ opacity:0; transform:translateY(6px) scale(0.9); } to{ opacity:1; transform:translateY(0) scale(1); } }
+.reaction-option{
+  font-size:22px; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  transition:transform var(--dur-fast) var(--ease-spring), background var(--dur-fast);
+}
+.reaction-option:hover{ transform:scale(1.25) translateY(-3px); background:var(--bg); }
+
+/* ============ REPOST ============ */
+.repost-embed{
+  border:1px solid var(--border); border-radius:14px; padding:12px; margin-top:2px; display:block;
+  transition:background var(--dur-fast);
+}
+.repost-embed:hover{ background:var(--bg); }
+.repost-embed-thumb{ width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-top:8px; }
+.repost-embed-preview{ margin-top:12px; }
+.repost-choice-list{ padding:12px; display:flex; flex-direction:column; gap:4px; }
+.repost-choice-btn{
+  display:flex; align-items:center; gap:14px; padding:14px; border-radius:14px; text-align:left;
+  transition:background var(--dur-fast);
+}
+.repost-choice-btn:hover{ background:var(--bg); }
+.repost-choice-btn .post-action-icon{ width:24px; height:24px; color:var(--accent); flex-shrink:0; }
+.repost-choice-btn b{ display:block; font-size:14.5px; }
+.repost-choice-btn span{ font-size:12.5px; color:var(--ink-faint); }
+
+/* ============ HASHTAG PAGE ============ */
+.hashtag-title-icon{ display:inline-flex; width:22px; height:22px; color:var(--accent); vertical-align:-4px; margin-right:6px; }
+.hashtag-title-icon svg{ width:100%; height:100%; }
+
 /* ============ STORY COMPOSER ============ */
 .story-drop-zone{
   border:2px dashed var(--border-strong); border-radius:18px; padding:44px 20px;
@@ -585,6 +648,11 @@ img{display:block; max-width:100%;}
   transition:background var(--dur-fast);
 }
 .search-result-item:hover{ background:var(--surface); }
+.hashtag-result-icon{
+  width:48px; height:48px; border-radius:32%; background:var(--accent-soft); color:var(--accent);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.hashtag-result-icon svg{ width:22px; height:22px; }
 
 /* ============ NOTIFICATIONS ============ */
 .notif-item{
@@ -759,6 +827,8 @@ const iconHeart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const iconHeartFilled = `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 20.5s-7.5-4.6-9.8-9.4C.7 7.6 2.4 4 6 4c2 0 3.6 1.1 4.5 2.7C11.4 5.1 13 4 15 4c3.6 0 5.3 3.6 3.8 7.1-2.3 4.8-9.8 9.4-9.8 9.4-.4.3-1 .3-1.4 0Z"/></svg>`;
 const iconComment = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7A2.5 2.5 0 0 1 17.5 16H10l-4.5 4v-4h-1A2.5 2.5 0 0 1 4 13.5v-7Z"/></svg>`;
 const iconShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg>`;
+const iconRepost = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11a3 3 0 0 1 3 3v2"/><path d="m15 4 3 3-3 3"/><path d="M20 17H9a3 3 0 0 1-3-3v-2"/><path d="m9 20-3-3 3-3"/></svg>`;
+const iconHashtag = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 7 20M17 4l-2 16M4 9h16M3 15h16"/></svg>`;
 const iconImage = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15.5-5-5-9.5 9.5"/></svg>`;
 const iconX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
 const iconSend = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 20 4l-7 16-2.5-6.5L4 11Z"/></svg>`;
@@ -783,7 +853,7 @@ const State = {
 
 /* ---------- Schéma des données ----------
    users:<userId>            -> {id, handle, name, bio, avatarColor, avatarEmoji, createdAt, following:[], followers:[]}
-   posts:<postId>            -> {id, authorId, text, imageDataUrl, createdAt, likes:[userId], comments:[{id,authorId,text,createdAt}]}
+   posts:<postId>            -> {id, authorId, text, images:[dataUrl], createdAt, reactions:{userId:key}, comments:[{id,authorId,text,createdAt}], hashtags:[str], mentions:[str], repostOf:postId|null}
    feed:index                -> [postId,...] shared:true
    stories:<storyId>         -> {id, authorId, imageDataUrl, text, createdAt, expiresAt}
    stories:index             -> [storyId,...] shared:true
@@ -992,6 +1062,8 @@ function renderRouteContent(route){
   else if(base === '#search') renderSearchPage();
   else if(base === '#notifications') renderNotificationsPage();
   else if(base === '#live') renderLivePage();
+  else if(base === '#hashtag') renderHashtagPage();
+  else if(base === '#profile-by-handle') { resolveHandleRoute(route.split('/')[1]); }
   else renderFeedPage();
 }
 
@@ -1062,10 +1134,35 @@ function closeModal(){
 /* ======================================================================
    COMPOSER (création de publication)
 ====================================================================== */
-function openComposerModal(){
+/* ======================================================================
+   TEXTE ENRICHI : hashtags (#mot) et mentions (@pseudo)
+====================================================================== */
+function extractHashtags(text){
+  const matches = text.match(/#([a-zA-Z0-9_À-ÿ]{2,30})/g) || [];
+  return [...new Set(matches.map(h => h.slice(1).toLowerCase()))];
+}
+function extractMentions(text){
+  const matches = text.match(/@([a-z0-9_]{3,20})/gi) || [];
+  return [...new Set(matches.map(m => m.slice(1).toLowerCase()))];
+}
+function richTextHTML(text){
+  return escapeHTML(text)
+    .replace(/#([a-zA-Z0-9_À-ÿ]{2,30})/g, '<a href="#hashtag/$1" class="rich-tag">#$1</a>')
+    .replace(/@([a-z0-9_]{3,20})/gi, '<a href="#profile-by-handle/$1" class="rich-mention">@$1</a>');
+}
+
+async function resolveHandleRoute(handle){
+  const idx = await DB.get('handles:index', true) || {};
+  const id = idx[handle.toLowerCase()];
+  if(id) location.hash = '#profile/'+id;
+  else toast('Ce pseudo n\'existe pas.', 'danger');
+}
+
+function openComposerModal(prefill={}){
+  const isRepost = !!prefill.repostOf;
   openModal(`
     <div class="modal-header">
-      <h3>Nouvelle publication</h3>
+      <h3>${isRepost ? 'Republier avec un commentaire' : 'Nouvelle publication'}</h3>
       <button class="icon-btn" id="closeComposer" aria-label="Fermer">${iconX}</button>
     </div>
     <div class="composer-body">
@@ -1076,14 +1173,15 @@ function openComposerModal(){
           <span class="composer-visibility">Public</span>
         </div>
       </div>
-      <textarea id="composerText" class="composer-textarea" placeholder="Quoi de neuf ?" maxlength="500" rows="4" autofocus></textarea>
-      <div id="composerImagePreview" class="composer-image-preview" hidden></div>
+      <textarea id="composerText" class="composer-textarea" placeholder="Quoi de neuf ? Utilise # pour un sujet, @ pour mentionner." maxlength="500" rows="4" autofocus></textarea>
+      <div id="composerImagePreview" class="composer-image-grid"></div>
+      ${isRepost ? `<div class="repost-embed-preview" id="repostEmbedPreview"></div>` : ''}
     </div>
     <div class="modal-footer">
-      <label class="icon-btn" title="Ajouter une image">
+      ${isRepost ? '' : `<label class="icon-btn" title="Ajouter des images">
         ${iconImage}
-        <input type="file" accept="image/*" id="composerImageInput" hidden>
-      </label>
+        <input type="file" accept="image/*" id="composerImageInput" hidden multiple>
+      </label>`}
       <span class="composer-count" id="composerCount">500</span>
       <button class="btn-accent" id="submitPost">Publier</button>
     </div>
@@ -1094,46 +1192,108 @@ function openComposerModal(){
   textarea.addEventListener('input', ()=>{ count.textContent = 500 - textarea.value.length; });
   textarea.focus();
 
-  let imageDataUrl = null;
-  document.getElementById('composerImageInput').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    if(file.size > 4*1024*1024){ toast('Image trop lourde (max 4 Mo).', 'danger'); return; }
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      imageDataUrl = reader.result;
-      const prev = document.getElementById('composerImagePreview');
-      prev.hidden = false;
-      prev.innerHTML = `<img src="${imageDataUrl}" alt=""><button class="remove-image-btn" id="removeImg">${iconX}</button>`;
-      document.getElementById('removeImg').addEventListener('click', ()=>{ imageDataUrl=null; prev.hidden=true; prev.innerHTML=''; });
-    };
-    reader.readAsDataURL(file);
+  if(isRepost){
+    renderRepostEmbedPreview(prefill.repostOf);
+  }
+
+  let images = [];
+  const MAX_IMAGES = 4;
+  function paintImagePreview(){
+    const prev = document.getElementById('composerImagePreview');
+    prev.innerHTML = images.map((src,i) => `
+      <div class="composer-image-cell">
+        <img src="${src}" alt="">
+        <button class="remove-image-btn" data-idx="${i}">${iconX}</button>
+      </div>
+    `).join('');
+    prev.querySelectorAll('.remove-image-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ images.splice(Number(btn.dataset.idx),1); paintImagePreview(); });
+    });
+  }
+
+  const imgInput = document.getElementById('composerImageInput');
+  imgInput?.addEventListener('change', (e)=>{
+    const files = Array.from(e.target.files || []);
+    if(images.length + files.length > MAX_IMAGES){
+      toast(`Maximum ${MAX_IMAGES} images par publication.`, 'danger');
+    }
+    const allowed = files.slice(0, MAX_IMAGES - images.length);
+    let pending = allowed.length;
+    allowed.forEach(file=>{
+      if(file.size > 4*1024*1024){ toast(file.name+' est trop lourde (max 4 Mo).', 'danger'); pending--; return; }
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        images.push(reader.result);
+        paintImagePreview();
+      };
+      reader.readAsDataURL(file);
+    });
+    imgInput.value = '';
   });
 
   document.getElementById('submitPost').addEventListener('click', async ()=>{
     const text = textarea.value.trim();
-    if(!text && !imageDataUrl){ toast('Ajoute du texte ou une image.', 'danger'); return; }
+    if(!text && images.length===0 && !isRepost){ toast('Ajoute du texte ou une image.', 'danger'); return; }
+    if(isRepost && !text){ toast('Ajoute un commentaire pour republier.', 'danger'); return; }
     const btn = document.getElementById('submitPost');
     btn.disabled = true; btn.textContent = 'Publication…';
-    await createPost(text, imageDataUrl);
+    await createPost(text, images, isRepost ? prefill.repostOf : null);
     closeModal();
-    toast('Publication partagée.');
+    toast(isRepost ? 'Republié.' : 'Publication partagée.');
     if(State.route === '#feed') renderFeedPage();
+    else if(State.route === '#profile') renderProfilePage();
   });
 }
 
-async function createPost(text, imageDataUrl){
+async function renderRepostEmbedPreview(originalPost){
+  const author = await getUser(originalPost.authorId);
+  const el = document.getElementById('repostEmbedPreview');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="repost-embed">
+      <div class="post-author-link" style="pointer-events:none">
+        ${avatarHTML(author, 28)}
+        <div class="post-author-text"><b>${escapeHTML(author?.name||'')}</b><span>@${escapeHTML(author?.handle||'')}</span></div>
+      </div>
+      ${originalPost.text ? `<p class="post-text" style="font-size:13.5px;margin-top:6px">${richTextHTML(originalPost.text)}</p>` : ''}
+      ${originalPost.images?.length ? `<img src="${originalPost.images[0]}" class="repost-embed-thumb" alt="">` : ''}
+    </div>
+  `;
+}
+
+async function createPost(text, images, repostOf=null){
   const id = uid('p');
+  const hashtags = extractHashtags(text);
+  const mentions = extractMentions(text);
   const post = {
     id, authorId: State.currentUser.id,
-    text, imageDataUrl: imageDataUrl || null,
+    text, images: images && images.length ? images : [],
     createdAt: Date.now(),
-    likes: [], comments: []
+    reactions: {}, // { userId: emoji }
+    comments: [],
+    hashtags, mentions,
+    repostOf: repostOf ? repostOf.id : null
   };
   await DB.set('posts:'+id, post);
   const index = await DB.get('feed:index', true) || [];
   index.unshift(id);
   await DB.set('feed:index', index, true);
+
+  for(const tag of hashtags){
+    const tagIndex = await DB.get('hashtag:'+tag, true) || [];
+    tagIndex.unshift(id);
+    await DB.set('hashtag:'+tag, tagIndex, true);
+  }
+  for(const handle of mentions){
+    const idx = await DB.get('handles:index', true) || {};
+    const mentionedId = idx[handle];
+    if(mentionedId && mentionedId !== State.currentUser.id){
+      await pushNotification(mentionedId, 'mention', State.currentUser.id, "t'a mentionné dans une publication");
+    }
+  }
+  if(repostOf && repostOf.authorId !== State.currentUser.id){
+    await pushNotification(repostOf.authorId, 'repost', State.currentUser.id, 'a republié ta publication');
+  }
   return post;
 }
 
@@ -1191,12 +1351,67 @@ function emptyStateHTML(icon, title, body, ctaLabel, ctaId){
   </div>`;
 }
 
+const REACTIONS = [
+  {emoji:'❤️', key:'love', label:'J\'adore'},
+  {emoji:'😂', key:'haha', label:'Ça me fait rire'},
+  {emoji:'😮', key:'wow', label:'Waouh'},
+  {emoji:'😢', key:'sad', label:'Triste'},
+  {emoji:'👏', key:'clap', label:'Bravo'},
+];
+
+function normalizePost(post){
+  // Rétrocompatibilité avec l'ancien schéma (likes: [userId]) si présent en storage
+  if(!post.reactions){
+    post.reactions = {};
+    (post.likes || []).forEach(uid => post.reactions[uid] = 'love');
+  }
+  if(!post.images){
+    post.images = post.imageDataUrl ? [post.imageDataUrl] : [];
+  }
+  if(!post.comments) post.comments = [];
+  if(post.repostOf === undefined) post.repostOf = null;
+  return post;
+}
+
+function reactionCounts(post){
+  const counts = {};
+  Object.values(post.reactions).forEach(k => counts[k] = (counts[k]||0)+1);
+  return counts;
+}
+function totalReactions(post){ return Object.keys(post.reactions).length; }
+function topReactionEmojis(post){
+  const counts = reactionCounts(post);
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3)
+    .map(([key])=> REACTIONS.find(r=>r.key===key)?.emoji || '❤️');
+}
+
 async function renderPostCard(post){
+  post = normalizePost(post);
   const author = await getUser(post.authorId);
   const el = document.createElement('article');
   el.className = 'post-card';
   el.dataset.postId = post.id;
-  const liked = author ? post.likes.includes(State.currentUser.id) : false;
+  const myReaction = post.reactions[State.currentUser.id];
+
+  let repostBlockHTML = '';
+  if(post.repostOf){
+    const original = normalizePost(await DB.get('posts:'+post.repostOf) || {});
+    if(original.id){
+      const origAuthor = await getUser(original.authorId);
+      repostBlockHTML = `
+      <a href="#profile/${original.authorId}" class="repost-embed" style="display:block;margin-top:10px" data-open-original="${original.id}">
+        <div class="post-author-link" style="pointer-events:none">
+          ${avatarHTML(origAuthor, 28)}
+          <div class="post-author-text"><b>${escapeHTML(origAuthor?.name||'')}</b><span>@${escapeHTML(origAuthor?.handle||'')} · ${timeAgo(original.createdAt)}</span></div>
+        </div>
+        ${original.text ? `<p class="post-text" style="font-size:13.5px;margin-top:6px">${richTextHTML(original.text)}</p>` : ''}
+        ${original.images.length ? `<img src="${original.images[0]}" class="repost-embed-thumb" alt="">` : ''}
+      </a>`;
+    } else {
+      repostBlockHTML = `<p class="no-comments" style="margin-top:10px">Publication originale supprimée.</p>`;
+    }
+  }
+
   el.innerHTML = `
     <div class="post-head">
       <a href="#profile/${post.authorId}" class="post-author-link">
@@ -1207,16 +1422,25 @@ async function renderPostCard(post){
         </div>
       </a>
     </div>
-    ${post.text ? `<p class="post-text">${escapeHTML(post.text)}</p>` : ''}
-    ${post.imageDataUrl ? `<div class="post-image"><img src="${post.imageDataUrl}" alt=""></div>` : ''}
+    ${post.text ? `<p class="post-text">${richTextHTML(post.text)}</p>` : ''}
+    ${post.images.length ? `<div class="post-image-grid post-image-count-${Math.min(post.images.length,4)}">${post.images.map(src=>`<div class="post-image-cell"><img src="${src}" alt=""></div>`).join('')}</div>` : ''}
+    ${repostBlockHTML}
     <div class="post-actions">
-      <button class="post-action like-btn ${liked?'liked':''}" data-action="like">
-        <span class="post-action-icon">${liked ? iconHeartFilled : iconHeart}</span>
-        <span class="like-count">${post.likes.length || ''}</span>
-      </button>
+      <div class="reaction-wrap">
+        <button class="post-action reaction-btn ${myReaction?'liked':''}" data-action="react">
+          <span class="post-action-icon">${myReaction ? REACTIONS.find(r=>r.key===myReaction).emoji : iconHeart}</span>
+          <span class="like-count">${totalReactions(post) || ''}</span>
+        </button>
+        <div class="reaction-picker" hidden>
+          ${REACTIONS.map(r=>`<button class="reaction-option" data-reaction="${r.key}" title="${r.label}">${r.emoji}</button>`).join('')}
+        </div>
+      </div>
       <button class="post-action" data-action="comment">
         <span class="post-action-icon">${iconComment}</span>
         <span>${post.comments.length || ''}</span>
+      </button>
+      <button class="post-action" data-action="repost">
+        <span class="post-action-icon">${iconRepost}</span>
       </button>
       <button class="post-action" data-action="share">
         <span class="post-action-icon">${iconShare}</span>
@@ -1225,15 +1449,47 @@ async function renderPostCard(post){
     <div class="post-comments" hidden></div>
   `;
 
-  el.querySelector('[data-action="like"]').addEventListener('click', async (e)=>{
+  el.querySelectorAll('[data-open-original]').forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      // Le lien pointe déjà vers le profil de l'auteur original via href ; comportement natif conservé.
+    });
+  });
+
+  const reactionWrap = el.querySelector('.reaction-wrap');
+  const reactBtn = el.querySelector('[data-action="react"]');
+  const picker = el.querySelector('.reaction-picker');
+
+  function closePicker(){ picker.hidden = true; }
+  function openPicker(){
+    document.querySelectorAll('.reaction-picker').forEach(p => { if(p !== picker) p.hidden = true; });
+    picker.hidden = false;
+  }
+
+  let hoverTimer, longPressTimer;
+  reactionWrap.addEventListener('mouseenter', ()=>{ clearTimeout(hoverTimer); openPicker(); });
+  reactionWrap.addEventListener('mouseleave', ()=>{ hoverTimer = setTimeout(closePicker, 250); });
+  reactBtn.addEventListener('touchstart', ()=>{ longPressTimer = setTimeout(openPicker, 380); }, {passive:true});
+  reactBtn.addEventListener('touchend', ()=>{ clearTimeout(longPressTimer); });
+  document.addEventListener('click', (e)=>{ if(!reactionWrap.contains(e.target)) closePicker(); });
+
+  async function applyReaction(key){
+    await setReaction(post, key);
+    const now = post.reactions[State.currentUser.id];
+    reactBtn.classList.toggle('liked', !!now);
+    reactBtn.querySelector('.post-action-icon').innerHTML = now ? REACTIONS.find(r=>r.key===now).emoji : iconHeart;
+    reactBtn.querySelector('.like-count').textContent = totalReactions(post) || '';
+    reactBtn.classList.add('pop'); setTimeout(()=>reactBtn.classList.remove('pop'), 260);
+    closePicker();
+  }
+
+  reactBtn.addEventListener('click', async (e)=>{
     e.preventDefault();
-    await toggleLike(post);
-    const btn = el.querySelector('[data-action="like"]');
-    const nowLiked = post.likes.includes(State.currentUser.id);
-    btn.classList.toggle('liked', nowLiked);
-    btn.querySelector('.post-action-icon').innerHTML = nowLiked ? iconHeartFilled : iconHeart;
-    btn.querySelector('.like-count').textContent = post.likes.length || '';
-    btn.classList.add('pop'); setTimeout(()=>btn.classList.remove('pop'), 260);
+    e.stopPropagation();
+    if(!picker.hidden){ closePicker(); return; }
+    await applyReaction(myReaction ? null : 'love');
+  });
+  picker.querySelectorAll('.reaction-option').forEach(opt=>{
+    opt.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); applyReaction(opt.dataset.reaction); });
   });
 
   el.querySelector('[data-action="comment"]').addEventListener('click', ()=>{
@@ -1242,22 +1498,68 @@ async function renderPostCard(post){
     if(!box.hidden) renderCommentBox(box, post);
   });
 
+  el.querySelector('[data-action="repost"]').addEventListener('click', ()=>{
+    openRepostChoiceModal(post);
+  });
+
   el.querySelector('[data-action="share"]').addEventListener('click', ()=>{
     toast('Lien de la publication copié.');
+  });
+
+  el.querySelectorAll('.rich-tag, .rich-mention').forEach(link=>{
+    link.addEventListener('click', async (e)=>{
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      if(href.startsWith('#hashtag/')) location.hash = href;
+      else if(href.startsWith('#profile-by-handle/')) await resolveHandleRoute(href.split('/')[1]);
+    });
   });
 
   return el;
 }
 
-async function toggleLike(post){
+async function setReaction(post, key){
   const uidCur = State.currentUser.id;
-  const has = post.likes.includes(uidCur);
-  if(has) post.likes = post.likes.filter(id=>id!==uidCur);
-  else {
-    post.likes.push(uidCur);
-    if(post.authorId !== uidCur) await pushNotification(post.authorId, 'like', State.currentUser.id, 'a aimé ta publication');
+  const had = post.reactions[uidCur];
+  if(had === key || key === null){
+    delete post.reactions[uidCur];
+  } else {
+    post.reactions[uidCur] = key;
+    if(!had && post.authorId !== uidCur){
+      await pushNotification(post.authorId, 'like', State.currentUser.id, 'a réagi à ta publication');
+    }
   }
   await DB.set('posts:'+post.id, post);
+}
+
+function openRepostChoiceModal(post){
+  openModal(`
+    <div class="modal-header">
+      <h3>Republier</h3>
+      <button class="icon-btn" id="closeRepostChoice" aria-label="Fermer">${iconX}</button>
+    </div>
+    <div class="repost-choice-list">
+      <button class="repost-choice-btn" id="quickRepost">
+        <span class="post-action-icon">${iconRepost}</span>
+        <div><b>Republier</b><span>Partage immédiatement sur ton profil</span></div>
+      </button>
+      <button class="repost-choice-btn" id="quoteRepost">
+        <span class="post-action-icon">${iconEdit}</span>
+        <div><b>Citer</b><span>Ajoute ton commentaire avant de partager</span></div>
+      </button>
+    </div>
+  `);
+  document.getElementById('closeRepostChoice').addEventListener('click', closeModal);
+  document.getElementById('quickRepost').addEventListener('click', async ()=>{
+    closeModal();
+    await createPost('', [], post);
+    toast('Republié sur ton profil.');
+    if(State.route === '#feed') renderFeedPage();
+  });
+  document.getElementById('quoteRepost').addEventListener('click', ()=>{
+    closeModal();
+    setTimeout(()=>openComposerModal({repostOf: post}), 210);
+  });
 }
 
 function renderCommentBox(box, post){
@@ -1278,7 +1580,7 @@ function renderCommentBox(box, post){
       const cu = await getUser(c.authorId);
       const cel = document.createElement('div');
       cel.className = 'comment-item';
-      cel.innerHTML = `${avatarHTML(cu, 30)}<div class="comment-bubble"><b>${escapeHTML(cu?.name||'')}</b> ${escapeHTML(c.text)}</div>`;
+      cel.innerHTML = `${avatarHTML(cu, 30)}<div class="comment-bubble"><b>${escapeHTML(cu?.name||'')}</b> ${richTextHTML(c.text)}</div>`;
       itemsRoot.appendChild(cel);
     }
   })();
@@ -1293,7 +1595,7 @@ function renderCommentBox(box, post){
     input.value = '';
     const cel = document.createElement('div');
     cel.className = 'comment-item';
-    cel.innerHTML = `${avatarHTML(State.currentUser, 30)}<div class="comment-bubble"><b>${escapeHTML(State.currentUser.name)}</b> ${escapeHTML(text)}</div>`;
+    cel.innerHTML = `${avatarHTML(State.currentUser, 30)}<div class="comment-bubble"><b>${escapeHTML(State.currentUser.name)}</b> ${richTextHTML(text)}</div>`;
     itemsRoot.appendChild(cel);
     itemsRoot.parentElement.querySelector('.no-comments')?.remove();
     const countEl = box.closest('.post-card').querySelector('[data-action="comment"] span:last-child');
@@ -1389,6 +1691,7 @@ function renderAuthScreen(){
       btn.disabled = false; btn.textContent = 'Rejoindre Nova';
     } else {
       await seedDemoContentIfEmpty();
+      location.hash = '#feed';
       render();
     }
   });
@@ -1403,6 +1706,7 @@ function renderAuthScreen(){
       document.getElementById('li_error').textContent = res.error;
       btn.disabled = false; btn.textContent = 'Se connecter';
     } else {
+      location.hash = '#feed';
       render();
     }
   });
@@ -1973,7 +2277,7 @@ async function renderSearchPage(){
     <div class="feed-header"><h1>Rechercher</h1></div>
     <div class="search-bar">
       ${iconSearch}
-      <input type="text" id="searchInput" placeholder="Rechercher un nom ou un pseudo…" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Rechercher un compte ou un #hashtag…" autocomplete="off">
     </div>
     <div id="searchResults" class="search-results"></div>
   `;
@@ -1988,6 +2292,21 @@ async function renderSearchPage(){
   async function doSearch(q){
     q = q.trim().toLowerCase();
     if(!q){ results.innerHTML = ''; return; }
+
+    if(q.startsWith('#')){
+      const tag = q.slice(1);
+      if(!tag){ results.innerHTML = ''; return; }
+      results.innerHTML = `
+        <a href="#hashtag/${encodeURIComponent(tag)}" class="search-result-item">
+          <div class="hashtag-result-icon">${iconHashtag}</div>
+          <div class="conv-list-text">
+            <b>#${escapeHTML(tag)}</b>
+            <span>Voir les publications</span>
+          </div>
+        </a>`;
+      return;
+    }
+
     const users = (await Promise.all(allIds.map(id=>getUser(id)))).filter(Boolean);
     if(myGen !== appGeneration || !document.getElementById('searchResults')) return;
     const matches = users.filter(u => u.id !== State.currentUser.id && (u.name.toLowerCase().includes(q) || u.handle.includes(q)));
@@ -2026,11 +2345,44 @@ async function refreshNotifDot(){
 }
 
 const NOTIF_VERBS = {
-  like: 'a aimé ta publication',
+  like: 'a réagi à ta publication',
   comment: 'a commenté ta publication',
   follow: 'a commencé à te suivre',
-  message: "t'a envoyé un message"
+  message: "t'a envoyé un message",
+  mention: "t'a mentionné dans une publication",
+  repost: 'a republié ta publication'
 };
+
+/* ======================================================================
+   PAGE HASHTAG
+====================================================================== */
+async function renderHashtagPage(){
+  const myGen = appGeneration;
+  const tag = decodeURIComponent((location.hash.split('/')[1] || '').toLowerCase());
+  const main = document.getElementById('mainCol');
+  if(!main) return;
+  main.innerHTML = `
+    <div class="feed-header">
+      <h1><span class="hashtag-title-icon">${iconHashtag}</span>${escapeHTML(tag)}</h1>
+    </div>
+    <div id="hashtagPostsList" class="posts-list">
+      <div class="skeleton-post"></div>
+    </div>
+  `;
+  const ids = await DB.get('hashtag:'+tag, true) || [];
+  if(myGen !== appGeneration || !document.getElementById('hashtagPostsList')) return;
+  const list = document.getElementById('hashtagPostsList');
+  if(ids.length === 0){
+    list.innerHTML = emptyStateHTML('hashtag', 'Aucune publication', `Personne n'a encore utilisé #${escapeHTML(tag)}.`, null, null);
+    return;
+  }
+  const posts = (await Promise.all(ids.map(id=>DB.get('posts:'+id)))).filter(Boolean);
+  if(myGen !== appGeneration || !document.getElementById('hashtagPostsList')) return;
+  list.innerHTML = '';
+  for(const post of posts){
+    list.appendChild(await renderPostCard(post));
+  }
+}
 
 async function renderNotificationsPage(){
   const myGen = appGeneration;
