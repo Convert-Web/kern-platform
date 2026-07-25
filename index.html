@@ -461,6 +461,17 @@ img{display:block; max-width:100%;}
 .composer-image-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
 .composer-image-grid:empty{ display:none; }
 .composer-image-cell{ position:relative; border-radius:14px; overflow:hidden; aspect-ratio:1; background:var(--bg); }
+.composer-image-loading{ display:flex; align-items:center; justify-content:center; }
+.composer-spinner{
+  width:26px; height:26px; border-radius:50%;
+  border:3px solid var(--border); border-top-color:var(--accent);
+  animation:spin 700ms linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.composer-error{
+  background:var(--danger-soft); color:var(--danger); font-size:13px; font-weight:500;
+  padding:10px 14px; border-radius:12px; margin-top:10px; line-height:1.4;
+}
 .composer-image-cell img{ width:100%; height:100%; object-fit:cover; }
 
 /* ============ POST IMAGE GRID ============ */
@@ -589,6 +600,17 @@ img{display:block; max-width:100%;}
 .thread-col{ display:flex; flex-direction:column; min-width:0; }
 .thread-empty{ flex:1; display:flex; align-items:center; justify-content:center; }
 .thread-head{ display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); }
+.thread-encryption-badge{
+  margin-left:auto; display:flex; align-items:center; gap:5px;
+  font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:20px;
+}
+.thread-encryption-badge svg{ width:13px; height:13px; }
+.thread-encryption-badge.is-on{ background:var(--success-soft); color:var(--success); }
+.thread-encryption-badge.is-off{ background:var(--danger-soft); color:var(--danger); }
+.msg-undecryptable{ display:flex; align-items:center; gap:6px; font-style:italic; opacity:0.8; }
+.msg-undecryptable svg{ width:14px; height:14px; flex-shrink:0; }
+.conv-lock-mini{ display:inline-flex; width:12px; height:12px; color:var(--success); vertical-align:-1px; margin-left:2px; }
+.conv-lock-mini svg{ width:100%; height:100%; }
 .thread-head b{ font-size:15px; }
 .thread-messages{ flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:8px; }
 .msg-row{ display:flex; }
@@ -784,12 +806,24 @@ const DB = {
       return r ? JSON.parse(r.value) : null;
     }catch(e){ return null; }
   },
+  /** Écrit une valeur. Lève une erreur explicite en cas d'échec — ne jamais avaler
+   *  silencieusement, sinon l'UI peut annoncer un succès pour une donnée jamais sauvegardée. */
   async set(key, value, shared=false){
+    const payload = JSON.stringify(value);
+    if(payload.length > 4.5 * 1024 * 1024){
+      throw new DBError('SIZE_LIMIT', `La donnée pour "${key}" dépasse la taille maximale autorisée (${(payload.length/1024/1024).toFixed(1)} Mo).`);
+    }
     try{
-      if(HAS_CLOUD_STORAGE) await window.storage.set(key, JSON.stringify(value), shared);
-      else LocalPolyfill.set(key, JSON.stringify(value), shared);
+      const ok = HAS_CLOUD_STORAGE ? await window.storage.set(key, payload, shared) : LocalPolyfill.set(key, payload, shared);
+      if(HAS_CLOUD_STORAGE && !ok){
+        throw new DBError('WRITE_FAILED', `L'enregistrement de "${key}" a échoué côté serveur.`);
+      }
       return true;
-    }catch(e){ console.error('DB.set failed', key, e); return false; }
+    }catch(e){
+      if(e instanceof DBError) throw e;
+      console.error('DB.set failed', key, e);
+      throw new DBError('WRITE_FAILED', `L'enregistrement de "${key}" a échoué (${e.message || 'erreur réseau'}).`);
+    }
   },
   async list(prefix, shared=false){
     try{
@@ -805,6 +839,45 @@ const DB = {
     }catch(e){ return false; }
   }
 };
+class DBError extends Error{
+  constructor(code, message){ super(message); this.name='DBError'; this.code=code; }
+}
+
+/** Compresse et redimensionne une image côté client avant stockage : garantit
+ *  qu'aucun envoi (story, post, avatar) ne dépasse silencieusement les limites
+ *  du stockage. Retourne un dataURL JPEG. */
+function compressImage(file, {maxDim=1600, quality=0.82} = {}){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=>reject(new Error('Lecture du fichier impossible.'));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=>reject(new Error('Image invalide ou corrompue.'));
+      img.onload = ()=>{
+        let {width, height} = img;
+        if(width > maxDim || height > maxDim){
+          const ratio = Math.min(maxDim/width, maxDim/height);
+          width = Math.round(width*ratio);
+          height = Math.round(height*ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        let q = quality;
+        let out = canvas.toDataURL('image/jpeg', q);
+        // Réduit encore si nécessaire pour rester largement sous la limite de stockage
+        while(out.length > 1.2*1024*1024 && q > 0.35){
+          q -= 0.12;
+          out = canvas.toDataURL('image/jpeg', q);
+        }
+        resolve(out);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 function uid(prefix='id'){
   return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,9);
@@ -812,6 +885,91 @@ function uid(prefix='id'){
 
 async function seedDemoContentIfEmpty(){ /* Nova ne génère aucune fausse donnée : chaque compte démarre vide, comme un vrai réseau social. */ }
 function stopPolling(){ if(State.pollTimer){ clearInterval(State.pollTimer); State.pollTimer=null; } }
+
+/* ======================================================================
+   CHIFFREMENT BOUT EN BOUT (Web Crypto API — vrai chiffrement, pas de simulacre)
+
+   Principe : chaque compte a une paire de clés RSA-OAEP (2048 bits).
+   - La clé PUBLIQUE est stockée dans le profil utilisateur (accessible à tous,
+     nécessaire pour que d'autres puissent chiffrer des messages à cette personne).
+   - La clé PRIVÉE ne quitte JAMAIS cet appareil : elle vit uniquement dans le
+     localStorage local, jamais dans le stockage partagé/cloud. Nova (et donc
+     quiconque n'a accès qu'au stockage serveur) ne peut PAS déchiffrer les messages.
+
+   Chaque message est chiffré en hybride, comme le font les vrais systèmes E2E :
+   1. Une clé symétrique AES-256-GCM aléatoire est générée pour CE message.
+   2. Le texte est chiffré avec cette clé AES (rapide, gère n'importe quelle taille).
+   3. La clé AES elle-même est chiffrée avec la clé publique RSA de CHAQUE destinataire.
+   4. Le message stocké contient : le texte chiffré + la clé AES chiffrée pour
+      chaque participant. Seul le détenteur de la clé privée correspondante peut
+      déchiffrer sa copie de la clé AES, puis le message.
+
+   Limite honnête : comme il n'y a pas de mot de passe dans Nova, la clé privée
+   est liée à CET appareil/navigateur. Se connecter au même compte depuis un
+   autre appareil ne permettra pas de déchiffrer les messages précédents —
+   c'est le même compromis que Signal Desktop applique à un nouvel appareil.
+====================================================================== */
+const CryptoE2E = {
+  async generateKeyPair(){
+    const keyPair = await crypto.subtle.generateKey(
+      { name:'RSA-OAEP', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
+      true, ['encrypt','decrypt']
+    );
+    const publicJwk = await crypto.subtle.exportKey('jwk', keyPair.publicKey);
+    const privateJwk = await crypto.subtle.exportKey('jwk', keyPair.privateKey);
+    return { publicJwk, privateJwk };
+  },
+  async importPublicKey(jwk){
+    return crypto.subtle.importKey('jwk', jwk, {name:'RSA-OAEP', hash:'SHA-256'}, true, ['encrypt']);
+  },
+  async importPrivateKey(jwk){
+    return crypto.subtle.importKey('jwk', jwk, {name:'RSA-OAEP', hash:'SHA-256'}, true, ['decrypt']);
+  },
+  buf2b64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); },
+  b642buf(b64){ return Uint8Array.from(atob(b64), c=>c.charCodeAt(0)).buffer; },
+
+  /** Chiffre `text` pour une liste de destinataires {userId, publicJwk}.
+   *  Retourne { iv, ciphertext, keys: {userId: encryptedAesKeyB64} }. */
+  async encryptForRecipients(text, recipients){
+    const aesKey = await crypto.subtle.generateKey({name:'AES-GCM', length:256}, true, ['encrypt','decrypt']);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encoded = new TextEncoder().encode(text);
+    const ciphertext = await crypto.subtle.encrypt({name:'AES-GCM', iv}, aesKey, encoded);
+    const rawAesKey = await crypto.subtle.exportKey('raw', aesKey);
+
+    const keys = {};
+    for(const {userId, publicJwk} of recipients){
+      if(!publicJwk) continue; // compte créé avant l'activation du chiffrement : voir migrateLegacyAccount
+      const pubKey = await this.importPublicKey(publicJwk);
+      const encryptedAesKey = await crypto.subtle.encrypt({name:'RSA-OAEP'}, pubKey, rawAesKey);
+      keys[userId] = this.buf2b64(encryptedAesKey);
+    }
+    return { iv: this.buf2b64(iv), ciphertext: this.buf2b64(ciphertext), keys };
+  },
+
+  /** Déchiffre un message pour l'utilisateur courant, en utilisant sa clé privée locale. */
+  async decryptForMe(encMsg, myUserId){
+    const myEncryptedKey = encMsg.keys[myUserId];
+    if(!myEncryptedKey) throw new Error('Aucune clé pour ce compte sur cet appareil.');
+    const privateJwk = getLocalPrivateKey(myUserId);
+    if(!privateJwk) throw new Error('Clé privée absente sur cet appareil.');
+    const privKey = await this.importPrivateKey(privateJwk);
+    const rawAesKey = await crypto.subtle.decrypt({name:'RSA-OAEP'}, privKey, this.b642buf(myEncryptedKey));
+    const aesKey = await crypto.subtle.importKey('raw', rawAesKey, {name:'AES-GCM'}, false, ['decrypt']);
+    const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM', iv:this.b642buf(encMsg.iv)}, aesKey, this.b642buf(encMsg.ciphertext));
+    return new TextDecoder().decode(plainBuf);
+  }
+};
+
+function localPrivateKeyStorageKey(userId){ return 'nova_privkey::'+userId; }
+function getLocalPrivateKey(userId){
+  const raw = localStorage.getItem(localPrivateKeyStorageKey(userId));
+  return raw ? JSON.parse(raw) : null;
+}
+function setLocalPrivateKey(userId, jwk){
+  localStorage.setItem(localPrivateKeyStorageKey(userId), JSON.stringify(jwk));
+}
+const E2E_SUPPORTED = !!(window.crypto && window.crypto.subtle);
 
 /* ======================================================================
    ICÔNES (SVG inline, traits, cohérentes avec l'identité épurée)
@@ -829,6 +987,8 @@ const iconComment = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const iconShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg>`;
 const iconRepost = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11a3 3 0 0 1 3 3v2"/><path d="m15 4 3 3-3 3"/><path d="M20 17H9a3 3 0 0 1-3-3v-2"/><path d="m9 20-3-3 3-3"/></svg>`;
 const iconHashtag = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 7 20M17 4l-2 16M4 9h16M3 15h16"/></svg>`;
+const iconLock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+const iconLockOpen = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>`;
 const iconImage = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15.5-5-5-9.5 9.5"/></svg>`;
 const iconX = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
 const iconSend = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 20 4l-7 16-2.5-6.5L4 11Z"/></svg>`;
@@ -867,8 +1027,8 @@ const State = {
 async function boot(){
   const savedSessionId = localStorage.getItem('nova_session_uid');
   if(savedSessionId){
-    const u = await DB.get('users:'+savedSessionId);
-    if(u){ State.currentUser = u; }
+    let u = await DB.get('users:'+savedSessionId);
+    if(u){ u = await ensureUserHasKeys(u); State.currentUser = u; }
   }
   render();
 }
@@ -900,12 +1060,19 @@ async function createAccount(name, handleRaw){
     return {error:'Ce pseudo est déjà pris. Essaie-en un autre.'};
   }
   const id = uid('u');
+  let publicJwk = null;
+  if(E2E_SUPPORTED){
+    const { publicJwk: pub, privateJwk } = await CryptoE2E.generateKeyPair();
+    publicJwk = pub;
+    setLocalPrivateKey(id, privateJwk); // ne quitte jamais cet appareil
+  }
   const user = {
     id, handle, name: name.trim(),
     bio:'', avatarColor: pickAvatarColor(handle),
     avatarEmoji: null,
     createdAt: Date.now(),
-    following: [], followers: []
+    following: [], followers: [],
+    publicKey: publicJwk
   };
   await DB.set('users:'+id, user);
   const idx = await DB.get('handles:index', true) || {};
@@ -916,13 +1083,34 @@ async function createAccount(name, handleRaw){
   return {user};
 }
 
+/** Un compte peut exister sans clé publique (créé avant l'activation du
+ *  chiffrement, ou sur un navigateur sans Web Crypto). On génère alors une
+ *  paire de clés à la volée dès que c'est possible, pour que les futurs
+ *  messages de cette personne soient chiffrés. Les anciens messages non
+ *  chiffrés restent lisibles tels quels (voir isLegacyPlaintext). */
+async function ensureUserHasKeys(user){
+  if(user.publicKey || !E2E_SUPPORTED) return user;
+  const existingPriv = getLocalPrivateKey(user.id);
+  if(existingPriv){
+    // Clé privée déjà présente sur cet appareil mais absente du profil (désync) :
+    // on ne peut pas reconstruire la clé publique depuis la privée sans re-export ;
+    // dans ce cas rare, on régénère une nouvelle paire proprement.
+  }
+  const { publicJwk, privateJwk } = await CryptoE2E.generateKeyPair();
+  setLocalPrivateKey(user.id, privateJwk);
+  user.publicKey = publicJwk;
+  await DB.set('users:'+user.id, user);
+  return user;
+}
+
 async function loginWithHandle(handleRaw){
   const handle = handleRaw.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
   const idx = await DB.get('handles:index', true) || {};
   const id = idx[handle];
   if(!id) return {error:"Aucun compte avec ce pseudo. Crée un compte d'abord."};
-  const user = await DB.get('users:'+id);
+  let user = await DB.get('users:'+id);
   if(!user) return {error:'Compte introuvable.'};
+  user = await ensureUserHasKeys(user);
   localStorage.setItem('nova_session_uid', id);
   State.currentUser = user;
   return {user};
@@ -1048,6 +1236,20 @@ function renderAppShell(){
 
   document.getElementById('openComposer').addEventListener('click', openComposerModal);
   document.getElementById('miniProfileBtn').addEventListener('click', ()=>{ location.hash = '#profile/'+State.currentUser.id; });
+
+  // Cliquer sur un lien de nav vers la route déjà active ne déclenche pas
+  // 'hashchange' (le hash ne change pas) : on force alors le re-rendu à la main
+  // pour que "Messages" (par ex.) rafraîchisse toujours sa liste au clic.
+  document.querySelectorAll('.nav-item, .tab-item').forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      const target = link.getAttribute('href');
+      if(target && target === location.hash){
+        e.preventDefault();
+        renderRouteContent(target);
+        renderSidePanel();
+      }
+    });
+  });
 
   renderRouteContent(route);
   renderSidePanel();
@@ -1176,6 +1378,7 @@ function openComposerModal(prefill={}){
       <textarea id="composerText" class="composer-textarea" placeholder="Quoi de neuf ? Utilise # pour un sujet, @ pour mentionner." maxlength="500" rows="4" autofocus></textarea>
       <div id="composerImagePreview" class="composer-image-grid"></div>
       ${isRepost ? `<div class="repost-embed-preview" id="repostEmbedPreview"></div>` : ''}
+      <p class="composer-error" id="postError" hidden></p>
     </div>
     <div class="modal-footer">
       ${isRepost ? '' : `<label class="icon-btn" title="Ajouter des images">
@@ -1189,14 +1392,19 @@ function openComposerModal(prefill={}){
   document.getElementById('closeComposer').addEventListener('click', closeModal);
   const textarea = document.getElementById('composerText');
   const count = document.getElementById('composerCount');
+  const errorEl = document.getElementById('postError');
   textarea.addEventListener('input', ()=>{ count.textContent = 500 - textarea.value.length; });
   textarea.focus();
+
+  function showError(msg){ errorEl.textContent = msg; errorEl.hidden = false; }
+  function clearError(){ errorEl.hidden = true; errorEl.textContent = ''; }
 
   if(isRepost){
     renderRepostEmbedPreview(prefill.repostOf);
   }
 
   let images = [];
+  let processingCount = 0;
   const MAX_IMAGES = 4;
   function paintImagePreview(){
     const prev = document.getElementById('composerImagePreview');
@@ -1205,43 +1413,56 @@ function openComposerModal(prefill={}){
         <img src="${src}" alt="">
         <button class="remove-image-btn" data-idx="${i}">${iconX}</button>
       </div>
-    `).join('');
+    `).join('') + (processingCount > 0 ? `<div class="composer-image-cell composer-image-loading"><div class="composer-spinner"></div></div>`.repeat(processingCount) : '');
     prev.querySelectorAll('.remove-image-btn').forEach(btn=>{
       btn.addEventListener('click', ()=>{ images.splice(Number(btn.dataset.idx),1); paintImagePreview(); });
     });
   }
 
   const imgInput = document.getElementById('composerImageInput');
-  imgInput?.addEventListener('change', (e)=>{
+  imgInput?.addEventListener('change', async (e)=>{
+    clearError();
     const files = Array.from(e.target.files || []);
     if(images.length + files.length > MAX_IMAGES){
-      toast(`Maximum ${MAX_IMAGES} images par publication.`, 'danger');
+      showError(`Maximum ${MAX_IMAGES} images par publication.`);
     }
     const allowed = files.slice(0, MAX_IMAGES - images.length);
-    let pending = allowed.length;
-    allowed.forEach(file=>{
-      if(file.size > 4*1024*1024){ toast(file.name+' est trop lourde (max 4 Mo).', 'danger'); pending--; return; }
-      const reader = new FileReader();
-      reader.onload = ()=>{
-        images.push(reader.result);
+    for(const file of allowed){
+      if(!file.type.startsWith('image/')){ showError(file.name+' n\'est pas une image.'); continue; }
+      if(file.size > 15*1024*1024){ showError(file.name+' est trop lourde (max 15 Mo avant compression).'); continue; }
+      processingCount++;
+      paintImagePreview();
+      try{
+        const compressed = await compressImage(file, {maxDim:1600, quality:0.82});
+        images.push(compressed);
+      }catch(err){
+        showError('Impossible de traiter '+file.name+' : '+err.message);
+      }finally{
+        processingCount--;
         paintImagePreview();
-      };
-      reader.readAsDataURL(file);
-    });
+      }
+    }
     imgInput.value = '';
   });
 
   document.getElementById('submitPost').addEventListener('click', async ()=>{
+    clearError();
     const text = textarea.value.trim();
-    if(!text && images.length===0 && !isRepost){ toast('Ajoute du texte ou une image.', 'danger'); return; }
-    if(isRepost && !text){ toast('Ajoute un commentaire pour republier.', 'danger'); return; }
+    if(!text && images.length===0 && !isRepost){ showError('Ajoute du texte ou une image.'); return; }
+    if(isRepost && !text){ showError('Ajoute un commentaire pour republier.'); return; }
+    if(processingCount > 0){ showError('Attends la fin du traitement des images.'); return; }
     const btn = document.getElementById('submitPost');
     btn.disabled = true; btn.textContent = 'Publication…';
-    await createPost(text, images, isRepost ? prefill.repostOf : null);
-    closeModal();
-    toast(isRepost ? 'Republié.' : 'Publication partagée.');
-    if(State.route === '#feed') renderFeedPage();
-    else if(State.route === '#profile') renderProfilePage();
+    try{
+      await createPost(text, images, isRepost ? prefill.repostOf : null);
+      closeModal();
+      toast(isRepost ? 'Republié.' : 'Publication partagée.');
+      if(State.route === '#feed') renderFeedPage();
+      else if(State.route === '#profile') renderProfilePage();
+    }catch(err){
+      showError(err.message || 'La publication a échoué. Vérifie ta connexion et réessaie.');
+      btn.disabled = false; btn.textContent = 'Publier';
+    }
   });
 }
 
@@ -1274,25 +1495,33 @@ async function createPost(text, images, repostOf=null){
     hashtags, mentions,
     repostOf: repostOf ? repostOf.id : null
   };
+  // On écrit d'abord le contenu du post (le plus volumineux, donc le plus
+  // susceptible d'échouer). On ne le référence dans le fil qu'une fois
+  // sa présence confirmée, pour ne jamais indexer un post fantôme.
   await DB.set('posts:'+id, post);
   const index = await DB.get('feed:index', true) || [];
   index.unshift(id);
-  await DB.set('feed:index', index, true);
+  try{
+    await DB.set('feed:index', index, true);
+  }catch(err){
+    await DB.del('posts:'+id).catch(()=>{});
+    throw err;
+  }
 
   for(const tag of hashtags){
     const tagIndex = await DB.get('hashtag:'+tag, true) || [];
     tagIndex.unshift(id);
-    await DB.set('hashtag:'+tag, tagIndex, true);
+    await DB.set('hashtag:'+tag, tagIndex, true).catch(()=>{}); // secondaire : ne bloque pas la publication
   }
   for(const handle of mentions){
     const idx = await DB.get('handles:index', true) || {};
     const mentionedId = idx[handle];
     if(mentionedId && mentionedId !== State.currentUser.id){
-      await pushNotification(mentionedId, 'mention', State.currentUser.id, "t'a mentionné dans une publication");
+      await pushNotification(mentionedId, 'mention', State.currentUser.id, "t'a mentionné dans une publication").catch(()=>{});
     }
   }
   if(repostOf && repostOf.authorId !== State.currentUser.id){
-    await pushNotification(repostOf.authorId, 'repost', State.currentUser.id, 'a republié ta publication');
+    await pushNotification(repostOf.authorId, 'repost', State.currentUser.id, 'a republié ta publication').catch(()=>{});
   }
   return post;
 }
@@ -1725,10 +1954,20 @@ async function createStory(imageDataUrl, text){
     createdAt: now, expiresAt: now + 24*60*60*1000,
     viewedBy: []
   };
-  await DB.set('stories:'+id, story);
+  // On écrit d'abord l'index (référence légère) : si ça échoue, rien n'est publié.
+  // On écrit ensuite la story elle-même. Si CETTE écriture échoue, on retire
+  // aussitôt la référence de l'index pour ne jamais laisser un fantôme visible
+  // dans le fil sans contenu associé.
   const index = await DB.get('stories:index', true) || [];
   index.unshift(id);
   await DB.set('stories:index', index, true);
+  try{
+    await DB.set('stories:'+id, story);
+  }catch(err){
+    const rollback = (await DB.get('stories:index', true) || []).filter(sid => sid !== id);
+    await DB.set('stories:index', rollback, true).catch(()=>{});
+    throw err;
+  }
   return story;
 }
 
@@ -1809,6 +2048,7 @@ function openStoryComposer(){
           <input type="text" id="storyCaption" class="story-caption-input" placeholder="Ajouter une légende…" maxlength="80">
         </div>
       </div>
+      <p class="composer-error" id="storyError" hidden></p>
     </div>
     <div class="modal-footer">
       <span style="font-size:12.5px;color:var(--ink-faint)">Visible 24 h</span>
@@ -1818,31 +2058,51 @@ function openStoryComposer(){
   document.getElementById('closeStoryComposer').addEventListener('click', closeModal);
   const dropZone = document.getElementById('storyDropZone');
   const input = document.getElementById('storyImageInput');
+  const errorEl = document.getElementById('storyError');
   dropZone.addEventListener('click', ()=>input.click());
   let dataUrl = null;
-  input.addEventListener('change', (e)=>{
+
+  function showError(msg){
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+  function clearError(){ errorEl.hidden = true; errorEl.textContent = ''; }
+
+  input.addEventListener('change', async (e)=>{
     const file = e.target.files[0];
     if(!file) return;
-    if(file.size > 5*1024*1024){ toast('Image trop lourde (max 5 Mo).', 'danger'); return; }
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      dataUrl = reader.result;
+    clearError();
+    if(!file.type.startsWith('image/')){ showError('Ce fichier n\'est pas une image.'); return; }
+    if(file.size > 15*1024*1024){ showError('Image trop lourde (max 15 Mo avant compression).'); return; }
+    dropZone.innerHTML = `<div class="composer-spinner"></div><p>Traitement de l'image…</p>`;
+    try{
+      dataUrl = await compressImage(file, {maxDim:1400, quality:0.85});
       dropZone.hidden = true;
       document.getElementById('storyPreviewWrap').hidden = false;
       document.getElementById('storyPreviewImg').src = dataUrl;
       document.getElementById('submitStory').disabled = false;
-    };
-    reader.readAsDataURL(file);
+    }catch(err){
+      dropZone.innerHTML = `${iconImage}<p>Choisis une image pour ta story</p>`;
+      showError('Impossible de traiter cette image : ' + err.message);
+      dataUrl = null;
+    }
   });
+
   document.getElementById('submitStory').addEventListener('click', async ()=>{
     if(!dataUrl) return;
     const btn = document.getElementById('submitStory');
-    btn.disabled = true; btn.textContent = 'Publication…';
+    btn.disabled = true; btn.textContent = 'Envoi…';
+    clearError();
     const caption = document.getElementById('storyCaption').value.trim();
-    await createStory(dataUrl, caption);
-    closeModal();
-    toast('Story publiée pour 24 h.');
-    if(State.route === '#feed') renderStoriesRow();
+    try{
+      await createStory(dataUrl, caption);
+      closeModal();
+      toast('Story publiée pour 24 h.');
+      if(State.route === '#feed') renderStoriesRow();
+    }catch(err){
+      showError(err.message || 'L\'envoi a échoué. Vérifie ta connexion et réessaie.');
+      btn.disabled = false; btn.textContent = 'Partager';
+    }
   });
 }
 
@@ -2131,15 +2391,50 @@ async function findOrCreateConversation(otherUserId){
   return conv;
 }
 
+/** Envoie un message chiffré bout en bout. Le texte en clair n'est JAMAIS
+ *  écrit dans le stockage : seul { iv, ciphertext, keys } l'est. Si le
+ *  chiffrement n'est pas disponible (navigateur sans Web Crypto, ou l'un
+ *  des deux comptes n'a pas de clé publique — cas hérité), le message est
+ *  envoyé en clair et marqué explicitement `encrypted:false`, affiché comme
+ *  tel dans l'interface plutôt que de faussement prétendre être protégé. */
 async function sendMessage(convId, text){
+  const conv = await DB.get('conv:'+convId);
+  if(!conv) throw new DBError('NOT_FOUND', 'Conversation introuvable.');
+  const otherId = conv.members.find(m=>m!==State.currentUser.id);
+  const me = State.currentUser;
+  const other = await getUser(otherId);
+
+  const myPriv = E2E_SUPPORTED ? getLocalPrivateKey(me.id) : null;
+  const canEncrypt = E2E_SUPPORTED && !!me.publicKey && !!other?.publicKey && !!myPriv;
+
+  let msg;
+  if(canEncrypt){
+    const recipients = [
+      {userId: me.id, publicJwk: me.publicKey},
+      {userId: otherId, publicJwk: other.publicKey}
+    ];
+    const enc = await CryptoE2E.encryptForRecipients(text, recipients);
+    msg = { id: uid('m'), senderId: me.id, createdAt: Date.now(), encrypted:true, iv:enc.iv, ciphertext:enc.ciphertext, keys:enc.keys };
+  } else {
+    msg = { id: uid('m'), senderId: me.id, createdAt: Date.now(), encrypted:false, text };
+  }
+
   const messages = await DB.get('conv:'+convId+':messages') || [];
-  const msg = {id: uid('m'), senderId: State.currentUser.id, text, createdAt: Date.now()};
   messages.push(msg);
   await DB.set('conv:'+convId+':messages', messages);
-  const conv = await DB.get('conv:'+convId);
-  const otherId = conv.members.find(m=>m!==State.currentUser.id);
-  if(otherId) await pushNotification(otherId, 'message', State.currentUser.id, 't\'a envoyé un message');
+  if(otherId) await pushNotification(otherId, 'message', me.id, 't\'a envoyé un message').catch(()=>{});
   return msg;
+}
+
+/** Déchiffre un message pour l'affichage. Renvoie { text, encrypted, error? }. */
+async function decryptMessageForDisplay(msg){
+  if(!msg.encrypted) return { text: msg.text, encrypted:false };
+  try{
+    const text = await CryptoE2E.decryptForMe(msg, State.currentUser.id);
+    return { text, encrypted:true };
+  }catch(err){
+    return { text: null, encrypted:true, error: err.message };
+  }
 }
 
 async function renderMessagesPage(){
@@ -2176,7 +2471,13 @@ async function renderMessagesPage(){
     const otherUser = await getUser(otherId);
     const messages = await DB.get('conv:'+conv.id+':messages') || [];
     const last = messages[messages.length-1];
-    entries.push({conv, otherUser, last});
+    let preview = 'Dites bonjour 👋';
+    if(last){
+      const decrypted = await decryptMessageForDisplay(last);
+      preview = decrypted.error ? 'Message illisible sur cet appareil' : (decrypted.text || '').slice(0,38);
+    }
+    const isEncrypted = E2E_SUPPORTED && !!State.currentUser.publicKey && !!otherUser?.publicKey;
+    entries.push({conv, otherUser, last, preview, isEncrypted});
   }
   if(myGen !== appGeneration || !document.getElementById('convList')) return;
   entries.sort((a,b)=>(b.last?.createdAt||b.conv.createdAt) - (a.last?.createdAt||a.conv.createdAt));
@@ -2185,8 +2486,8 @@ async function renderMessagesPage(){
     <button class="conv-list-item" data-conv="${e.conv.id}">
       ${avatarHTML(e.otherUser, 46)}
       <div class="conv-list-text">
-        <b>${escapeHTML(e.otherUser?.name || 'Utilisateur')}</b>
-        <span>${e.last ? escapeHTML(e.last.text).slice(0,38) : 'Dites bonjour 👋'}</span>
+        <b>${escapeHTML(e.otherUser?.name || 'Utilisateur')} ${e.isEncrypted ? `<span class="conv-lock-mini" title="Chiffré">${iconLock}</span>` : ''}</b>
+        <span>${escapeHTML(e.preview)}</span>
       </div>
       ${e.last ? `<span class="conv-list-time">${timeAgo(e.last.createdAt)}</span>` : ''}
     </button>
@@ -2216,13 +2517,19 @@ async function openThread(convId){
   const conv = await DB.get('conv:'+convId);
   const otherId = conv.members.find(m=>m!==State.currentUser.id);
   const otherUser = await getUser(otherId);
+  const isEncrypted = E2E_SUPPORTED && !!State.currentUser.publicKey && !!otherUser?.publicKey;
   const col = document.getElementById('threadCol');
   col.innerHTML = `
     <div class="thread-head">
       ${avatarHTML(otherUser, 38)}
       <b>${escapeHTML(otherUser?.name || '')}</b>
+      <span class="thread-encryption-badge ${isEncrypted?'is-on':'is-off'}" title="${isEncrypted ? 'Chiffré de bout en bout' : 'Non chiffré'}">
+        ${isEncrypted ? iconLock : iconLockOpen}
+        <span>${isEncrypted ? 'Chiffré' : 'Non chiffré'}</span>
+      </span>
     </div>
     <div class="thread-messages" id="threadMessages"></div>
+    <p class="composer-error" id="threadError" hidden></p>
     <form class="thread-composer" id="threadComposer">
       <input type="text" id="threadInput" placeholder="Écrire un message…" maxlength="500" autocomplete="off">
       <button type="submit" class="icon-btn" aria-label="Envoyer">${iconSend}</button>
@@ -2233,11 +2540,20 @@ async function openThread(convId){
   document.getElementById('threadComposer').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const input = document.getElementById('threadInput');
+    const errorEl = document.getElementById('threadError');
     const text = input.value.trim();
     if(!text) return;
+    const savedText = text;
     input.value = '';
-    await sendMessage(convId, text);
-    await paintThreadMessages(convId, otherUser);
+    errorEl.hidden = true;
+    try{
+      await sendMessage(convId, savedText);
+      await paintThreadMessages(convId, otherUser);
+    }catch(err){
+      input.value = savedText; // on ne perd jamais ce que la personne a écrit
+      errorEl.textContent = err.message || 'Échec de l\'envoi. Vérifie ta connexion et réessaie.';
+      errorEl.hidden = false;
+    }
   });
 
   stopPolling();
@@ -2255,14 +2571,28 @@ async function paintThreadMessages(convId, otherUser, isPoll=false){
   const box = document.getElementById('threadMessages');
   if(!box) return;
   const wasNearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-  box.innerHTML = messages.length===0
-    ? `<p class="no-comments" style="text-align:center;padding:30px 0">Dites bonjour à ${escapeHTML(otherUser?.name||'')} 👋</p>`
-    : messages.map(m=>{
-        const mine = m.senderId === State.currentUser.id;
-        return `<div class="msg-row ${mine?'mine':''}">
-          <div class="msg-bubble">${escapeHTML(m.text)}</div>
-        </div>`;
-      }).join('');
+
+  if(messages.length === 0){
+    box.innerHTML = `<p class="no-comments" style="text-align:center;padding:30px 0">Dites bonjour à ${escapeHTML(otherUser?.name||'')} 👋</p>`;
+    return;
+  }
+
+  const rows = [];
+  for(const m of messages){
+    const mine = m.senderId === State.currentUser.id;
+    const decrypted = await decryptMessageForDisplay(m);
+    let bodyHTML;
+    if(decrypted.error){
+      bodyHTML = `<span class="msg-undecryptable">${iconLockOpen} Message illisible sur cet appareil</span>`;
+    } else {
+      bodyHTML = richTextHTML(decrypted.text);
+    }
+    rows.push(`<div class="msg-row ${mine?'mine':''}">
+      <div class="msg-bubble">${bodyHTML}</div>
+    </div>`);
+  }
+  if(!document.getElementById('threadMessages')) return; // route quittée pendant le déchiffrement
+  box.innerHTML = rows.join('');
   if(wasNearBottom || !isPoll) box.scrollTop = box.scrollHeight;
 }
 
