@@ -3,1878 +3,2040 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mahal Ouarzazate — Occasion vérifiée, à deux pas de chez vous</title>
-<meta name="description" content="Vêtements, électroménager, meubles et petits objets d'occasion, vérifiés au dépôt et remis en main propre à Ouarzazate. Commande en un clic sur WhatsApp.">
+<title>Bazar Al Madina — Votre bazar en ligne</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  ============================================================================
+  BAZAR AL MADINA — Site vitrine e-commerce (sans backend)
+  ============================================================================
+
+  🛠️ CE QUE VOUS DEVEZ PERSONNALISER :
+
+  1. NUMÉRO WHATSAPP DU VENDEUR
+     → Cherchez la constante WHATSAPP_NUMBER tout en haut du <script> en bas
+       de ce fichier (section "CONFIGURATION GÉNÉRALE").
+       Format international SANS le "+" ni espaces : ex. 212612345678
+
+  2. NOM DE LA BOUTIQUE / ADRESSE
+     → Constantes SHOP_NAME et SHOP_ADDRESS, juste à côté du numéro WhatsApp.
+
+  3. AJOUTER / MODIFIER DES PRODUITS
+     → Cherchez le tableau "const PRODUCTS = [ ... ]" (section "CATALOGUE
+       PRODUITS"). Chaque produit est un objet JavaScript avec :
+       id, titre, description, catégorie, prix (en MAD), état, image (URL).
+       Copiez un objet existant, changez les valeurs, ajoutez une virgule.
+       Les catégories doivent correspondre à celles listées dans CATEGORIES
+       un peu plus haut (sinon le filtre ne les affichera pas correctement).
+
+  4. IMAGES
+     → Ce fichier utilise des images libres de droits (Unsplash / Picsum)
+       chargées via URL. Pour vos propres photos, remplacez juste la valeur
+       "image" de chaque produit par le lien de votre image (ou un chemin
+       local si vous hébergez le site avec vos photos à côté).
+
+  Tout le reste (panier, recherche, filtres, tri, commande WhatsApp)
+  fonctionne automatiquement à partir de ces données. Aucune base de
+  données, aucun serveur, aucun paiement en ligne : tout tourne dans le
+  navigateur du client, et la commande finale part en message WhatsApp
+  vers la boutique.
+  ============================================================================
+-->
 
 <style>
-/* ================= TOKENS ================= */
-:root{
-  --white: #FFFFFF;
-  --bg: #F6F6F8;
-  --bg-soft: #F0F1F3;
-  --ink: #17191C;
-  --ink-soft: #6E7378;
-  --ink-faint: #9A9EA3;
-  --teal: #0CB4B0;
-  --teal-dark: #099490;
-  --teal-tint: #E4F7F6;
-  --heart: #EF4A5B;
-  --yellow: #FFC93C;
-  --line: #E7E8EB;
+  /* ==========================================================================
+     TOKENS DE DESIGN — Bazar Al Madina
+     Palette inspirée des souks marocains : tadelakt sable, terre cuite,
+     émeraude zellige, cuivre ocre. Pas de thème "marketplace" générique :
+     motif géométrique zellige utilisé comme signature visuelle (séparateurs,
+     filigrane du header, bordures de cartes).
+     ========================================================================== */
+  :root {
+    /* Couleurs nommées */
+    --sable: #F7EFE0;          /* fond principal, tadelakt clair */
+    --sable-deep: #EDE0C8;     /* fond secondaire, cartes */
+    --terre: #7A2E2E;          /* rouge brique / terre cuite — accent principal */
+    --terre-dark: #5E2020;
+    --emeraude: #1F6F5C;       /* vert zellige — accent secondaire, liens, badges */
+    --emeraude-dark: #164F41;
+    --cuivre: #C98A2E;         /* ocre / cuivre doré — CTA, prix */
+    --cuivre-dark: #A66F1F;
+    --encre: #2B2420;          /* brun presque noir — texte principal */
+    --encre-soft: #6B5D4F;     /* texte secondaire */
+    --blanc-casse: #FFFDF8;
 
-  --display: 'Poppins', sans-serif;
-  --body: 'Inter', sans-serif;
+    --rayon-s: 6px;
+    --rayon-m: 12px;
+    --rayon-l: 20px;
+    --ombre: 0 4px 16px rgba(43, 36, 32, 0.12);
+    --ombre-forte: 0 12px 32px rgba(43, 36, 32, 0.22);
 
-  --radius-sm: 8px;
-  --radius: 14px;
-  --radius-lg: 22px;
-  --shadow-card: 0 1px 2px rgba(23,25,28,0.04), 0 8px 20px -14px rgba(23,25,28,0.25);
-  --shadow-pop: 0 20px 44px -18px rgba(23,25,28,0.35);
-}
+    --font-affiche: 'Zilla Slab', 'Georgia', serif;
+    --font-corps: 'Mukta', 'Segoe UI', sans-serif;
+  }
 
-*{box-sizing:border-box; margin:0; padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:var(--body);
-  background:var(--bg);
-  color:var(--ink);
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-img{max-width:100%; display:block;}
-a{color:inherit; text-decoration:none;}
-button{font-family:inherit; cursor:pointer; border:none; background:none;}
-ul{list-style:none;}
+  * { box-sizing: border-box; }
 
-::selection{background:var(--teal); color:#fff;}
-:focus-visible{outline:3px solid var(--teal); outline-offset:2px;}
+  html { scroll-behavior: smooth; }
 
-.container{max-width:1200px; margin:0 auto; padding:0 24px;}
+  body {
+    margin: 0;
+    font-family: var(--font-corps);
+    background: var(--sable);
+    color: var(--encre);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
 
-/* ================= TRUST STRIP ================= */
-.trust-strip{
-  background:var(--ink);
-  color:#fff;
-  overflow:hidden;
-  white-space:nowrap;
-  padding:8px 0;
-  position:relative;
-  z-index:60;
-}
-.trust-strip .ticker{
-  display:inline-flex;
-  animation:ticker 26s linear infinite;
-  font-size:12.5px;
-  font-weight:500;
-}
-.trust-strip .ticker span{
-  padding:0 20px;
-  display:inline-flex; align-items:center; gap:8px;
-  color:rgba(255,255,255,0.88);
-}
-.trust-strip .ticker span::after{content:"•"; margin-left:20px; color:rgba(255,255,255,0.3);}
-@keyframes ticker{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
-@media (prefers-reduced-motion:reduce){ .trust-strip .ticker{animation:none;} }
+  img { max-width: 100%; display: block; }
 
-/* ================= HEADER ================= */
-header{
-  position:sticky; top:0; z-index:100;
-  background:rgba(255,255,255,0.96);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-}
-.nav{
-  display:flex; align-items:center; gap:28px;
-  padding:14px 24px;
-  max-width:1200px; margin:0 auto;
-}
-.logo{
-  font-family:var(--display);
-  font-weight:800;
-  font-size:20px;
-  letter-spacing:-0.01em;
-  display:flex; align-items:center; gap:9px;
-  flex-shrink:0;
-  color:var(--ink);
-}
-.logo .mark{
-  width:30px; height:30px; border-radius:9px;
-  background:var(--teal);
-  color:#fff;
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; font-weight:800;
-}
-.logo small{
-  display:block;
-  font-family:var(--body);
-  font-size:10px;
-  font-weight:600;
-  color:var(--teal-dark);
-  letter-spacing:0.03em;
-  text-transform:uppercase;
-  margin-top:1px;
-}
+  a { color: inherit; }
 
-.nav-search{
-  flex:1;
-  max-width:460px;
-  position:relative;
-  display:flex;
-  align-items:center;
-}
-.nav-search svg{position:absolute; left:14px; color:var(--ink-faint); pointer-events:none;}
-.nav-search input{
-  width:100%;
-  background:var(--bg-soft);
-  border:1.5px solid transparent;
-  border-radius:999px;
-  padding:10px 16px 10px 40px;
-  font-size:14px;
-  font-family:var(--body);
-  color:var(--ink);
-  transition:border-color 0.15s ease, background 0.15s ease;
-}
-.nav-search input:focus{outline:none; border-color:var(--teal); background:#fff;}
+  button { font-family: inherit; cursor: pointer; }
 
-.nav-links{display:flex; gap:22px; font-size:14px; font-weight:600; flex-shrink:0;}
-.nav-links a{color:var(--ink-soft); transition:color 0.15s ease;}
-.nav-links a:hover{color:var(--ink);}
+  /* Respect du mouvement réduit */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
 
-.nav-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
-.icon-btn{
-  position:relative;
-  width:40px; height:40px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--ink);
-  background:var(--bg-soft);
-  transition:background 0.15s ease;
-}
-.icon-btn:hover{background:var(--line);}
-.icon-count{
-  position:absolute; top:-3px; right:-3px;
-  background:var(--heart);
-  color:#fff;
-  font-size:10px;
-  font-weight:700;
-  min-width:17px; height:17px; padding:0 3px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  border:2px solid #fff;
-}
-.cart-btn{
-  display:flex; align-items:center; gap:8px;
-  background:var(--teal);
-  color:#fff;
-  padding:10px 18px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:14px;
-  transition:background 0.15s ease, transform 0.15s ease;
-}
-.cart-btn:hover{background:var(--teal-dark); transform:translateY(-1px);}
-.cart-count{
-  background:rgba(255,255,255,0.25);
-  font-size:11px; font-weight:800;
-  width:19px; height:19px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-}
-.burger{
-  display:none; width:38px; height:38px;
-  align-items:center; justify-content:center;
-  flex-direction:column; gap:5px;
-  border-radius:50%;
-  flex-shrink:0;
-  transition:background 0.15s ease;
-}
-.burger:hover{background:var(--bg-soft);}
-.burger span{
-  display:block; width:19px; height:2px; border-radius:2px;
-  background:var(--ink);
-  transition:transform 0.25s ease, opacity 0.2s ease;
-}
-.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-.burger.open span:nth-child(2){opacity:0;}
-.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  /* Focus clavier visible partout */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid var(--cuivre);
+    outline-offset: 2px;
+  }
 
-/* ================= MOBILE MENU (drawer) ================= */
-.mobile-menu{
-  position:fixed; top:0; left:0; height:100%; width:320px; max-width:86vw;
-  background:#fff; z-index:201;
-  transform:translateX(-100%); transition:transform 0.3s ease;
-  display:flex; flex-direction:column;
-  box-shadow:16px 0 40px rgba(0,0,0,0.15);
-  overflow-y:auto;
-}
-.mobile-menu.open{transform:translateX(0);}
-.mobile-menu-head{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:18px 20px; border-bottom:1px solid var(--line); flex-shrink:0;
-}
-.mobile-menu-search{
-  display:flex; align-items:center; gap:10px;
-  margin:16px 20px 6px;
-  background:var(--bg-soft); border-radius:999px;
-  padding:11px 16px;
-}
-.mobile-menu-search svg{color:var(--ink-faint); flex-shrink:0;}
-.mobile-menu-search input{
-  flex:1; border:none; background:transparent;
-  font-size:14px; font-family:var(--body); color:var(--ink);
-}
-.mobile-menu-search input:focus{outline:none;}
-.mobile-menu-links{display:flex; flex-direction:column; padding:10px 12px; gap:2px;}
-.mobile-menu-links a{
-  display:flex; align-items:center; gap:13px;
-  padding:13px 12px; border-radius:12px;
-  font-size:15px; font-weight:700; color:var(--ink);
-  transition:background 0.15s ease;
-}
-.mobile-menu-links a:hover, .mobile-menu-links a:active{background:var(--bg-soft);}
-.mobile-menu-links .mlink-emoji{font-size:17px; width:22px; text-align:center; flex-shrink:0;}
-.mobile-menu-divider{height:1px; background:var(--line); margin:8px 20px;}
-.mobile-menu-actions{display:flex; gap:10px; padding:10px 20px;}
-.mobile-action-btn{
-  flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
-  background:var(--bg-soft); border-radius:999px; padding:12px;
-  font-weight:700; font-size:13.5px; color:var(--ink);
-}
-.mobile-action-btn svg{flex-shrink:0;}
-.mobile-action-btn.fav svg{color:var(--heart);}
-.mobile-action-btn.bag svg{color:var(--teal-dark);}
-.mobile-action-badge{
-  background:var(--ink); color:#fff; font-size:10px; font-weight:800;
-  min-width:16px; height:16px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center; padding:0 3px;
-}
-.mobile-menu-footer{margin-top:auto; padding:18px 20px 26px;}
-.mobile-menu-footer .whatsapp-btn{font-size:13.5px; padding:13px;}
+  /* --------------------------------------------------------------------
+     MOTIF ZELLIGE — signature visuelle réutilisée en filigrane
+     -------------------------------------------------------------------- */
+  .motif-zellige {
+    background-image:
+      linear-gradient(135deg, rgba(31,111,92,0.10) 25%, transparent 25%),
+      linear-gradient(225deg, rgba(31,111,92,0.10) 25%, transparent 25%),
+      linear-gradient(45deg, rgba(122,46,46,0.08) 25%, transparent 25%),
+      linear-gradient(315deg, rgba(122,46,46,0.08) 25%, transparent 25%);
+    background-position: 20px 0, 20px 0, 0 0, 0 0;
+    background-size: 40px 40px;
+    background-repeat: repeat;
+  }
 
-/* ================= HERO ================= */
-.hero{position:relative; padding:56px 0 40px; overflow:hidden;}
-.hero-inner{display:grid; grid-template-columns:1fr 0.92fr; gap:52px; align-items:center;}
-.eyebrow{
-  display:inline-flex; align-items:center; gap:7px;
-  font-size:12.5px; font-weight:700; letter-spacing:0.02em;
-  color:var(--teal-dark);
-  background:var(--teal-tint);
-  padding:7px 13px;
-  border-radius:999px;
-  margin-bottom:20px;
-}
-.eyebrow::before{content:"📍"; font-size:11px;}
+  .separateur-zellige {
+    height: 14px;
+    width: 100%;
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--cuivre) 0, var(--cuivre) 10px,
+      var(--emeraude) 10px, var(--emeraude) 20px,
+      var(--terre) 20px, var(--terre) 30px
+    );
+    opacity: 0.85;
+  }
 
-.hero h1{
-  font-family:var(--display);
-  font-size:clamp(34px, 4.6vw, 54px);
-  line-height:1.05;
-  font-weight:800;
-  letter-spacing:-0.02em;
-  margin-bottom:18px;
-}
-.hero h1 span{color:var(--teal);}
+  /* --------------------------------------------------------------------
+     BARRE UTILITAIRE + EN-TÊTE
+     -------------------------------------------------------------------- */
+  .barre-info {
+    background: var(--encre);
+    color: var(--sable);
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 6px 12px;
+    letter-spacing: 0.02em;
+  }
 
-.hero p.lead{
-  font-size:16.5px;
-  color:var(--ink-soft);
-  max-width:480px;
-  margin-bottom:28px;
-}
-.hero-ctas{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:30px;}
-.btn{
-  padding:14px 24px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:14.5px;
-  display:inline-flex; align-items:center; gap:8px;
-  transition:transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
-}
-.btn-primary{background:var(--teal); color:#fff;}
-.btn-primary:hover{background:var(--teal-dark); transform:translateY(-2px); box-shadow:0 14px 26px -10px rgba(12,180,176,0.55);}
-.btn-ghost{background:#fff; color:var(--ink); border:1.5px solid var(--line);}
-.btn-ghost:hover{border-color:var(--ink); transform:translateY(-2px);}
+  header.entete {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--blanc-casse);
+    border-bottom: 3px solid var(--terre);
+  }
 
-.trust-row{display:flex; gap:22px; flex-wrap:wrap;}
-.trust-item{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--ink-soft);}
-.trust-item svg{flex-shrink:0; color:var(--teal);}
+  .entete-interieure {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
 
-/* hero visual: photo stack */
-.hero-visual{position:relative; height:440px;}
-.tag-card{
-  position:absolute;
-  background:#fff;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow-pop);
-  padding:10px;
-  width:190px;
-}
-.tag-card img{width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:0;}
-.tag-card .price-tag{
-  position:relative; margin-top:-30px; margin-left:8px;
-  display:inline-flex; align-items:center; gap:6px;
-  background:var(--ink); color:#fff;
-  padding:6px 11px; border-radius:999px;
-  font-size:13px; font-weight:800;
-}
-.tag-card .heart-mini{
-  position:absolute; top:18px; right:18px;
-  width:28px; height:28px; border-radius:50%;
-  background:rgba(255,255,255,0.9);
-  display:flex; align-items:center; justify-content:center;
-  color:var(--heart);
-}
-.card-1{top:0; right:20px; transform:rotate(-4deg); z-index:3;}
-.card-2{top:170px; right:220px; transform:rotate(3deg); z-index:2;}
-.card-3{top:290px; right:10px; transform:rotate(6deg); z-index:1;}
-.hero-badge-floating{
-  position:absolute; top:250px; left:0;
-  background:var(--yellow);
-  color:var(--ink);
-  font-weight:800; font-size:12.5px;
-  padding:9px 15px; border-radius:999px;
-  box-shadow:var(--shadow-pop);
-  transform:rotate(-6deg);
-  z-index:4;
-}
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-affiche);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--terre);
+    text-decoration: none;
+    white-space: nowrap;
+  }
 
-/* ================= RAYONS (categories) ================= */
-.rayons{padding:44px 0 8px;}
-.rayons-head{margin-bottom:22px;}
-.section-label{
-  font-size:12px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;
-  color:var(--teal-dark);
-  margin-bottom:8px;
-  display:block;
-}
-.rayons h2{
-  font-family:var(--display);
-  font-size:clamp(24px,2.8vw,32px);
-  font-weight:800;
-  letter-spacing:-0.01em;
-}
+  .logo-etoile {
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+  }
 
-.rayon-grid{
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  gap:12px;
-}
-.rayon-card{
-  background:#fff;
-  border:1.5px solid var(--line);
-  border-radius:var(--radius);
-  padding:18px 16px;
-  transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  text-align:left;
-}
-.rayon-card:hover{border-color:var(--teal); transform:translateY(-3px); box-shadow:var(--shadow-card);}
-.rayon-card.active{background:var(--teal); border-color:var(--teal);}
-.rayon-card.active .rname, .rayon-card.active .rcount{color:#fff;}
-.rayon-emoji{font-size:22px; margin-bottom:10px; display:block;}
-.rayon-card .rname{font-weight:700; font-size:14px; margin-bottom:2px; color:var(--ink);}
-.rayon-card .rcount{font-size:11.5px; color:var(--ink-faint); font-weight:600;}
+  .logo small {
+    display: block;
+    font-family: var(--font-corps);
+    font-weight: 500;
+    font-size: 0.62rem;
+    color: var(--encre-soft);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 
-/* ================= PRODUITS ================= */
-.produits{padding:44px 0 20px;}
-.produits-head{
-  display:flex; justify-content:space-between; align-items:flex-end;
-  margin-bottom:22px; flex-wrap:wrap; gap:14px;
-}
-.produits h2{
-  font-family:var(--display);
-  font-size:clamp(22px,2.6vw,30px);
-  font-weight:800;
-  letter-spacing:-0.01em;
-}
-.result-count{font-size:13.5px; color:var(--ink-faint); font-weight:600;}
+  .bouton-panier {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--emeraude);
+    color: var(--blanc-casse);
+    border: none;
+    border-radius: var(--rayon-m);
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: var(--ombre);
+    transition: transform 0.15s ease, background 0.15s ease;
+    flex-shrink: 0;
+  }
+  .bouton-panier:hover { background: var(--emeraude-dark); transform: translateY(-1px); }
 
-.filter-bar{
-  display:flex; gap:10px; margin-bottom:28px;
-  flex-wrap:wrap; align-items:center;
-}
-.search-input{
-  flex:1; min-width:220px;
-  background:#fff;
-  border:1.5px solid var(--line);
-  border-radius:999px;
-  padding:12px 18px;
-  font-size:14px;
-  font-family:var(--body);
-}
-.search-input:focus{border-color:var(--teal); outline:none;}
-.select-pill{
-  background:#fff;
-  border:1.5px solid var(--line);
-  border-radius:999px;
-  padding:12px 18px;
-  font-size:14px;
-  font-family:var(--body);
-  font-weight:500;
-  color:var(--ink);
-  min-width:170px;
-}
-.select-pill:focus{border-color:var(--teal); outline:none;}
+  .badge-compteur {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--cuivre);
+    color: var(--encre);
+    font-size: 0.72rem;
+    font-weight: 800;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--blanc-casse);
+  }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:18px;
-  margin-bottom:26px;
-}
+  /* --------------------------------------------------------------------
+     HERO
+     -------------------------------------------------------------------- */
+  .hero {
+    position: relative;
+    background: var(--terre);
+    color: var(--blanc-casse);
+    overflow: hidden;
+    padding: 48px 20px 40px;
+  }
 
-.pcard{
-  background:#fff;
-  border-radius:var(--radius);
-  overflow:hidden;
-  box-shadow:var(--shadow-card);
-  border:1px solid var(--line);
-  transition:transform 0.2s ease, box-shadow 0.2s ease;
-  display:flex; flex-direction:column;
-}
-.pcard:hover{transform:translateY(-4px); box-shadow:var(--shadow-pop);}
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(135deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+      linear-gradient(225deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+      linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%),
+      linear-gradient(315deg, rgba(255,255,255,0.05) 25%, transparent 25%);
+    background-position: 30px 0, 30px 0, 0 0, 0 0;
+    background-size: 60px 60px;
+    opacity: 0.6;
+  }
 
-.pcard-img{position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--bg-soft);}
-.pcard-img img{width:100%; height:100%; object-fit:cover; transition:transform 0.4s ease;}
-.pcard:hover .pcard-img img{transform:scale(1.05);}
-.pcard-img.img-fallback{
-  display:flex; align-items:center; justify-content:center;
-}
-.pcard-img.img-fallback::after{
-  content:"📦"; font-size:38px; opacity:0.4;
-}
+  .hero-contenu {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
 
-.badge-etat{
-  position:absolute; bottom:10px; left:10px;
-  background:rgba(23,25,28,0.82);
-  color:#fff;
-  font-size:10.5px; font-weight:700;
-  padding:5px 10px;
-  border-radius:999px;
-}
-.badge-boost{
-  position:absolute; top:10px; left:10px; z-index:2;
-  background:var(--yellow);
-  color:var(--ink);
-  font-size:10.5px; font-weight:800;
-  padding:5px 10px;
-  border-radius:999px;
-}
-.stamp-verified{
-  position:absolute; bottom:10px; right:10px;
-  display:flex; align-items:center; gap:4px;
-  background:var(--teal-tint);
-  color:var(--teal-dark);
-  font-size:10px; font-weight:800;
-  padding:5px 9px;
-  border-radius:999px;
-}
-.fav-btn{
-  position:absolute; top:10px; right:10px; z-index:2;
-  width:32px; height:32px; border-radius:50%;
-  background:rgba(255,255,255,0.92);
-  display:flex; align-items:center; justify-content:center;
-  color:var(--ink);
-  box-shadow:0 2px 8px rgba(0,0,0,0.12);
-  transition:transform 0.15s ease, color 0.15s ease;
-}
-.fav-btn:hover{transform:scale(1.08);}
-.fav-btn.active{color:var(--heart);}
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: var(--sable);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
 
-.pcard-body{padding:14px; display:flex; flex-direction:column; gap:6px; flex:1;}
-.pcard-price-row{display:flex; align-items:baseline; gap:8px;}
-.pcard-price{font-family:var(--display); font-weight:800; font-size:18px; color:var(--ink);}
-.pcard-oldprice{font-size:12.5px; color:var(--ink-faint); text-decoration:line-through;}
-.pcard-discount{font-size:11.5px; font-weight:800; color:var(--teal-dark); margin-left:auto;}
-.pcard-name{font-size:14px; font-weight:700; color:var(--ink); line-height:1.3;}
-.pcard-meta{font-size:12px; color:var(--ink-faint); font-weight:500; min-height:15px;}
+  .hero h1 {
+    font-family: var(--font-affiche);
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    line-height: 1.08;
+    margin: 0;
+    max-width: 16ch;
+  }
 
-.pcard-seller{display:flex; align-items:center; gap:8px; margin-top:2px; padding-top:8px; border-top:1px solid var(--line);}
-.seller-avatar{width:24px; height:24px; border-radius:50%; object-fit:cover; flex-shrink:0;}
-.seller-info{display:flex; flex-direction:column; flex:1; min-width:0;}
-.seller-name{font-size:11.5px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.seller-rating{font-size:10.5px; color:var(--ink-faint); font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.pcard-likes{
-  display:flex; align-items:center; gap:3px;
-  font-size:11px; color:var(--ink-faint); font-weight:600;
-  flex-shrink:0;
-}
-.pcard-likes svg{color:var(--heart); opacity:0.7;}
+  .hero p {
+    max-width: 52ch;
+    color: rgba(255,253,248,0.88);
+    font-size: 1.05rem;
+    margin: 0;
+  }
 
-.pcard-add{
-  margin-top:8px;
-  width:100%;
-  background:var(--ink);
-  color:#fff;
-  padding:11px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:13px;
-  transition:background 0.15s ease, transform 0.15s ease;
-}
-.pcard-add:hover{background:var(--teal-dark); transform:translateY(-1px);}
-.pcard-add.added{background:var(--teal);}
+  /* --------------------------------------------------------------------
+     BARRE DE RECHERCHE + FILTRES
+     -------------------------------------------------------------------- */
+  .zone-controles {
+    max-width: 1200px;
+    margin: -26px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 5;
+  }
 
-.empty-state{
-  grid-column:1/-1; text-align:center; padding:70px 20px; color:var(--ink-soft);
-  background:#fff; border-radius:var(--radius); border:1.5px dashed var(--line);
-}
-.empty-title{font-size:16px; font-weight:700; margin-bottom:6px; color:var(--ink);}
-.empty-sub{font-size:14px;}
+  .carte-controles {
+    background: var(--blanc-casse);
+    border-radius: var(--rayon-l);
+    box-shadow: var(--ombre-forte);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
 
-.load-more{
-  display:inline-flex; margin:0 auto; display:flex;
-  background:#fff; border:1.5px solid var(--line); color:var(--ink);
-  padding:13px 28px; border-radius:999px; font-weight:700; font-size:14px;
-  transition:border-color 0.15s ease, transform 0.15s ease;
-}
-.load-more:hover{border-color:var(--teal); transform:translateY(-2px);}
+  .ligne-recherche {
+    display: flex;
+    gap: 10px;
+  }
 
-/* ================= COMMENT ÇA MARCHE ================= */
-.comment{padding:70px 0; background:#fff; margin-top:20px;}
-.comment-head{text-align:center; max-width:520px; margin:0 auto 44px;}
-.comment-head h2{font-family:var(--display); font-size:clamp(24px,3vw,32px); font-weight:800; margin-bottom:10px; letter-spacing:-0.01em;}
-.comment-head p{color:var(--ink-soft); font-size:15px;}
-.steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; position:relative;}
-.step{text-align:center;}
-.step-num{
-  width:44px; height:44px; border-radius:50%;
-  background:var(--teal-tint); color:var(--teal-dark);
-  display:flex; align-items:center; justify-content:center;
-  font-family:var(--display); font-weight:800; font-size:17px;
-  margin:0 auto 14px;
-}
-.step h3{font-size:15.5px; font-weight:700; margin-bottom:6px;}
-.step p{font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+  .champ-recherche {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sable);
+    border: 2px solid transparent;
+    border-radius: var(--rayon-m);
+    padding: 10px 14px;
+    transition: border-color 0.15s ease;
+  }
+  .champ-recherche:focus-within { border-color: var(--emeraude); }
 
-/* ================= CONFIANCE ================= */
-.confiance{padding:70px 0;}
-.confiance-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:50px; align-items:center;}
-.confiance-visual{
-  background:var(--teal);
-  border-radius:var(--radius-lg);
-  height:340px;
-  display:flex; align-items:center; justify-content:center;
-  position:relative;
-  overflow:hidden;
-}
-.confiance-visual .badge-huge{
-  color:#fff; text-align:center;
-}
-.confiance-visual .badge-huge .num{font-family:var(--display); font-size:64px; font-weight:800; line-height:1;}
-.confiance-visual .badge-huge .label{font-size:14px; font-weight:600; margin-top:8px; opacity:0.9;}
-.confiance h2{font-family:var(--display); font-size:clamp(24px,3vw,32px); font-weight:800; margin-bottom:14px; letter-spacing:-0.01em;}
-.confiance > .container > .confiance-grid > div p{color:var(--ink-soft); font-size:15px; margin-bottom:24px;}
-.confiance-list{display:flex; flex-direction:column; gap:16px;}
-.confiance-list li{display:flex; gap:12px; align-items:flex-start;}
-.confiance-list svg{
-  flex-shrink:0; margin-top:2px; color:var(--teal);
-  background:var(--teal-tint); border-radius:50%; padding:5px; width:26px; height:26px;
-}
-.confiance-list b{display:block; font-size:14.5px; margin-bottom:2px;}
-.confiance-list span{font-size:13.5px; color:var(--ink-soft);}
+  .champ-recherche svg { flex-shrink: 0; color: var(--encre-soft); }
 
-/* ================= QUARTIERS ================= */
-.quartiers{padding:60px 0; background:#fff;}
-.quartiers-head{text-align:center; max-width:480px; margin:0 auto 30px;}
-.quartiers-head h2{font-family:var(--display); font-size:clamp(22px,2.8vw,28px); font-weight:800; margin-bottom:8px; letter-spacing:-0.01em;}
-.quartiers-head p{color:var(--ink-soft); font-size:14.5px;}
-.quartiers-grid{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
-.quartier-chip{
-  background:var(--bg-soft);
-  padding:10px 18px;
-  border-radius:999px;
-  font-size:13.5px; font-weight:600;
-  display:flex; align-items:center; gap:8px;
-}
-.quartier-chip.hub{background:var(--teal); color:#fff;}
-.quartier-chip svg{color:var(--teal); flex-shrink:0;}
-.quartier-chip.hub svg{color:#fff;}
+  .champ-recherche input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.98rem;
+    color: var(--encre);
+    font-family: inherit;
+  }
+  .champ-recherche input:focus { outline: none; }
 
-/* ================= VENDRE ================= */
-.vendre{padding:20px 0 70px;}
-.vendre-box{
-  background:var(--ink);
-  color:#fff;
-  border-radius:var(--radius-lg);
-  padding:50px;
-  display:grid; grid-template-columns:1.1fr 0.9fr; gap:44px; align-items:center;
-}
-.vendre-box h2{font-family:var(--display); font-size:clamp(24px,3vw,32px); font-weight:800; margin-bottom:14px; letter-spacing:-0.01em;}
-.vendre-box p{color:rgba(255,255,255,0.7); font-size:15px; margin-bottom:24px; max-width:420px;}
-.vendre-mini-form{background:#fff; border-radius:var(--radius); padding:24px; display:flex; flex-direction:column; gap:12px;}
-.vendre-mini-form label{font-size:12.5px; font-weight:700; color:var(--ink-soft); margin-bottom:-6px;}
-.vendre-mini-form input, .vendre-mini-form select{
-  border:1.5px solid var(--line); border-radius:var(--radius-sm); padding:11px 14px; font-size:14px; font-family:var(--body); color:var(--ink);
-}
-.vendre-mini-form input:focus, .vendre-mini-form select:focus{outline:none; border-color:var(--teal);}
+  .ligne-filtres {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-/* ================= FOOTER ================= */
-footer{background:#fff; border-top:1px solid var(--line); padding:50px 0 24px;}
-.footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px; margin-bottom:36px;}
-.footer-logo{font-family:var(--display); font-weight:800; font-size:18px; margin-bottom:10px;}
-.footer-grid > div:first-child p{color:var(--ink-soft); font-size:13.5px; max-width:260px;}
-.footer-col h4{font-size:13px; font-weight:700; margin-bottom:14px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-faint);}
-.footer-col ul{display:flex; flex-direction:column; gap:10px;}
-.footer-col a{font-size:13.5px; color:var(--ink-soft); transition:color 0.15s ease;}
-.footer-col a:hover{color:var(--teal-dark);}
-.footer-bottom{
-  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
-  padding-top:22px; border-top:1px solid var(--line);
-  font-size:12.5px; color:var(--ink-faint);
-}
+  .groupe-select {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 140px;
+  }
 
-/* ================= CART DRAWER ================= */
-.overlay{
-  position:fixed; inset:0; background:rgba(23,25,28,0.45);
-  opacity:0; pointer-events:none; transition:opacity 0.25s ease; z-index:200;
-}
-.overlay.open{opacity:1; pointer-events:auto;}
-.cart-drawer{
-  position:fixed; top:0; right:0; height:100%; width:400px; max-width:92vw;
-  background:#fff; z-index:201;
-  transform:translateX(100%); transition:transform 0.3s ease;
-  display:flex; flex-direction:column;
-  box-shadow:-16px 0 40px rgba(0,0,0,0.15);
-}
-.cart-drawer.open{transform:translateX(0);}
-.cart-head{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:22px 24px; border-bottom:1px solid var(--line);
-}
-.cart-head h3{font-family:var(--display); font-size:18px; font-weight:800;}
-.cart-close{
-  width:34px; height:34px; border-radius:50%; background:var(--bg-soft);
-  display:flex; align-items:center; justify-content:center; font-size:16px;
-}
-.cart-items{flex:1; overflow-y:auto; padding:14px 24px;}
-.cart-empty{padding:60px 0; text-align:center;}
-.cart-item{display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--line);}
-.cart-item img{width:64px; height:64px; object-fit:cover; border-radius:10px; flex-shrink:0;}
-.cart-item-info{flex:1;}
-.cart-item-name{font-size:13.5px; font-weight:700; margin-bottom:2px;}
-.cart-item-city{font-size:11.5px; color:var(--ink-faint); margin-bottom:6px;}
-.cart-item-row{display:flex; justify-content:space-between; align-items:center;}
-.qty-control{
-  display:flex; align-items:center; gap:8px;
-  background:var(--bg-soft); border-radius:999px; padding:4px 8px;
-}
-.qty-control button{
-  width:20px; height:20px; font-size:14px; font-weight:700;
-  display:flex; align-items:center; justify-content:center;
-}
-.qty-control span{font-size:13px; font-weight:700; min-width:16px; text-align:center;}
-.cart-item-price{font-weight:800; font-size:14px; color:var(--ink);}
-.remove-item{font-size:11.5px; color:var(--ink-faint); text-decoration:underline; margin-top:6px; display:inline-block; cursor:pointer;}
+  .groupe-select label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--encre-soft);
+  }
 
-.cart-foot{padding:20px 24px 24px; border-top:1px solid var(--line); background:var(--bg-soft);}
-.cart-total-row{display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px;}
-.cart-total-row.grand{font-weight:800; font-size:16.5px; margin-top:8px; margin-bottom:16px;}
-.whatsapp-btn{
-  width:100%; background:#25D366; color:#fff; padding:15px; border-radius:999px;
-  font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center; gap:10px;
-  transition:transform 0.15s ease, background 0.2s ease;
-}
-.whatsapp-btn:hover{background:#1eb857; transform:translateY(-2px);}
-.cart-note{font-size:11.5px; color:var(--ink-faint); text-align:center; margin-top:10px;}
+  select {
+    appearance: none;
+    background: var(--sable);
+    border: 2px solid transparent;
+    border-radius: var(--rayon-m);
+    padding: 9px 32px 9px 12px;
+    font-size: 0.92rem;
+    color: var(--encre);
+    font-family: inherit;
+    font-weight: 600;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232B2420' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    width: 100%;
+    transition: border-color 0.15s ease;
+  }
+  select:focus { border-color: var(--emeraude); outline: none; }
 
-/* ================= ESPACE VENDEUR (admin PIN gate) ================= */
-.admin-overlay{
-  position:fixed; inset:0; background:rgba(23,25,28,0.55);
-  z-index:400; display:none; align-items:center; justify-content:center;
-  padding:20px; backdrop-filter:blur(3px);
-}
-.admin-overlay.open{display:flex;}
-.admin-modal{
-  background:#fff; border-radius:var(--radius-lg);
-  width:440px; max-width:100%;
-  max-height:88vh; overflow-y:auto;
-  padding:26px;
-  box-shadow:var(--shadow-pop);
-}
-.admin-modal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
-.admin-modal-head h3{font-family:var(--display); font-size:19px; font-weight:800;}
-.admin-modal-sub{font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;}
-.admin-pin-input{
-  width:100%; text-align:center; letter-spacing:6px;
-  font-size:20px; font-weight:800; font-family:var(--display);
-  border:1.5px solid var(--line); border-radius:var(--radius-sm);
-  padding:14px; color:var(--ink);
-}
-.admin-pin-input:focus{outline:none; border-color:var(--teal);}
-.admin-pin-error{
-  display:none; color:var(--heart); font-size:12.5px; font-weight:600;
-  margin-top:8px; text-align:center;
-}
-.admin-pin-error.show{display:block;}
+  .puce-resultats {
+    font-size: 0.85rem;
+    color: var(--encre-soft);
+    font-weight: 600;
+    white-space: nowrap;
+  }
 
-.admin-form-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:6px;}
-.admin-field{display:flex; flex-direction:column; gap:5px; grid-column:span 2;}
-.admin-field.half{grid-column:span 1;}
-.admin-field span{font-size:12px; font-weight:700; color:var(--ink-soft);}
-.admin-field input, .admin-field select{
-  border:1.5px solid var(--line); border-radius:var(--radius-sm);
-  padding:10px 12px; font-size:14px; font-family:var(--body); color:var(--ink);
-}
-.admin-field input:focus, .admin-field select:focus{outline:none; border-color:var(--teal);}
-.admin-photo-preview{grid-column:span 2; border-radius:var(--radius-sm); overflow:hidden; border:1.5px solid var(--line);}
-.admin-photo-preview img{width:100%; height:160px; object-fit:cover;}
-.admin-export-row{display:flex; flex-direction:column; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid var(--line);}
+  /* --------------------------------------------------------------------
+     CHIPS CATÉGORIES (raccourci visuel)
+     -------------------------------------------------------------------- */
+  .rangee-chips {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    padding: 0 20px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .rangee-chips::-webkit-scrollbar { display: none; }
 
-/* toast */
-.toast{
-  position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
-  background:var(--ink); color:#fff;
-  padding:14px 22px; border-radius:999px;
-  font-size:14px; font-weight:600;
-  display:flex; align-items:center; gap:10px;
-  z-index:300; opacity:0; pointer-events:none;
-  transition:all 0.3s ease;
-  box-shadow:0 12px 30px rgba(0,0,0,0.25);
-}
-.toast.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto;}
-.toast svg{color:var(--teal);}
+  .chip {
+    flex-shrink: 0;
+    background: var(--blanc-casse);
+    border: 2px solid var(--sable-deep);
+    color: var(--encre);
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .chip:hover { border-color: var(--emeraude); }
+  .chip.actif {
+    background: var(--emeraude);
+    border-color: var(--emeraude);
+    color: var(--blanc-casse);
+  }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 980px){
-  .hero-inner{grid-template-columns:1fr; gap:36px;}
-  .hero-visual{height:320px; max-width:400px; margin:0 auto;}
-  .rayon-grid{grid-template-columns:repeat(3,1fr);}
-  .grid{grid-template-columns:repeat(3,1fr);}
-  .steps{grid-template-columns:repeat(2,1fr); row-gap:32px;}
-  .confiance-grid{grid-template-columns:1fr; gap:32px;}
-  .confiance-visual{height:220px;}
-  .vendre-box{grid-template-columns:1fr; padding:32px 24px;}
-  .footer-grid{grid-template-columns:1fr 1fr; gap:28px;}
-  .nav-links{display:none;}
-  .nav-search{display:none;}
-  .burger{display:flex;}
-}
+  /* --------------------------------------------------------------------
+     GRILLE PRODUITS
+     -------------------------------------------------------------------- */
+  main.contenu {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
 
-@media (max-width: 640px){
-  .nav{gap:12px;}
-  .hero{padding:36px 0 32px;}
-  .hero-ctas{flex-direction:column;}
-  .hero-ctas .btn{width:100%; justify-content:center;}
-  .trust-row{flex-direction:column; gap:10px;}
-  .rayon-grid{grid-template-columns:1fr 1fr;}
-  .grid{grid-template-columns:1fr 1fr; gap:12px;}
-  .produits-head{flex-direction:column; align-items:flex-start;}
-  .filter-bar{flex-direction:column; align-items:stretch;}
-  .select-pill{width:100%;}
-  .quartiers-grid{gap:8px;}
-  .cart-drawer{width:100vw; max-width:100vw;}
-  .card-1{width:150px; right:10px;}
-  .card-2{width:150px; right:150px; top:130px;}
-  .card-3{display:none;}
-  .hero-badge-floating{left:8px; top:200px;}
-}
+  .titre-section {
+    font-family: var(--font-affiche);
+    font-size: 1.4rem;
+    margin: 0 0 16px;
+    color: var(--terre);
+  }
+
+  .grille-produits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  @media (min-width: 640px) {
+    .grille-produits { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  }
+  @media (min-width: 900px) {
+    .grille-produits { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1180px) {
+    .grille-produits { grid-template-columns: repeat(5, 1fr); }
+  }
+
+  .carte-produit {
+    background: var(--blanc-casse);
+    border-radius: var(--rayon-m);
+    overflow: hidden;
+    border: 1px solid var(--sable-deep);
+    box-shadow: var(--ombre);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    text-align: left;
+    padding: 0;
+  }
+  .carte-produit:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ombre-forte);
+  }
+
+  .vignette-produit {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--sable-deep);
+    overflow: hidden;
+  }
+  .vignette-produit img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+  .carte-produit:hover .vignette-produit img { transform: scale(1.06); }
+
+  .etiquette-etat {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    color: var(--blanc-casse);
+  }
+  .etat-neuf { background: var(--emeraude); }
+  .etat-tres-bon { background: var(--cuivre-dark); }
+  .etat-bon { background: var(--terre); }
+  .etat-occasion { background: var(--encre-soft); }
+
+  .infos-produit {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .categorie-produit {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--emeraude);
+  }
+
+  .titre-produit {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--encre);
+    margin: 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .description-produit {
+    font-size: 0.8rem;
+    color: var(--encre-soft);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bas-carte {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .prix-produit {
+    font-family: var(--font-affiche);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--terre);
+  }
+  .prix-produit span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--encre-soft);
+    margin-left: 2px;
+  }
+
+  .bouton-ajouter {
+    background: var(--cuivre);
+    color: var(--encre);
+    border: none;
+    border-radius: var(--rayon-s);
+    width: 34px; height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .bouton-ajouter:hover { background: var(--cuivre-dark); transform: scale(1.08); }
+  .bouton-ajouter:active { transform: scale(0.94); }
+
+  .aucun-resultat {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--encre-soft);
+  }
+  .aucun-resultat svg { margin-bottom: 12px; color: var(--sable-deep); }
+  .aucun-resultat strong { display: block; color: var(--encre); font-size: 1.1rem; margin-bottom: 4px; }
+
+  /* --------------------------------------------------------------------
+     MODALE DÉTAIL PRODUIT
+     -------------------------------------------------------------------- */
+  .superposition {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 36, 32, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .superposition.visible { display: flex; }
+
+  @media (min-width: 720px) {
+    .superposition { align-items: center; }
+  }
+
+  .modale-detail {
+    background: var(--blanc-casse);
+    width: 100%;
+    max-width: 640px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: var(--rayon-l) var(--rayon-l) 0 0;
+    animation: glisser-monter 0.28s ease;
+  }
+  @media (min-width: 720px) {
+    .modale-detail { border-radius: var(--rayon-l); }
+  }
+
+  @keyframes glisser-monter {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .entete-modale {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px;
+    background: linear-gradient(to bottom, rgba(255,253,248,0.95), transparent);
+    z-index: 2;
+  }
+
+  .bouton-fermer {
+    background: var(--blanc-casse);
+    border: 1px solid var(--sable-deep);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--ombre);
+  }
+
+  .image-modale {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-top: -52px;
+  }
+
+  .corps-modale { padding: 20px 24px 28px; }
+
+  .corps-modale .categorie-produit { font-size: 0.75rem; }
+
+  .corps-modale h2 {
+    font-family: var(--font-affiche);
+    font-size: 1.5rem;
+    margin: 6px 0 10px;
+    color: var(--encre);
+  }
+
+  .meta-modale {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .corps-modale p.description-longue {
+    color: var(--encre-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .barre-prix-modale {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 2px dashed var(--sable-deep);
+    padding-top: 16px;
+    gap: 16px;
+  }
+
+  .prix-modale {
+    font-family: var(--font-affiche);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--terre);
+  }
+
+  .bouton-ajouter-modale {
+    background: var(--emeraude);
+    color: var(--blanc-casse);
+    border: none;
+    border-radius: var(--rayon-m);
+    padding: 13px 22px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--ombre);
+    transition: background 0.15s ease;
+  }
+  .bouton-ajouter-modale:hover { background: var(--emeraude-dark); }
+
+  /* --------------------------------------------------------------------
+     PANIER COULISSANT
+     -------------------------------------------------------------------- */
+  .panier-superposition {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 36, 32, 0.55);
+    z-index: 200;
+    display: none;
+  }
+  .panier-superposition.visible { display: block; }
+
+  .panneau-panier {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100%;
+    width: 100%;
+    max-width: 420px;
+    background: var(--sable);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -8px 0 30px rgba(0,0,0,0.2);
+  }
+  .panneau-panier.visible { transform: translateX(0); }
+
+  .entete-panier {
+    background: var(--terre);
+    color: var(--blanc-casse);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .entete-panier h2 {
+    font-family: var(--font-affiche);
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bouton-fermer-panier {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: var(--blanc-casse);
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .corps-panier {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panier-vide {
+    text-align: center;
+    color: var(--encre-soft);
+    padding: 60px 20px;
+  }
+  .panier-vide svg { color: var(--sable-deep); margin-bottom: 14px; }
+  .panier-vide strong { display: block; color: var(--encre); margin-bottom: 6px; font-size: 1.05rem; }
+
+  .ligne-panier {
+    display: flex;
+    gap: 12px;
+    background: var(--blanc-casse);
+    border-radius: var(--rayon-m);
+    padding: 10px;
+    border: 1px solid var(--sable-deep);
+  }
+
+  .image-ligne-panier {
+    width: 64px; height: 64px;
+    border-radius: var(--rayon-s);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .details-ligne-panier {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .titre-ligne-panier {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--encre);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prix-unitaire-ligne {
+    font-size: 0.78rem;
+    color: var(--encre-soft);
+  }
+
+  .controles-ligne-panier {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .stepper-quantite {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sable);
+    border-radius: var(--rayon-s);
+    padding: 3px;
+  }
+
+  .bouton-stepper {
+    background: var(--blanc-casse);
+    border: 1px solid var(--sable-deep);
+    width: 24px; height: 24px;
+    border-radius: 5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: var(--encre);
+  }
+
+  .valeur-quantite {
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .bouton-supprimer-ligne {
+    background: none;
+    border: none;
+    color: var(--terre);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: underline;
+    padding: 4px;
+  }
+
+  .pied-panier {
+    border-top: 2px dashed var(--sable-deep);
+    padding: 16px 20px 20px;
+    background: var(--blanc-casse);
+  }
+
+  .ligne-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .ligne-total span:first-child {
+    font-weight: 600;
+    color: var(--encre-soft);
+  }
+  .ligne-total span.montant-total {
+    font-family: var(--font-affiche);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--terre);
+  }
+
+  .bouton-commander {
+    width: 100%;
+    background: var(--emeraude);
+    color: var(--blanc-casse);
+    border: none;
+    border-radius: var(--rayon-m);
+    padding: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: var(--ombre);
+    transition: background 0.15s ease;
+  }
+  .bouton-commander:hover { background: var(--emeraude-dark); }
+  .bouton-commander:disabled {
+    background: var(--sable-deep);
+    color: var(--encre-soft);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* --------------------------------------------------------------------
+     MODALE FORMULAIRE CLIENT (avant envoi WhatsApp)
+     -------------------------------------------------------------------- */
+  .modale-formulaire {
+    background: var(--blanc-casse);
+    width: 100%;
+    max-width: 440px;
+    border-radius: var(--rayon-l);
+    padding: 24px;
+    animation: glisser-monter 0.28s ease;
+  }
+
+  .modale-formulaire h2 {
+    font-family: var(--font-affiche);
+    font-size: 1.3rem;
+    margin: 0 0 4px;
+    color: var(--terre);
+  }
+  .modale-formulaire p.sous-titre {
+    color: var(--encre-soft);
+    font-size: 0.88rem;
+    margin: 0 0 20px;
+  }
+
+  .champ-formulaire { margin-bottom: 16px; }
+
+  .champ-formulaire label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--encre);
+    margin-bottom: 6px;
+  }
+
+  .champ-formulaire input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--sable-deep);
+    border-radius: var(--rayon-m);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: var(--sable);
+    color: var(--encre);
+  }
+  .champ-formulaire input:focus {
+    outline: none;
+    border-color: var(--emeraude);
+  }
+
+  .message-erreur-champ {
+    color: var(--terre);
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 5px;
+    display: none;
+  }
+  .champ-formulaire.en-erreur input { border-color: var(--terre); }
+  .champ-formulaire.en-erreur .message-erreur-champ { display: block; }
+
+  .actions-formulaire {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .bouton-secondaire {
+    flex: 1;
+    background: var(--sable);
+    color: var(--encre);
+    border: 2px solid var(--sable-deep);
+    border-radius: var(--rayon-m);
+    padding: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .bouton-whatsapp {
+    flex: 1.4;
+    background: #25D366;
+    color: #06210F;
+    border: none;
+    border-radius: var(--rayon-m);
+    padding: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: var(--ombre);
+    transition: filter 0.15s ease;
+  }
+  .bouton-whatsapp:hover { filter: brightness(0.95); }
+
+  /* --------------------------------------------------------------------
+     TOAST DE CONFIRMATION (ajout au panier)
+     -------------------------------------------------------------------- */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--encre);
+    color: var(--blanc-casse);
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--ombre-forte);
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast svg { color: var(--cuivre); flex-shrink: 0; }
+
+  /* --------------------------------------------------------------------
+     PIED DE PAGE
+     -------------------------------------------------------------------- */
+  footer.pied-page {
+    background: var(--encre);
+    color: rgba(255,253,248,0.75);
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  footer.pied-page strong { color: var(--sable); font-family: var(--font-affiche); font-size: 1.1rem; }
+  footer.pied-page p { margin: 8px 0 0; }
 </style>
 </head>
 <body>
 
-<!-- ===== TRUST STRIP ===== -->
-<div class="trust-strip">
-  <div class="ticker" id="ticker">
-    <span>📍 Uniquement à Ouarzazate</span>
-    <span>✅ Chaque article vérifié au dépôt</span>
-    <span>🤝 Remise en main propre</span>
-    <span>💬 Commande simple sur WhatsApp</span>
-    <span>📍 Uniquement à Ouarzazate</span>
-    <span>✅ Chaque article vérifié au dépôt</span>
-    <span>🤝 Remise en main propre</span>
-    <span>💬 Commande simple sur WhatsApp</span>
-  </div>
+<!-- ============================================================
+     BARRE D'INFORMATION SUPÉRIEURE
+     ============================================================ -->
+<div class="barre-info">
+  🛍️ Retrait uniquement en boutique · Commande envoyée directement sur WhatsApp
 </div>
 
-<!-- ===== HEADER ===== -->
-<header>
-  <nav class="nav">
-    <a href="#top" class="logo">
-      <span class="mark">M</span>
-      <span>Mahal<small>Ouarzazate</small></span>
+<!-- ============================================================
+     EN-TÊTE
+     ============================================================ -->
+<header class="entete">
+  <div class="entete-interieure">
+    <a href="#" class="logo" aria-label="Bazar Al Madina — accueil">
+      <svg class="logo-etoile" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16 Z" fill="#7A2E2E" stroke="#C98A2E" stroke-width="1.5"/>
+      </svg>
+      <span>Bazar Al Madina<small>Ouarzazate · Maroc</small></span>
     </a>
-    <div class="nav-search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInputTop" placeholder="Chercher un article, une marque..." oninput="syncSearch(this.value)">
-    </div>
-    <ul class="nav-links">
-      <li><a href="#rayons">Rayons</a></li>
-      <li><a href="#confiance">Confiance</a></li>
-      <li><a href="#vendre">Déposer un article</a></li>
-    </ul>
-    <div class="nav-right">
-      <button class="icon-btn" aria-label="Favoris">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-        <span class="icon-count" id="favCount">0</span>
-      </button>
-      <button class="cart-btn" onclick="openCart()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <button class="burger" id="burgerBtn" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+    <button class="bouton-panier" id="bouton-ouvrir-panier" aria-label="Ouvrir le panier">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Panier</span>
+      <span class="badge-compteur" id="badge-compteur" hidden>0</span>
+    </button>
+  </div>
 </header>
 
-<!-- ===== MOBILE MENU (drawer dépliant) ===== -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu-head">
-    <span class="logo">
-      <span class="mark">M</span>
-      <span>Mahal<small>Ouarzazate</small></span>
-    </span>
-    <button class="cart-close" onclick="closeMobileMenu()" aria-label="Fermer le menu">✕</button>
-  </div>
-
-  <div class="mobile-menu-search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="searchInputMobile" placeholder="Chercher un article, une marque..." oninput="syncSearch(this.value)">
-  </div>
-
-  <nav class="mobile-menu-links">
-    <a href="#rayons" onclick="closeMobileMenu()"><span class="mlink-emoji">🗂️</span> Rayons</a>
-    <a href="#produits" onclick="closeMobileMenu()"><span class="mlink-emoji">🛍️</span> Tous les articles</a>
-    <a href="#confiance" onclick="closeMobileMenu()"><span class="mlink-emoji">✅</span> Confiance</a>
-    <a href="#quartiers-nav" onclick="closeMobileMenu(); document.querySelector('.quartiers').scrollIntoView({behavior:'smooth'});"><span class="mlink-emoji">📍</span> Quartiers desservis</a>
-    <a href="#vendre" onclick="closeMobileMenu()"><span class="mlink-emoji">📦</span> Déposer un article</a>
-  </nav>
-
-  <div class="mobile-menu-divider"></div>
-
-  <div class="mobile-menu-actions">
-    <button class="mobile-action-btn fav" onclick="closeMobileMenu()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-      Favoris <span class="mobile-action-badge" id="favCountMobile">0</span>
-    </button>
-    <button class="mobile-action-btn bag" onclick="closeMobileMenu(); openCart();">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-      Panier <span class="mobile-action-badge" id="cartCountMobile">0</span>
-    </button>
-  </div>
-
-  <div class="mobile-menu-footer">
-    <a href="https://wa.me/212600000000" target="_blank" rel="noopener" class="whatsapp-btn">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg>
-      Nous contacter
-    </a>
-  </div>
-</div>
-
-<!-- ===== HERO ===== -->
-<section class="hero" id="top">
-  <div class="container hero-inner">
-    <div>
-      <span class="eyebrow">Uniquement à Ouarzazate</span>
-      <h1>La friperie<br>en ligne <span>d'Ouarzazate</span></h1>
-      <p class="lead">Vêtements, meubles, électroménager et petits objets — chaque article passe par notre dépôt, vérifié à la main, puis mis en vente ici. On se retrouve à Ouarzazate, c'est tout.</p>
-      <div class="hero-ctas">
-        <a href="#produits" class="btn btn-primary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-          Voir les articles
-        </a>
-        <a href="#vendre" class="btn btn-ghost">Déposer un article</a>
-      </div>
-      <div class="trust-row">
-        <div class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6L9 17l-5-5"/></svg>
-          Article vérifié avant mise en ligne
-        </div>
-        <div class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7 4.5-7 4.5V11a7 7 0 0 1 14 0v14.5S12 21 12 21z"/><circle cx="12" cy="11" r="2.5"/></svg>
-          Remise en main propre à Ouarzazate
-        </div>
-        <div class="trust-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M17.5 3.5a5 5 0 0 1 0 7L12 16 6.5 10.5a5 5 0 0 1 7-7L12 5l-.5-1.5"/></svg>
-          Commande simple par WhatsApp
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-visual">
-      <span class="hero-badge-floating">✦ Nouveaux articles chaque semaine</span>
-
-      <div class="tag-card card-1">
-        <div class="heart-mini">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-        </div>
-        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=300&fit=crop" alt="Veste en cuir d'occasion">
-        <div class="price-tag">220 DH</div>
-      </div>
-
-      <div class="tag-card card-2">
-        <div class="heart-mini">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-        </div>
-        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?w=300&h=300&fit=crop" alt="Chaise vintage en bois">
-        <div class="price-tag">120 DH</div>
-      </div>
-
-      <div class="tag-card card-3">
-        <div class="heart-mini">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-        </div>
-        <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=300&fit=crop" alt="Grille-pain 4 fentes">
-        <div class="price-tag">150 DH</div>
-      </div>
-    </div>
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-contenu">
+    <span class="hero-eyebrow">✨ Nouveaux articles chaque semaine</span>
+    <h1>Le bazar de votre quartier, maintenant à portée de main</h1>
+    <p>Parcourez nos articles, ajoutez-les à votre panier, et récupérez votre commande directement en boutique. Simple, rapide, sans surprise.</p>
   </div>
 </section>
 
-<!-- ===== RAYONS ===== -->
-<section class="rayons" id="rayons">
-  <div class="container">
-    <div class="rayons-head">
-      <span class="section-label">Parcourir</span>
-      <h2>Les rayons du mahal</h2>
-    </div>
-    <div class="rayon-grid">
-      <button class="rayon-card active" data-cat="tous">
-        <span class="rayon-emoji">🗂️</span>
-        <div class="rname">Tous</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-      <button class="rayon-card" data-cat="vetements">
-        <span class="rayon-emoji">👕</span>
-        <div class="rname">Vêtements</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-      <button class="rayon-card" data-cat="electromenager">
-        <span class="rayon-emoji">🔌</span>
-        <div class="rname">Électroménager</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-      <button class="rayon-card" data-cat="meubles">
-        <span class="rayon-emoji">🪑</span>
-        <div class="rname">Meubles &amp; déco</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-      <button class="rayon-card" data-cat="electronique">
-        <span class="rayon-emoji">📱</span>
-        <div class="rname">Électronique</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-      <button class="rayon-card" data-cat="cuisine">
-        <span class="rayon-emoji">🍽️</span>
-        <div class="rname">Cuisine</div>
-        <div class="rcount">0 en ligne</div>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== PRODUITS ===== -->
-<section class="produits" id="produits">
-  <div class="container">
-    <div class="produits-head">
-      <div>
-        <span class="section-label">En vente actuellement</span>
-        <h2>Les bonnes affaires du moment</h2>
-      </div>
-      <span class="result-count" id="resultCount">0 article</span>
-    </div>
-
-    <div class="filter-bar">
-      <input type="text" class="search-input" id="searchInput" placeholder="Chercher un article, une marque...">
-      <select class="select-pill" id="quartierSelect">
-        <option value="">Tous les quartiers</option>
-        <option>Centre-ville</option>
-        <option>Tabounte</option>
-        <option>Elkhouzama</option>
-        <option>Hay Al Wahda</option>
-        <option>Ait Kdif</option>
-        <option>Quartier Administratif</option>
-        <option>Sidi Daoud</option>
-        <option>Targa</option>
-      </select>
-      <select class="select-pill" id="sortSelect">
-        <option value="recent">Plus récents</option>
-        <option value="price_asc">Prix croissant</option>
-        <option value="price_desc">Prix décroissant</option>
-        <option value="popular">Les plus aimés</option>
-      </select>
-    </div>
-
-    <div class="grid" id="productGrid"></div>
-
-    <button class="load-more" id="loadMoreBtn">Voir plus d'articles</button>
-  </div>
-</section>
-
-<!-- ===== COMMENT ÇA MARCHE ===== -->
-<section class="comment">
-  <div class="container">
-    <div class="comment-head">
-      <h2>Simple comme au dépôt</h2>
-      <p>Pas de compte à créer, pas de carte bancaire à saisir. Vous choisissez, on confirme sur WhatsApp.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Choisissez</h3>
-        <p>Parcourez les rayons et ajoutez vos articles au panier.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Confirmez</h3>
-        <p>Le panier ouvre WhatsApp avec votre commande déjà rédigée.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>On valide</h3>
-        <p>On confirme le prix et un créneau avec vous.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h3>Vous récupérez</h3>
-        <p>Remise en main propre à Ouarzazate, où ça vous arrange.</p>
+<!-- ============================================================
+     ZONE RECHERCHE + FILTRES
+     ============================================================ -->
+<div class="zone-controles">
+  <div class="carte-controles">
+    <div class="ligne-recherche">
+      <div class="champ-recherche">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="champ-recherche-nom" placeholder="Rechercher un article… (ex : théière, veste, jouet)" aria-label="Rechercher un produit par nom">
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ===== CONFIANCE ===== -->
-<section class="confiance" id="confiance">
-  <div class="container confiance-grid">
-    <div class="confiance-visual">
-      <div class="badge-huge">
-        <div class="num">100%</div>
-        <div class="label">Vérifié au dépôt</div>
+    <div class="ligne-filtres">
+      <div class="groupe-select">
+        <label for="select-categorie">Catégorie</label>
+        <select id="select-categorie" aria-label="Filtrer par catégorie"></select>
       </div>
-    </div>
-    <div>
-      <span class="section-label">Pourquoi nous faire confiance</span>
-      <h2>Chaque article passe par le dépôt avant d'être en ligne</h2>
-      <p>Rien n'est mis en vente sans être passé physiquement entre nos mains au mahal de Ouarzazate. Ce que vous voyez en photo, c'est ce qui vous attend.</p>
-      <ul class="confiance-list">
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>État vérifié à la main</b><span>Chaque article est inspecté et son état est indiqué clairement (bon état, très bon état, comme neuf).</span></div>
-        </li>
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Photos réelles, prix réels</b><span>Pas de photo de catalogue : ce que vous achetez est la pièce exacte photographiée.</span></div>
-        </li>
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Remise en main propre</b><span>On se retrouve directement à Ouarzazate, vous payez seulement quand l'article est entre vos mains.</span></div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ===== QUARTIERS ===== -->
-<section class="quartiers">
-  <div class="container">
-    <div class="quartiers-head">
-      <h2>On se retrouve où vous voulez à Ouarzazate</h2>
-      <p>Le dépôt est notre base, mais on peut convenir d'un point de rendez-vous dans ces quartiers.</p>
-    </div>
-    <div class="quartiers-grid">
-      <div class="quartier-chip hub">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-        Centre-ville <small style="opacity:0.85; margin-left:2px;">— Dépôt</small>
-      </div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Tabounte</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Elkhouzama</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Hay Al Wahda</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Ait Kdif</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Quartier Administratif</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Sidi Daoud</div>
-      <div class="quartier-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Targa</div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== VENDRE / DÉPOSER ===== -->
-<section class="vendre" id="vendre">
-  <div class="container">
-    <div class="vendre-box">
-      <div>
-        <h2>Un article à déposer ?</h2>
-        <p>Vêtements, meubles, électroménager — si c'est en bon état, on l'expose au dépôt et on le met en ligne pour vous. Laissez vos coordonnées, on vous recontacte pour l'estimation.</p>
-        <a href="#" class="btn btn-primary" onclick="submitDepot(event)">Envoyer ma demande sur WhatsApp</a>
-      </div>
-      <div class="vendre-mini-form">
-        <label>Votre nom</label>
-        <input type="text" id="depotNom" placeholder="Ex: Youssef">
-        <label>Quartier (Ouarzazate)</label>
-        <input type="text" id="depotQuartier" placeholder="Ex: Tabounte">
-        <label>Type d'article</label>
-        <select id="depotType">
-          <option>Vêtements</option>
-          <option>Électroménager</option>
-          <option>Meubles</option>
-          <option>Électronique</option>
-          <option>Autre</option>
+      <div class="groupe-select">
+        <label for="select-tri">Trier par</label>
+        <select id="select-tri" aria-label="Trier les produits">
+          <option value="defaut">Pertinence</option>
+          <option value="prix-asc">Prix croissant</option>
+          <option value="prix-desc">Prix décroissant</option>
         </select>
       </div>
+      <span class="puce-resultats" id="puce-resultats"></span>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo">Mahal Ouarzazate</div>
-        <p>Dépôt-vente d'articles d'occasion, vérifiés à la main. Remise en main propre uniquement à Ouarzazate.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Rayons</h4>
-        <ul>
-          <li><a href="#produits">Vêtements</a></li>
-          <li><a href="#produits">Électroménager</a></li>
-          <li><a href="#produits">Meubles &amp; déco</a></li>
-          <li><a href="#produits">Électronique</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Le mahal</h4>
-        <ul>
-          <li><a href="#confiance">Comment on vérifie</a></li>
-          <li><a href="#vendre">Déposer un article</a></li>
-          <li><a href="#top">Ouarzazate, dépôt principal</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="https://wa.me/212600000000" target="_blank" rel="noopener">WhatsApp commande</a></li>
-          <li><a href="#" onclick="return false;">06 00 00 00 00</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Mahal Ouarzazate — Tous droits réservés.</span>
-      <span>Fait avec soin à Ouarzazate 🇲🇦 · <a href="#" onclick="openAdminGate(event)" style="color:var(--ink-faint); text-decoration:underline;">Espace vendeur</a></span>
-    </div>
-  </div>
+<!-- ============================================================
+     CHIPS CATÉGORIES (raccourci)
+     ============================================================ -->
+<nav class="rangee-chips" id="rangee-chips" aria-label="Raccourcis de catégories"></nav>
+
+<!-- ============================================================
+     CONTENU PRINCIPAL — GRILLE PRODUITS
+     ============================================================ -->
+<main class="contenu">
+  <h2 class="titre-section" id="titre-resultats">Tous nos articles</h2>
+  <div class="grille-produits" id="grille-produits"></div>
+</main>
+
+<div class="separateur-zellige" aria-hidden="true"></div>
+
+<!-- ============================================================
+     PIED DE PAGE
+     ============================================================ -->
+<footer class="pied-page">
+  <strong>Bazar Al Madina</strong>
+  <p>Ouarzazate, Maroc · Retrait en boutique uniquement · Commandes via WhatsApp</p>
 </footer>
 
-<!-- ===== ESPACE VENDEUR (PIN + admin) ===== -->
-<div class="admin-overlay" id="adminOverlay" onclick="if(event.target===this) closeAdminGate();">
-  <div class="admin-modal">
-
-    <!-- Étape 1 : code PIN -->
-    <div id="adminPinStep">
-      <div class="admin-modal-head">
-        <h3>Espace vendeur</h3>
-        <button class="cart-close" onclick="closeAdminGate()" aria-label="Fermer">✕</button>
-      </div>
-      <p class="admin-modal-sub">Réservé au cousin. Entrez le code pour publier un article.</p>
-      <input type="password" inputmode="numeric" class="admin-pin-input" id="adminPinInput" placeholder="Code PIN" maxlength="8" autocomplete="off">
-      <p class="admin-pin-error" id="adminPinError">Code incorrect, réessayez.</p>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" onclick="checkAdminPin()">Déverrouiller</button>
-    </div>
-
-    <!-- Étape 2 : formulaire d'ajout -->
-    <div id="adminFormStep" style="display:none;">
-      <div class="admin-modal-head">
-        <h3>Ajouter un article</h3>
-        <button class="cart-close" onclick="closeAdminGate()" aria-label="Fermer">✕</button>
-      </div>
-      <p class="admin-modal-sub">Publié immédiatement sur cet appareil. Pour le rendre visible à tous les visiteurs, utilisez « Exporter » en bas et envoyez le fichier pour mise à jour du site.</p>
-
-      <form id="adminForm" onsubmit="submitNewProduct(event)">
-        <div class="admin-form-grid">
-          <label class="admin-field">
-            <span>Nom de l'article *</span>
-            <input type="text" id="afName" required placeholder="Ex: Veste en jean">
-          </label>
-          <label class="admin-field">
-            <span>Catégorie *</span>
-            <select id="afCat" required>
-              <option value="vetements">Vêtements</option>
-              <option value="electromenager">Électroménager</option>
-              <option value="meubles">Meubles & déco</option>
-              <option value="electronique">Électronique</option>
-              <option value="cuisine">Cuisine</option>
-            </select>
-          </label>
-          <label class="admin-field half">
-            <span>Prix (DH) *</span>
-            <input type="number" id="afPrice" required min="1" placeholder="150">
-          </label>
-          <label class="admin-field half">
-            <span>Ancien prix (DH)</span>
-            <input type="number" id="afOldPrice" min="1" placeholder="300">
-          </label>
-          <label class="admin-field half">
-            <span>État *</span>
-            <select id="afEtat" required>
-              <option>Bon état</option>
-              <option>Très bon état</option>
-              <option>Comme neuf</option>
-            </select>
-          </label>
-          <label class="admin-field half">
-            <span>Quartier *</span>
-            <select id="afQuartier" required>
-              <option>Centre-ville</option>
-              <option>Tabounte</option>
-              <option>Elkhouzama</option>
-              <option>Hay Al Wahda</option>
-              <option>Ait Kdif</option>
-              <option>Quartier Administratif</option>
-              <option>Sidi Daoud</option>
-              <option>Targa</option>
-            </select>
-          </label>
-          <label class="admin-field half">
-            <span>Marque</span>
-            <input type="text" id="afBrand" placeholder="Facultatif">
-          </label>
-          <label class="admin-field half">
-            <span>Taille</span>
-            <input type="text" id="afSize" placeholder="Facultatif">
-          </label>
-          <label class="admin-field">
-            <span>Photo *</span>
-            <input type="file" id="afPhotoFile" accept="image/*" onchange="handlePhotoUpload(event)">
-          </label>
-          <div class="admin-photo-preview" id="afPhotoPreview" style="display:none;">
-            <img id="afPhotoPreviewImg" alt="Aperçu">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:6px;">Publier l'article</button>
-      </form>
-
-      <div class="admin-export-row">
-        <button class="load-more" style="width:100%;" onclick="exportCatalog()">⬇️ Exporter le catalogue mis à jour</button>
-        <button class="load-more" style="width:100%; color:var(--heart); border-color:var(--heart);" onclick="lockAdminGate()">🔒 Verrouiller l'espace vendeur</button>
-      </div>
-    </div>
-
+<!-- ============================================================
+     MODALE DÉTAIL PRODUIT
+     ============================================================ -->
+<div class="superposition" id="superposition-detail" role="dialog" aria-modal="true" aria-labelledby="titre-modale-detail">
+  <div class="modale-detail" id="modale-detail">
+    <!-- Rempli dynamiquement en JS -->
   </div>
 </div>
 
-<!-- ===== CART DRAWER ===== -->
-<div class="overlay" id="overlay" onclick="closeCart(); closeMobileMenu();"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-head">
-    <h3>Votre panier</h3>
-    <button class="cart-close" onclick="closeCart()">✕</button>
+<!-- ============================================================
+     PANIER COULISSANT
+     ============================================================ -->
+<div class="panier-superposition" id="panier-superposition"></div>
+<aside class="panneau-panier" id="panneau-panier" role="dialog" aria-modal="true" aria-labelledby="titre-panier">
+  <div class="entete-panier">
+    <h2 id="titre-panier">🛒 Votre panier</h2>
+    <button class="bouton-fermer-panier" id="bouton-fermer-panier" aria-label="Fermer le panier">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
   </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-foot" id="cartFoot" style="display:none;">
-    <div class="cart-total-row">
-      <span>Articles</span>
-      <span class="val" id="cartSubtotal">0 DH</span>
+  <div class="corps-panier" id="corps-panier">
+    <!-- Rempli dynamiquement en JS -->
+  </div>
+  <div class="pied-panier" id="pied-panier" hidden>
+    <div class="ligne-total">
+      <span>Total de la commande</span>
+      <span class="montant-total" id="montant-total-panier">0 MAD</span>
     </div>
-    <div class="cart-total-row grand">
-      <span>Total estimé</span>
-      <span class="val" id="cartGrandTotal">0 DH</span>
-    </div>
-    <a href="#" class="whatsapp-btn" id="whatsappBtn" target="_blank" rel="noopener">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg>
+    <button class="bouton-commander" id="bouton-commander">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
       Commander sur WhatsApp
-    </a>
-    <p class="cart-note">Prix final et créneau confirmés par le vendeur sur WhatsApp.</p>
+    </button>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MODALE FORMULAIRE CLIENT (avant envoi WhatsApp)
+     ============================================================ -->
+<div class="superposition" id="superposition-formulaire" role="dialog" aria-modal="true" aria-labelledby="titre-formulaire">
+  <div class="modale-formulaire">
+    <h2 id="titre-formulaire">📋 Presque terminé !</h2>
+    <p class="sous-titre">Indiquez vos coordonnées pour que le bazar puisse préparer votre commande.</p>
+
+    <div class="champ-formulaire" id="groupe-champ-nom">
+      <label for="champ-nom-client">Votre nom complet</label>
+      <input type="text" id="champ-nom-client" placeholder="ex : Yassine El Amrani" autocomplete="name">
+      <span class="message-erreur-champ">Merci de saisir votre nom.</span>
+    </div>
+
+    <div class="champ-formulaire" id="groupe-champ-telephone">
+      <label for="champ-telephone-client">Votre numéro de téléphone</label>
+      <input type="tel" id="champ-telephone-client" placeholder="ex : 06 12 34 56 78" autocomplete="tel">
+      <span class="message-erreur-champ">Merci de saisir un numéro de téléphone valide.</span>
+    </div>
+
+    <div class="actions-formulaire">
+      <button class="bouton-secondaire" id="bouton-annuler-formulaire">Retour</button>
+      <button class="bouton-whatsapp" id="bouton-envoyer-whatsapp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.39c1.45.79 3.08 1.21 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.81 14.11c-.24.68-1.4 1.32-1.94 1.4-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.78-4.16-4.92-4.35-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.43.27-.29.58-.36.78-.36l.55.01c.18 0 .41-.02.64.49.24.55.81 1.9.88 2.04.07.14.11.3.02.49-.09.19-.13.3-.27.46-.14.16-.28.36-.4.49-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.6-.14.24.09 1.55.73 1.81.86.26.13.44.19.5.3.07.11.07.63-.17 1.31z"/></svg>
+        Envoyer
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- ===== TOAST ===== -->
+<!-- ============================================================
+     TOAST DE CONFIRMATION
+     ============================================================ -->
 <div class="toast" id="toast">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-  <span id="toastText">Ajouté au panier</span>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="texte-toast">Article ajouté au panier</span>
 </div>
 
 <script>
-// ============================================================
-// CATALOGUE PRODUITS — Mahal Ouarzazate
-// Articles d'occasion vérifiés, remise en main propre à Ouarzazate uniquement.
-// Prix en dirhams (DH).
-// ============================================================
+/* ============================================================================
+   BAZAR AL MADINA — Script principal
+   ============================================================================ */
 
-const QUARTIERS = [
-  "Centre-ville", "Tabounte", "Elkhouzama", "Hay Al Wahda",
-  "Ait Kdif", "Quartier Administratif", "Sidi Daoud", "Targa"
-];
+/* ----------------------------------------------------------------------
+   1. CONFIGURATION GÉNÉRALE — à personnaliser en priorité
+   ---------------------------------------------------------------------- */
 
-const SELLERS = [
-  { name: "Rachid B.",  avatar: "https://i.pravatar.cc/100?img=12", rating: 4.9, sales: 63 },
-  { name: "Fatima Z.",  avatar: "https://i.pravatar.cc/100?img=47", rating: 5.0, sales: 41 },
-  { name: "Youssef M.", avatar: "https://i.pravatar.cc/100?img=33", rating: 4.7, sales: 89 },
-  { name: "Khadija A.", avatar: "https://i.pravatar.cc/100?img=45", rating: 4.8, sales: 27 },
-  { name: "Hamid T.",   avatar: "https://i.pravatar.cc/100?img=52", rating: 4.6, sales: 15 },
-  { name: "Sanaa L.",   avatar: "https://i.pravatar.cc/100?img=29", rating: 5.0, sales: 34 },
-  { name: "Le Mahal",   avatar: "https://i.pravatar.cc/100?img=68", rating: 4.9, sales: 210 }
+// 📱 Numéro WhatsApp du vendeur (format international, SANS "+" ni espaces)
+// Exemple : "212612345678" pour un numéro marocain commençant par 06 12 34 56 78
+const WHATSAPP_NUMBER = "212600000000";
+
+// 🏪 Nom de la boutique et ville (utilisés dans le message WhatsApp)
+const SHOP_NAME = "Bazar Al Madina";
+const SHOP_CITY = "Ouarzazate";
+
+
+/* ----------------------------------------------------------------------
+   2. CATALOGUE PRODUITS
+   Pour ajouter un article : copiez un objet ci-dessous, changez les
+   valeurs, et ajoutez une virgule à la fin de l'objet précédent.
+   Champs : id (unique), titre, description, categorie, prix (MAD, nombre),
+   etat ("Neuf" | "Très bon" | "Bon" | "Occasion"), image (URL).
+   ---------------------------------------------------------------------- */
+
+// Liste des catégories affichées dans les filtres (doit correspondre
+// exactement aux valeurs "categorie" utilisées dans PRODUCTS ci-dessous).
+const CATEGORIES = [
+  "Vêtements",
+  "Électroménager",
+  "Ustensiles",
+  "Décoration",
+  "Jouets",
+  "Bijoux & Accessoires",
+  "Maison & Rangement"
 ];
 
 const PRODUCTS = [
-  // ---------- VÊTEMENTS ----------
-  { id:1, cat:"vetements", name:"Veste en cuir", brand:"Zara", size:"L", price:220, oldPrice:450, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=600&fit=crop", seller:0, likes:34, boost:true },
-  { id:2, cat:"vetements", name:"Djellaba brodée", brand:"Artisanal", size:"M", price:180, oldPrice:320, etat:"Comme neuf", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&h=600&fit=crop", seller:1, likes:57 },
-  { id:3, cat:"vetements", name:"Manteau laine femme", brand:"Mango", size:"M", price:150, oldPrice:280, etat:"Bon état", quartier:"Hay Al Wahda", img:"https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=600&h=600&fit=crop", seller:3, likes:19 },
-  { id:4, cat:"vetements", name:"Jean's droit", brand:"Levi's", size:"40", price:70, oldPrice:150, etat:"Bon état", quartier:"Elkhouzama", img:"https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=600&fit=crop", seller:2, likes:11 },
-  { id:5, cat:"vetements", name:"Robe de soirée brodée", brand:"Caftan Chic", size:"S", price:200, oldPrice:400, etat:"Comme neuf", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=600&fit=crop", seller:5, likes:88, boost:true },
-  { id:6, cat:"vetements", name:"Baskets basses", brand:"Nike Air", size:"42", price:180, oldPrice:350, etat:"Très bon état", quartier:"Ait Kdif", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop", seller:2, likes:41 },
-  { id:7, cat:"vetements", name:"Sac à main cuir", brand:"Fossil", size:"Unique", price:140, oldPrice:280, etat:"Bon état", quartier:"Quartier Administratif", img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&h=600&fit=crop", seller:3, likes:23 },
-  { id:8, cat:"vetements", name:"Costume complet", brand:"Celio", size:"50", price:280, oldPrice:600, etat:"Très bon état", quartier:"Sidi Daoud", img:"https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&h=600&fit=crop", seller:0, likes:9 },
-  { id:9, cat:"vetements", name:"Blouson en jean", brand:"Bershka", size:"S/M", price:90, oldPrice:180, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?w=600&h=600&fit=crop", seller:5, likes:14 },
-  { id:10, cat:"vetements", name:"Ceinture + montre (lot)", brand:"Fossil", size:"Unique", price:110, oldPrice:220, etat:"Bon état", quartier:"Targa", img:"https://images.unsplash.com/photo-1509941943102-10c232535736?w=600&h=600&fit=crop", seller:4, likes:6 },
-  { id:11, cat:"vetements", name:"Écharpe + bonnet (lot hiver)", brand:"H&M", size:"Unique", price:45, oldPrice:90, etat:"Bon état", quartier:"Hay Al Wahda", img:"https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=600&h=600&fit=crop", seller:1, likes:3 },
-  { id:12, cat:"vetements", name:"Lot 3 chemises repassées", brand:"Celio", size:"M", price:100, oldPrice:220, etat:"Très bon état", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=600&h=600&fit=crop", seller:2, likes:17 },
-  { id:13, cat:"vetements", name:"Doudoune femme", brand:"Uniqlo", size:"S", price:130, oldPrice:260, etat:"Comme neuf", quartier:"Elkhouzama", img:"https://images.unsplash.com/photo-1544923246-77307dd654cb?w=600&h=600&fit=crop", seller:3, likes:29 },
-  { id:14, cat:"vetements", name:"Chaussures de ville", brand:"Clarks", size:"43", price:160, oldPrice:320, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?w=600&h=600&fit=crop", seller:0, likes:12 },
-
-  // ---------- ÉLECTROMÉNAGER ----------
-  { id:15, cat:"electromenager", name:"Grille-pain 4 fentes", brand:"Moulinex", size:"—", price:150, oldPrice:280, etat:"Bon état", quartier:"Ait Kdif", img:"https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&h=600&fit=crop", seller:6, likes:8 },
-  { id:16, cat:"electromenager", name:"Mini four électrique 20L", brand:"Brandt", size:"—", price:350, oldPrice:650, etat:"Très bon état", quartier:"Quartier Administratif", img:"https://images.unsplash.com/photo-1585659722983-3a681d78d7ea?w=600&h=600&fit=crop", seller:6, likes:15 },
-  { id:17, cat:"electromenager", name:"Aspirateur sans sac", brand:"Rowenta", size:"—", price:420, oldPrice:800, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600&h=600&fit=crop", seller:6, likes:22, boost:true },
-  { id:18, cat:"electromenager", name:"Bouilloire électrique 1.7L", brand:"Tefal", size:"—", price:80, oldPrice:160, etat:"Comme neuf", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1594213911678-2af9dc16bab7?w=600&h=600&fit=crop", seller:4, likes:5 },
-  { id:19, cat:"electromenager", name:"Machine à café expresso", brand:"Delonghi", size:"—", price:380, oldPrice:750, etat:"Très bon état", quartier:"Hay Al Wahda", img:"https://images.unsplash.com/photo-1585687501004-615dfdfde7f1?w=600&h=600&fit=crop", seller:6, likes:31 },
-  { id:20, cat:"electromenager", name:"Ventilateur sur pied", brand:"Media Tech", size:"—", price:180, oldPrice:350, etat:"Bon état", quartier:"Sidi Daoud", img:"https://images.unsplash.com/photo-1631048283915-24564b4d4f9d?w=600&h=600&fit=crop", seller:6, likes:7 },
-  { id:21, cat:"electromenager", name:"Fer à repasser vapeur", brand:"Tefal", size:"—", price:120, oldPrice:220, etat:"Bon état", quartier:"Elkhouzama", img:"https://images.unsplash.com/photo-1489274495757-95c7c837b101?w=600&h=600&fit=crop", seller:4, likes:4 },
-  { id:22, cat:"electromenager", name:"Mixeur plongeant 3 en 1", brand:"Moulinex", size:"—", price:140, oldPrice:280, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600&h=600&fit=crop", seller:6, likes:9 },
-  { id:23, cat:"electromenager", name:"Micro-ondes 20L", brand:"Samsung", size:"—", price:450, oldPrice:850, etat:"Bon état", quartier:"Targa", img:"https://images.unsplash.com/photo-1585659722983-3a681d78d7ea?w=600&h=600&fit=crop", seller:6, likes:18 },
-
-  // ---------- MEUBLES & DÉCO ----------
-  { id:24, cat:"meubles", name:"Chaise vintage bois", brand:"—", size:"—", price:120, oldPrice:300, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1503602642458-232111445657?w=600&h=600&fit=crop", seller:1, likes:26 },
-  { id:25, cat:"meubles", name:"Table basse bois massif", brand:"—", size:"—", price:380, oldPrice:750, etat:"Très bon état", quartier:"Ait Kdif", img:"https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=600&h=600&fit=crop", seller:6, likes:33 },
-  { id:26, cat:"meubles", name:"Étagère murale 3 niveaux", brand:"IKEA", size:"—", price:150, oldPrice:300, etat:"Bon état", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&h=600&fit=crop", seller:6, likes:10 },
-  { id:27, cat:"meubles", name:"Miroir mural doré", brand:"—", size:"—", price:200, oldPrice:400, etat:"Comme neuf", quartier:"Quartier Administratif", img:"https://images.unsplash.com/photo-1618220179428-22790b461013?w=600&h=600&fit=crop", seller:5, likes:45, boost:true },
-  { id:28, cat:"meubles", name:"Fauteuil en osier", brand:"—", size:"—", price:280, oldPrice:550, etat:"Bon état", quartier:"Hay Al Wahda", img:"https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&h=600&fit=crop", seller:6, likes:20 },
-  { id:29, cat:"meubles", name:"Tapis berbère fait main 2x3m", brand:"Artisanal", size:"2x3m", price:600, oldPrice:1200, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1600166898405-da9535204843?w=600&h=600&fit=crop", seller:1, likes:71, boost:true },
-  { id:30, cat:"meubles", name:"Commode 4 tiroirs", brand:"—", size:"—", price:450, oldPrice:900, etat:"Bon état", quartier:"Sidi Daoud", img:"https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&h=600&fit=crop", seller:6, likes:16 },
-  { id:31, cat:"meubles", name:"Lampe de chevet céramique", brand:"—", size:"—", price:90, oldPrice:180, etat:"Comme neuf", quartier:"Elkhouzama", img:"https://images.unsplash.com/photo-1517991104123-1d56a6e81ed9?w=600&h=600&fit=crop", seller:3, likes:13 },
-  { id:32, cat:"meubles", name:"Bibliothèque 5 étagères", brand:"IKEA", size:"—", price:320, oldPrice:650, etat:"Bon état", quartier:"Targa", img:"https://images.unsplash.com/photo-1588279102515-b93e08596f76?w=600&h=600&fit=crop", seller:6, likes:12 },
-  { id:33, cat:"meubles", name:"Table à manger + 4 chaises", brand:"—", size:"—", price:750, oldPrice:1500, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&h=600&fit=crop", seller:6, likes:38 },
-  { id:34, cat:"meubles", name:"Pouf marocain cuir", brand:"Artisanal", size:"—", price:160, oldPrice:320, etat:"Très bon état", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1567016432779-094069958ea5?w=600&h=600&fit=crop", seller:1, likes:24 },
-
-  // ---------- ÉLECTRONIQUE ----------
-  { id:35, cat:"electronique", name:"Enceinte Bluetooth", brand:"JBL", size:"—", price:180, oldPrice:350, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop", seller:2, likes:40 },
-  { id:36, cat:"electronique", name:"Tablette Android 10\"", brand:"Samsung", size:"64Go", price:850, oldPrice:1600, etat:"Bon état", quartier:"Quartier Administratif", img:"https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&h=600&fit=crop", seller:2, likes:52, boost:true },
-  { id:37, cat:"electronique", name:"Casque audio filaire", brand:"Sony", size:"—", price:70, oldPrice:150, etat:"Bon état", quartier:"Ait Kdif", img:"https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=600&fit=crop", seller:4, likes:9 },
-  { id:38, cat:"electronique", name:"Chargeur solaire portable", brand:"Anker", size:"—", price:120, oldPrice:250, etat:"Comme neuf", quartier:"Sidi Daoud", img:"https://images.unsplash.com/photo-1620121692029-d088224ddc74?w=600&h=600&fit=crop", seller:2, likes:14 },
-  { id:39, cat:"electronique", name:"Console rétro + 2 manettes", brand:"—", size:"—", price:320, oldPrice:600, etat:"Bon état", quartier:"Hay Al Wahda", img:"https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=600&h=600&fit=crop", seller:2, likes:27 },
-  { id:40, cat:"electronique", name:"Appareil photo compact", brand:"Canon", size:"—", price:480, oldPrice:900, etat:"Bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=600&fit=crop", seller:4, likes:36 },
-  { id:41, cat:"electronique", name:"Montre connectée", brand:"Xiaomi", size:"—", price:220, oldPrice:420, etat:"Très bon état", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop", seller:2, likes:19 },
-
-  // ---------- CUISINE & VAISSELLE ----------
-  { id:42, cat:"cuisine", name:"Service à thé marocain complet", brand:"Artisanal", size:"—", price:180, oldPrice:350, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&h=600&fit=crop", seller:1, likes:29 },
-  { id:43, cat:"cuisine", name:"Set de casseroles inox (5 pièces)", brand:"Tefal", size:"—", price:250, oldPrice:480, etat:"Bon état", quartier:"Elkhouzama", img:"https://images.unsplash.com/photo-1584990347449-a8e56bd68acc?w=600&h=600&fit=crop", seller:6, likes:11 },
-  { id:44, cat:"cuisine", name:"Tajine en terre cuite décoré", brand:"Artisanal", size:"—", price:90, oldPrice:180, etat:"Comme neuf", quartier:"Tabounte", img:"https://images.unsplash.com/photo-1557509959-69ef137d9339?w=600&h=600&fit=crop", seller:1, likes:22 },
-  { id:45, cat:"cuisine", name:"Lot 6 verres à thé gravés", brand:"Artisanal", size:"—", price:60, oldPrice:120, etat:"Très bon état", quartier:"Centre-ville", img:"https://images.unsplash.com/photo-1571167530149-c72f2b40e4d1?w=600&h=600&fit=crop", seller:5, likes:8 }
+  {
+    id: 1,
+    titre: "Veste en jean délavé",
+    description: "Veste en jean coupe classique, doublure chaude, parfaite pour les soirées fraîches.",
+    categorie: "Vêtements",
+    prix: 180,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80"
+  },
+  {
+    id: 2,
+    titre: "Djellaba homme brodée",
+    description: "Djellaba traditionnelle en coton, broderies fines au col, idéale pour l'hiver.",
+    categorie: "Vêtements",
+    prix: 320,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&q=80"
+  },
+  {
+    id: 3,
+    titre: "Pull en laine col rond",
+    description: "Pull chaud et confortable, coloris beige, taille M, très peu porté.",
+    categorie: "Vêtements",
+    prix: 95,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=500&q=80"
+  },
+  {
+    id: 4,
+    titre: "Mini-four électrique 20L",
+    description: "Four compact, idéal pour petites cuisines, fonctions grill et chaleur tournante.",
+    categorie: "Électroménager",
+    prix: 450,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=500&q=80"
+  },
+  {
+    id: 5,
+    titre: "Bouilloire électrique inox",
+    description: "Bouilloire 1.7L, arrêt automatique, chauffe rapide, très peu utilisée.",
+    categorie: "Électroménager",
+    prix: 130,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1585659722983-1a675dabf30d?w=500&q=80"
+  },
+  {
+    id: 6,
+    titre: "Mixeur plongeant 3 vitesses",
+    description: "Mixeur puissant avec fouet et bol mesureur inclus, fonctionne parfaitement.",
+    categorie: "Électroménager",
+    prix: 165,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1585515320310-259814833e62?w=500&q=80"
+  },
+  {
+    id: 7,
+    titre: "Service à thé marocain complet",
+    description: "Plateau en laiton, théière traditionnelle et 6 verres décorés, pièce authentique.",
+    categorie: "Ustensiles",
+    prix: 380,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=500&q=80"
+  },
+  {
+    id: 8,
+    titre: "Set de tajines en terre cuite (x2)",
+    description: "Deux tajines de tailles différentes, cuisson traditionnelle, parfait état.",
+    categorie: "Ustensiles",
+    prix: 220,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&q=80"
+  },
+  {
+    id: 9,
+    titre: "Couteaux de cuisine (lot de 5)",
+    description: "Lot de couteaux professionnels avec bloc en bois, lames en inox aiguisées.",
+    categorie: "Ustensiles",
+    prix: 140,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1593618998160-e34014e67546?w=500&q=80"
+  },
+  {
+    id: 10,
+    titre: "Lanterne marocaine en fer forgé",
+    description: "Lanterne artisanale avec verre coloré, parfaite pour terrasse ou salon.",
+    categorie: "Décoration",
+    prix: 210,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1573575155376-b5010099301b?w=500&q=80"
+  },
+  {
+    id: 11,
+    titre: "Tapis berbère fait main",
+    description: "Tapis en laine 150x100cm, motifs géométriques traditionnels, tissé à la main.",
+    categorie: "Décoration",
+    prix: 650,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1600166898405-da9535204843?w=500&q=80"
+  },
+  {
+    id: 12,
+    titre: "Coussins brodés (lot de 4)",
+    description: "Housses de coussin en velours brodé, coloris assortis, très bon état.",
+    categorie: "Décoration",
+    prix: 160,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500&q=80"
+  },
+  {
+    id: 13,
+    titre: "Miroir mosaïque zellige",
+    description: "Miroir rond encadré de mosaïque colorée artisanale, pièce décorative unique.",
+    categorie: "Décoration",
+    prix: 290,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=500&q=80"
+  },
+  {
+    id: 14,
+    titre: "Camion en bois pour enfant",
+    description: "Jouet artisanal en bois peint, roues mobiles, idéal dès 3 ans.",
+    categorie: "Jouets",
+    prix: 85,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1558877385-81a1c7e67d72?w=500&q=80"
+  },
+  {
+    id: 15,
+    titre: "Poupée de collection habit traditionnel",
+    description: "Poupée artisanale en tenue traditionnelle marocaine, pièce décorative et jouet.",
+    categorie: "Jouets",
+    prix: 110,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=500&q=80"
+  },
+  {
+    id: 16,
+    titre: "Puzzle 500 pièces paysage",
+    description: "Puzzle complet vérifié, toutes les pièces présentes, boîte en bon état.",
+    categorie: "Jouets",
+    prix: 45,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500&q=80"
+  },
+  {
+    id: 17,
+    titre: "Bracelet argent berbère",
+    description: "Bracelet artisanal en argent massif, gravures traditionnelles, pièce unique.",
+    categorie: "Bijoux & Accessoires",
+    prix: 240,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&q=80"
+  },
+  {
+    id: 18,
+    titre: "Sac à main en cuir tressé",
+    description: "Sac artisanal en cuir véritable, fermeture zip, très peu utilisé.",
+    categorie: "Bijoux & Accessoires",
+    prix: 195,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80"
+  },
+  {
+    id: 19,
+    titre: "Ceinture cuir gravée",
+    description: "Ceinture en cuir véritable avec boucle artisanale, taille ajustable.",
+    categorie: "Bijoux & Accessoires",
+    prix: 75,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=500&q=80"
+  },
+  {
+    id: 20,
+    titre: "Panier de rangement en osier (x3)",
+    description: "Lot de 3 paniers tressés à la main, tailles différentes, idéal rangement.",
+    categorie: "Maison & Rangement",
+    prix: 130,
+    etat: "Neuf",
+    image: "https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=500&q=80"
+  },
+  {
+    id: 21,
+    titre: "Coffre en bois sculpté",
+    description: "Coffre de rangement en bois massif, sculptures artisanales, fermeture à clé.",
+    categorie: "Maison & Rangement",
+    prix: 380,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500&q=80"
+  },
+  {
+    id: 22,
+    titre: "Étagère murale suspendue",
+    description: "Étagère en bois et corde, style bohème, montage facile, très bon état.",
+    categorie: "Maison & Rangement",
+    prix: 105,
+    etat: "Bon",
+    image: "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=500&q=80"
+  },
+  {
+    id: 23,
+    titre: "Grille-pain 2 fentes",
+    description: "Grille-pain compact, 6 niveaux de brunissage, fonctionne comme neuf.",
+    categorie: "Électroménager",
+    prix: 120,
+    etat: "Très bon",
+    image: "https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=500&q=80"
+  },
+  {
+    id: 24,
+    titre: "Robe kaftan brodée main",
+    description: "Kaftan en tissu fluide, broderies dorées, taille L, portée une seule fois.",
+    categorie: "Vêtements",
+    prix: 420,
+    etat: "Occasion",
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80"
+  }
 ];
 
-</script>
-<script>
-// ============================================================
-// APP LOGIC — Mahal Ouarzazate
-// Panier, favoris, filtres, tri, recherche, message WhatsApp
-// ============================================================
 
-// ---------- CONFIG ----------
-const WHATSAPP_NUMBER = "212600000000"; // à remplacer par le vrai numéro
-const PAGE_SIZE = 8;
+/* ----------------------------------------------------------------------
+   3. ÉTAT DE L'APPLICATION
+   ---------------------------------------------------------------------- */
 
-// ---------- STATE ----------
-let cart = [];
-let favorites = [];
-let currentCat = "tous";
-let currentSearch = "";
-let currentQuartier = "";
-let currentSort = "recent";
-let visibleCount = PAGE_SIZE;
+// Le panier est un objet { idProduit: quantite }
+let panier = {};
 
-// ---------- INIT ----------
-document.addEventListener("DOMContentLoaded", () => {
-  renderRayonCounts();
-  renderProducts();
-  updateCartUI();
-  updateFavCount();
+// Filtres actifs
+let filtreRecherche = "";
+let filtreCategorie = "toutes";
+let filtreTri = "defaut";
 
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    currentSearch = e.target.value.trim().toLowerCase();
-    visibleCount = PAGE_SIZE;
-    renderProducts();
-  });
+// Produit actuellement affiché dans la modale détail
+let produitAffiche = null;
 
-  document.getElementById("quartierSelect").addEventListener("change", (e) => {
-    currentQuartier = e.target.value;
-    visibleCount = PAGE_SIZE;
-    renderProducts();
-  });
 
-  document.getElementById("sortSelect").addEventListener("change", (e) => {
-    currentSort = e.target.value;
-    renderProducts();
-  });
+/* ----------------------------------------------------------------------
+   4. PERSISTANCE — localStorage
+   ---------------------------------------------------------------------- */
 
-  document.querySelectorAll(".rayon-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      document.querySelectorAll(".rayon-card").forEach((c) => c.classList.remove("active"));
-      card.classList.add("active");
-      currentCat = card.dataset.cat;
-      visibleCount = PAGE_SIZE;
-      renderProducts();
-      document.getElementById("produits").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
+const CLE_STOCKAGE = "bazar-al-madina-panier";
 
-  document.getElementById("loadMoreBtn").addEventListener("click", () => {
-    visibleCount += PAGE_SIZE;
-    renderProducts();
-  });
-});
-
-// ---------- RAYON COUNTS (calculés depuis le catalogue) ----------
-function renderRayonCounts() {
-  const counts = { tous: PRODUCTS.length };
-  PRODUCTS.forEach((p) => { counts[p.cat] = (counts[p.cat] || 0) + 1; });
-  document.querySelectorAll(".rayon-card").forEach((card) => {
-    const cat = card.dataset.cat;
-    const el = card.querySelector(".rcount");
-    if (el) el.textContent = `${counts[cat] || 0} en ligne`;
-  });
+function chargerPanierDepuisStockage() {
+  try {
+    const donnees = localStorage.getItem(CLE_STOCKAGE);
+    if (donnees) {
+      panier = JSON.parse(donnees);
+    }
+  } catch (erreur) {
+    console.warn("Impossible de lire le panier sauvegardé :", erreur);
+    panier = {};
+  }
 }
 
-// ---------- FILTERING + SORT ----------
-function getFilteredProducts() {
-  let list = PRODUCTS.filter((p) => {
-    const matchCat = currentCat === "tous" || p.cat === currentCat;
-    const matchSearch = !currentSearch ||
-      p.name.toLowerCase().includes(currentSearch) ||
-      (p.brand && p.brand.toLowerCase().includes(currentSearch));
-    const matchQuartier = !currentQuartier || p.quartier === currentQuartier;
-    return matchCat && matchSearch && matchQuartier;
-  });
-
-  if (currentSort === "price_asc") list = [...list].sort((a, b) => a.price - b.price);
-  else if (currentSort === "price_desc") list = [...list].sort((a, b) => b.price - a.price);
-  else if (currentSort === "popular") list = [...list].sort((a, b) => b.likes - a.likes);
-  else list = [...list].sort((a, b) => (b.boost === true) - (a.boost === true) || b.id - a.id);
-
-  return list;
+function sauvegarderPanierDansStockage() {
+  try {
+    localStorage.setItem(CLE_STOCKAGE, JSON.stringify(panier));
+  } catch (erreur) {
+    console.warn("Impossible de sauvegarder le panier :", erreur);
+  }
 }
 
-// ---------- RENDER PRODUCTS ----------
-function renderProducts() {
-  const grid = document.getElementById("productGrid");
-  const filtered = getFilteredProducts();
-  const toShow = filtered.slice(0, visibleCount);
 
-  document.getElementById("resultCount").textContent =
-    `${filtered.length} article${filtered.length > 1 ? "s" : ""}`;
+/* ----------------------------------------------------------------------
+   5. UTILITAIRES
+   ---------------------------------------------------------------------- */
 
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <p class="empty-title">Aucun article trouvé</p>
-        <p class="empty-sub">Essayez un autre mot-clé ou changez de quartier.</p>
-      </div>`;
-    document.getElementById("loadMoreBtn").style.display = "none";
-    return;
+function trouverProduitParId(id) {
+  return PRODUCTS.find(p => p.id === id);
+}
+
+function formaterPrix(nombre) {
+  return nombre.toLocaleString("fr-FR");
+}
+
+function classeEtat(etat) {
+  const correspondance = {
+    "Neuf": "etat-neuf",
+    "Très bon": "etat-tres-bon",
+    "Bon": "etat-bon",
+    "Occasion": "etat-occasion"
+  };
+  return correspondance[etat] || "etat-bon";
+}
+
+function echapperHtml(texte) {
+  const div = document.createElement("div");
+  div.textContent = texte;
+  return div.innerHTML;
+}
+
+
+/* ----------------------------------------------------------------------
+   6. RENDU — GRILLE DE PRODUITS
+   ---------------------------------------------------------------------- */
+
+function obtenirProduitsFiltres() {
+  let resultat = PRODUCTS.slice();
+
+  // Filtre recherche par nom
+  if (filtreRecherche.trim() !== "") {
+    const recherche = filtreRecherche.trim().toLowerCase();
+    resultat = resultat.filter(p => p.titre.toLowerCase().includes(recherche));
   }
 
-  grid.innerHTML = toShow.map(productCardHTML).join("");
-  document.getElementById("loadMoreBtn").style.display =
-    visibleCount < filtered.length ? "inline-flex" : "none";
+  // Filtre catégorie
+  if (filtreCategorie !== "toutes") {
+    resultat = resultat.filter(p => p.categorie === filtreCategorie);
+  }
+
+  // Tri
+  if (filtreTri === "prix-asc") {
+    resultat.sort((a, b) => a.prix - b.prix);
+  } else if (filtreTri === "prix-desc") {
+    resultat.sort((a, b) => b.prix - a.prix);
+  }
+
+  return resultat;
 }
 
-function productCardHTML(p) {
-  const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
-  const seller = SELLERS[p.seller];
-  const isFav = favorites.includes(p.id);
+function construireCarteProduitHtml(produit) {
   return `
-    <div class="pcard">
-      <div class="pcard-img">
-        ${p.boost ? `<span class="badge-boost">✦ En avant</span>` : ""}
-        <button class="fav-btn ${isFav ? "active" : ""}" onclick="toggleFavorite(${p.id}, this)" aria-label="Ajouter aux favoris">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-        </button>
-        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.closest('.pcard-img').classList.add('img-fallback'); this.remove();">
-        <span class="badge-etat">${p.etat}</span>
-        <span class="stamp-verified" title="Vérifié au dépôt">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
-          Vérifié
-        </span>
+    <button class="carte-produit" type="button" data-id-produit="${produit.id}" data-action="ouvrir-detail" aria-label="Voir le détail de ${echapperHtml(produit.titre)}">
+      <div class="vignette-produit">
+        <img src="${produit.image}" alt="${echapperHtml(produit.titre)}" loading="lazy">
+        <span class="etiquette-etat ${classeEtat(produit.etat)}">${echapperHtml(produit.etat)}</span>
       </div>
-      <div class="pcard-body">
-        <div class="pcard-price-row">
-          <span class="pcard-price">${p.price} DH</span>
-          <span class="pcard-oldprice">${p.oldPrice} DH</span>
-          <span class="pcard-discount">-${discount}%</span>
+      <div class="infos-produit">
+        <span class="categorie-produit">${echapperHtml(produit.categorie)}</span>
+        <h3 class="titre-produit">${echapperHtml(produit.titre)}</h3>
+        <p class="description-produit">${echapperHtml(produit.description)}</p>
+        <div class="bas-carte">
+          <span class="prix-produit">${formaterPrix(produit.prix)}<span> MAD</span></span>
+          <span class="bouton-ajouter" data-id-produit="${produit.id}" data-action="ajouter-rapide" role="button" aria-label="Ajouter ${echapperHtml(produit.titre)} au panier">+</span>
         </div>
-        <div class="pcard-name">${p.name}</div>
-        <div class="pcard-meta">${p.brand && p.brand !== "—" ? p.brand + " · " : ""}${p.size && p.size !== "—" ? "Taille " + p.size : ""}</div>
-        <div class="pcard-seller">
-          <img src="${seller.avatar}" alt="${seller.name}" class="seller-avatar">
-          <div class="seller-info">
-            <span class="seller-name">${seller.name}</span>
-            <span class="seller-rating">★ ${seller.rating.toFixed(1)} · ${p.quartier}</span>
-          </div>
-          <span class="pcard-likes">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.2-4.6-10-9.3C.4 8.2 2 4.5 5.6 4c2-.3 3.9.6 6.4 3.2C14.5 4.6 16.4 3.7 18.4 4c3.6.5 5.2 4.2 3.6 7.7-2.8 4.7-10 9.3-10 9.3z"/></svg>
-            ${p.likes}
-          </span>
-        </div>
-        <button class="pcard-add" onclick="addToCart(${p.id}, this)">
+      </div>
+    </button>
+  `;
+}
+
+function rafraichirGrilleProduits() {
+  const grille = document.getElementById("grille-produits");
+  const puceResultats = document.getElementById("puce-resultats");
+  const titreResultats = document.getElementById("titre-resultats");
+  const produits = obtenirProduitsFiltres();
+
+  if (produits.length === 0) {
+    grille.innerHTML = `
+      <div class="aucun-resultat">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <strong>Aucun article trouvé</strong>
+        Essayez une autre recherche ou une autre catégorie.
+      </div>
+    `;
+  } else {
+    grille.innerHTML = produits.map(construireCarteProduitHtml).join("");
+  }
+
+  puceResultats.textContent = produits.length + (produits.length > 1 ? " articles" : " article");
+
+  if (filtreCategorie === "toutes") {
+    titreResultats.textContent = "Tous nos articles";
+  } else {
+    titreResultats.textContent = filtreCategorie;
+  }
+}
+
+
+/* ----------------------------------------------------------------------
+   7. FILTRES — initialisation des selects et chips
+   ---------------------------------------------------------------------- */
+
+function initialiserSelectCategorie() {
+  const select = document.getElementById("select-categorie");
+  let html = '<option value="toutes">Toutes les catégories</option>';
+  CATEGORIES.forEach(cat => {
+    html += `<option value="${echapperHtml(cat)}">${echapperHtml(cat)}</option>`;
+  });
+  select.innerHTML = html;
+}
+
+function initialiserChipsCategories() {
+  const rangee = document.getElementById("rangee-chips");
+  let html = `<button class="chip actif" data-categorie="toutes">Toutes</button>`;
+  CATEGORIES.forEach(cat => {
+    html += `<button class="chip" data-categorie="${echapperHtml(cat)}">${echapperHtml(cat)}</button>`;
+  });
+  rangee.innerHTML = html;
+
+  rangee.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      filtreCategorie = chip.dataset.categorie;
+      document.getElementById("select-categorie").value = filtreCategorie;
+      rangee.querySelectorAll(".chip").forEach(c => c.classList.remove("actif"));
+      chip.classList.add("actif");
+      rafraichirGrilleProduits();
+    });
+  });
+}
+
+
+/* ----------------------------------------------------------------------
+   8. MODALE DÉTAIL PRODUIT
+   ---------------------------------------------------------------------- */
+
+function ouvrirDetailProduit(idProduit) {
+  const produit = trouverProduitParId(idProduit);
+  if (!produit) return;
+
+  produitAffiche = produit;
+
+  const modale = document.getElementById("modale-detail");
+  modale.innerHTML = `
+    <div class="entete-modale">
+      <button class="bouton-fermer" id="bouton-fermer-detail" aria-label="Fermer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <img class="image-modale" src="${produit.image}" alt="${echapperHtml(produit.titre)}">
+    <div class="corps-modale">
+      <span class="categorie-produit">${echapperHtml(produit.categorie)}</span>
+      <h2 id="titre-modale-detail">${echapperHtml(produit.titre)}</h2>
+      <div class="meta-modale">
+        <span class="etiquette-etat ${classeEtat(produit.etat)}" style="position:static;">${echapperHtml(produit.etat)}</span>
+      </div>
+      <p class="description-longue">${echapperHtml(produit.description)}</p>
+      <div class="barre-prix-modale">
+        <span class="prix-modale">${formaterPrix(produit.prix)} MAD</span>
+        <button class="bouton-ajouter-modale" id="bouton-ajouter-depuis-modale" data-id-produit="${produit.id}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Ajouter au panier
         </button>
       </div>
-    </div>`;
-}
+    </div>
+  `;
 
-// ---------- FAVORITES ----------
-function toggleFavorite(productId, btnEl) {
-  const idx = favorites.indexOf(productId);
-  if (idx === -1) {
-    favorites.push(productId);
-    if (btnEl) btnEl.classList.add("active");
-    showToast("Ajouté à vos favoris");
-  } else {
-    favorites.splice(idx, 1);
-    if (btnEl) btnEl.classList.remove("active");
-  }
-  updateFavCount();
-}
-
-function updateFavCount() {
-  const el = document.getElementById("favCount");
-  if (el) el.textContent = favorites.length;
-  const elMobile = document.getElementById("favCountMobile");
-  if (elMobile) elMobile.textContent = favorites.length;
-}
-
-// ---------- CART LOGIC ----------
-function addToCart(productId, btnEl) {
-  const product = PRODUCTS.find((p) => p.id === productId);
-  if (!product) return;
-
-  const existing = cart.find((item) => item.id === productId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ ...product, qty: 1 });
-  }
-
-  updateCartUI();
-  showToast(`${product.name} ajouté au panier`);
-
-  if (btnEl) {
-    const original = btnEl.innerHTML;
-    btnEl.classList.add("added");
-    btnEl.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Ajouté`;
-    setTimeout(() => {
-      btnEl.classList.remove("added");
-      btnEl.innerHTML = original;
-    }, 1400);
-  }
-}
-
-function changeQty(productId, delta) {
-  const item = cart.find((i) => i.id === productId);
-  if (!item) return;
-  item.qty += delta;
-  if (item.qty <= 0) {
-    cart = cart.filter((i) => i.id !== productId);
-  }
-  updateCartUI();
-}
-
-function removeFromCart(productId) {
-  cart = cart.filter((i) => i.id !== productId);
-  updateCartUI();
-}
-
-function cartTotal() {
-  return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-}
-
-function cartCount() {
-  return cart.reduce((sum, item) => sum + item.qty, 0);
-}
-
-// ---------- CART UI ----------
-function updateCartUI() {
-  document.getElementById("cartCount").textContent = cartCount();
-  const cartCountMobileEl = document.getElementById("cartCountMobile");
-  if (cartCountMobileEl) cartCountMobileEl.textContent = cartCount();
-  const itemsEl = document.getElementById("cartItems");
-  const footEl = document.getElementById("cartFoot");
-
-  if (cart.length === 0) {
-    itemsEl.innerHTML = `
-      <div class="cart-empty">
-        <p style="font-weight:700; margin-bottom:6px;">Votre panier est vide</p>
-        <p style="font-size:13px; color:var(--ink-soft);">Ajoutez un article pour commencer votre commande.</p>
-      </div>`;
-    footEl.style.display = "none";
-    return;
-  }
-
-  footEl.style.display = "block";
-  itemsEl.innerHTML = cart
-    .map(
-      (item) => `
-    <div class="cart-item">
-      <img src="${item.img}" alt="${item.name}">
-      <div class="cart-item-info">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-city">${item.quartier}</div>
-        <div class="cart-item-row">
-          <div class="qty-control">
-            <button onclick="changeQty(${item.id}, -1)" aria-label="Diminuer la quantité">−</button>
-            <span>${item.qty}</span>
-            <button onclick="changeQty(${item.id}, 1)" aria-label="Augmenter la quantité">+</button>
-          </div>
-          <span class="cart-item-price">${item.price * item.qty} DH</span>
-        </div>
-        <a class="remove-item" onclick="removeFromCart(${item.id})">Retirer</a>
-      </div>
-    </div>`
-    )
-    .join("");
-
-  const subtotal = cartTotal();
-  document.getElementById("cartSubtotal").textContent = `${subtotal} DH`;
-  document.getElementById("cartGrandTotal").textContent = `${subtotal} DH`;
-
-  document.getElementById("whatsappBtn").href = buildWhatsAppLink();
-}
-
-// ---------- WHATSAPP MESSAGE ----------
-function buildWhatsAppLink() {
-  if (cart.length === 0) return "#";
-
-  let message = "Bonjour, je souhaite commander sur Mahal Ouarzazate :\n\n";
-  cart.forEach((item) => {
-    message += `• ${item.name} (${item.quartier}) x${item.qty} — ${item.price * item.qty} DH\n`;
+  document.getElementById("bouton-fermer-detail").addEventListener("click", fermerDetailProduit);
+  document.getElementById("bouton-ajouter-depuis-modale").addEventListener("click", () => {
+    ajouterAuPanier(produit.id);
+    fermerDetailProduit();
   });
-  message += `\nTotal estimé : ${cartTotal()} DH`;
-  message += "\n\nMerci de me confirmer la disponibilité et un créneau pour la remise en main propre à Ouarzazate. 🙏";
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-}
-
-// ---------- CART DRAWER OPEN/CLOSE ----------
-function openCart() {
-  closeMobileMenu(true);
-  document.getElementById("cartDrawer").classList.add("open");
-  document.getElementById("overlay").classList.add("open");
+  document.getElementById("superposition-detail").classList.add("visible");
   document.body.style.overflow = "hidden";
 }
 
-function closeCart() {
-  document.getElementById("cartDrawer").classList.remove("open");
-  syncOverlay();
-  document.body.style.overflow = document.getElementById("mobileMenu").classList.contains("open") ? "hidden" : "";
+function fermerDetailProduit() {
+  document.getElementById("superposition-detail").classList.remove("visible");
+  document.body.style.overflow = "";
+  produitAffiche = null;
 }
 
-// ---------- MOBILE MENU (dépliant) OPEN/CLOSE ----------
-function toggleMobileMenu() {
-  const menu = document.getElementById("mobileMenu");
-  const isOpen = menu.classList.contains("open");
-  if (isOpen) {
-    closeMobileMenu();
+
+/* ----------------------------------------------------------------------
+   9. GESTION DU PANIER
+   ---------------------------------------------------------------------- */
+
+function ajouterAuPanier(idProduit) {
+  panier[idProduit] = (panier[idProduit] || 0) + 1;
+  sauvegarderPanierDansStockage();
+  rafraichirBadgeCompteur();
+  afficherToast("Article ajouté au panier");
+}
+
+function modifierQuantite(idProduit, delta) {
+  const quantiteActuelle = panier[idProduit] || 0;
+  const nouvelleQuantite = quantiteActuelle + delta;
+
+  if (nouvelleQuantite <= 0) {
+    delete panier[idProduit];
   } else {
-    document.getElementById("cartDrawer").classList.remove("open");
-    menu.classList.add("open");
-    document.getElementById("burgerBtn").classList.add("open");
-    document.getElementById("burgerBtn").setAttribute("aria-expanded", "true");
-    document.getElementById("overlay").classList.add("open");
-    document.body.style.overflow = "hidden";
+    panier[idProduit] = nouvelleQuantite;
+  }
+
+  sauvegarderPanierDansStockage();
+  rafraichirBadgeCompteur();
+  rafraichirContenuPanier();
+}
+
+function supprimerDuPanier(idProduit) {
+  delete panier[idProduit];
+  sauvegarderPanierDansStockage();
+  rafraichirBadgeCompteur();
+  rafraichirContenuPanier();
+}
+
+function obtenirNombreArticlesPanier() {
+  return Object.values(panier).reduce((total, q) => total + q, 0);
+}
+
+function obtenirTotalPanier() {
+  let total = 0;
+  Object.entries(panier).forEach(([idProduit, quantite]) => {
+    const produit = trouverProduitParId(Number(idProduit));
+    if (produit) total += produit.prix * quantite;
+  });
+  return total;
+}
+
+function rafraichirBadgeCompteur() {
+  const badge = document.getElementById("badge-compteur");
+  const nombre = obtenirNombreArticlesPanier();
+  if (nombre > 0) {
+    badge.textContent = nombre;
+    badge.hidden = false;
+  } else {
+    badge.hidden = true;
   }
 }
 
-function closeMobileMenu(keepOverflowCheck) {
-  document.getElementById("mobileMenu").classList.remove("open");
-  document.getElementById("burgerBtn").classList.remove("open");
-  document.getElementById("burgerBtn").setAttribute("aria-expanded", "false");
-  syncOverlay();
-  if (!keepOverflowCheck) {
-    document.body.style.overflow = document.getElementById("cartDrawer").classList.contains("open") ? "hidden" : "";
-  }
+function construireLignePanierHtml(produit, quantite) {
+  return `
+    <div class="ligne-panier" data-id-produit="${produit.id}">
+      <img class="image-ligne-panier" src="${produit.image}" alt="${echapperHtml(produit.titre)}">
+      <div class="details-ligne-panier">
+        <span class="titre-ligne-panier">${echapperHtml(produit.titre)}</span>
+        <span class="prix-unitaire-ligne">${formaterPrix(produit.prix)} MAD / unité</span>
+        <div class="controles-ligne-panier">
+          <div class="stepper-quantite">
+            <button class="bouton-stepper" data-action="diminuer" data-id-produit="${produit.id}" aria-label="Diminuer la quantité">−</button>
+            <span class="valeur-quantite">${quantite}</span>
+            <button class="bouton-stepper" data-action="augmenter" data-id-produit="${produit.id}" aria-label="Augmenter la quantité">+</button>
+          </div>
+          <button class="bouton-supprimer-ligne" data-action="supprimer" data-id-produit="${produit.id}">Retirer</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-// Overlay stays visible if either panel is still open
-function syncOverlay() {
-  const cartOpen = document.getElementById("cartDrawer").classList.contains("open");
-  const menuOpen = document.getElementById("mobileMenu").classList.contains("open");
-  document.getElementById("overlay").classList.toggle("open", cartOpen || menuOpen);
-}
+function rafraichirContenuPanier() {
+  const corps = document.getElementById("corps-panier");
+  const pied = document.getElementById("pied-panier");
+  const montantTotal = document.getElementById("montant-total-panier");
+  const boutonCommander = document.getElementById("bouton-commander");
 
-// ---------- SEARCH SYNC (header + mobile menu share one filter) ----------
-function syncSearch(value) {
-  const main = document.getElementById("searchInput");
-  if (main.value === value) return;
-  main.value = value;
-  main.dispatchEvent(new Event("input"));
-  // keep both search fields in sync with each other
-  const top = document.getElementById("searchInputTop");
-  const mobile = document.getElementById("searchInputMobile");
-  if (top && top.value !== value) top.value = value;
-  if (mobile && mobile.value !== value) mobile.value = value;
-}
+  const entrees = Object.entries(panier);
 
-// ---------- TOAST ----------
-let toastTimeout;
-function showToast(text) {
-  const toast = document.getElementById("toast");
-  document.getElementById("toastText").textContent = text;
-  toast.classList.add("show");
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => toast.classList.remove("show"), 2400);
-}
-
-// ---------- FORMULAIRE DÉPÔT (section "vendre") ----------
-function submitDepot(event) {
-  event.preventDefault();
-  const nom = document.getElementById("depotNom").value.trim();
-  const quartier = document.getElementById("depotQuartier").value.trim();
-  const type = document.getElementById("depotType").value;
-
-  if (!nom || !quartier) {
-    showToast("Merci de remplir votre nom et votre quartier");
+  if (entrees.length === 0) {
+    corps.innerHTML = `
+      <div class="panier-vide">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <strong>Votre panier est vide</strong>
+        Parcourez le catalogue et ajoutez vos articles préférés.
+      </div>
+    `;
+    pied.hidden = true;
     return;
   }
 
-  const message = `Bonjour, je souhaite déposer un article au mahal.\n\nNom : ${nom}\nQuartier (Ouarzazate) : ${quartier}\nType d'article : ${type}\n\nMerci de me recontacter pour l'estimation.`;
-  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(link, "_blank");
+  let html = "";
+  entrees.forEach(([idProduit, quantite]) => {
+    const produit = trouverProduitParId(Number(idProduit));
+    if (produit) html += construireLignePanierHtml(produit, quantite);
+  });
+  corps.innerHTML = html;
+
+  pied.hidden = false;
+  montantTotal.textContent = formaterPrix(obtenirTotalPanier()) + " MAD";
+  boutonCommander.disabled = false;
 }
 
-// ============================================================
-// ESPACE VENDEUR — publication réservée au cousin (code PIN)
-// ⚠️ Ceci est une protection légère côté navigateur, pas une vraie
-// authentification serveur. Change ce code régulièrement.
-// ============================================================
-const ADMIN_PIN = "7070"; // 🔑 à changer par le cousin
-let adminUnlocked = false;
-let uploadedPhotoDataUrl = null;
-
-function openAdminGate(event) {
-  if (event) event.preventDefault();
-  document.getElementById("adminOverlay").classList.add("open");
+function ouvrirPanier() {
+  rafraichirContenuPanier();
+  document.getElementById("panier-superposition").classList.add("visible");
+  document.getElementById("panneau-panier").classList.add("visible");
   document.body.style.overflow = "hidden";
-  if (adminUnlocked) {
-    showAdminForm();
-  } else {
-    document.getElementById("adminPinStep").style.display = "block";
-    document.getElementById("adminFormStep").style.display = "none";
-    document.getElementById("adminPinInput").value = "";
-    document.getElementById("adminPinError").classList.remove("show");
-    setTimeout(() => document.getElementById("adminPinInput").focus(), 100);
-  }
 }
 
-function closeAdminGate() {
-  document.getElementById("adminOverlay").classList.remove("open");
+function fermerPanier() {
+  document.getElementById("panier-superposition").classList.remove("visible");
+  document.getElementById("panneau-panier").classList.remove("visible");
   document.body.style.overflow = "";
 }
 
-function checkAdminPin() {
-  const val = document.getElementById("adminPinInput").value.trim();
-  if (val === ADMIN_PIN) {
-    adminUnlocked = true;
-    showAdminForm();
+
+/* ----------------------------------------------------------------------
+   10. TOAST DE CONFIRMATION
+   ---------------------------------------------------------------------- */
+
+let minuteurToast = null;
+
+function afficherToast(message) {
+  const toast = document.getElementById("toast");
+  document.getElementById("texte-toast").textContent = message;
+  toast.classList.add("visible");
+
+  clearTimeout(minuteurToast);
+  minuteurToast = setTimeout(() => {
+    toast.classList.remove("visible");
+  }, 2200);
+}
+
+
+/* ----------------------------------------------------------------------
+   11. FORMULAIRE CLIENT + ENVOI WHATSAPP
+   ---------------------------------------------------------------------- */
+
+function ouvrirFormulaireCommande() {
+  if (obtenirNombreArticlesPanier() === 0) return;
+  document.getElementById("superposition-formulaire").classList.add("visible");
+}
+
+function fermerFormulaireCommande() {
+  document.getElementById("superposition-formulaire").classList.remove("visible");
+}
+
+function validerChampFormulaire(idGroupe, estValide) {
+  const groupe = document.getElementById(idGroupe);
+  if (estValide) {
+    groupe.classList.remove("en-erreur");
   } else {
-    document.getElementById("adminPinError").classList.add("show");
+    groupe.classList.add("en-erreur");
   }
+  return estValide;
 }
 
-function lockAdminGate() {
-  adminUnlocked = false;
-  closeAdminGate();
-  showToast("Espace vendeur verrouillé");
+function validerNumeroTelephone(numero) {
+  // Accepte les formats marocains courants : 06/07 + 8 chiffres, avec ou sans espaces/tirets,
+  // ou format international +212...
+  const nettoye = numero.replace(/[\s.-]/g, "");
+  return /^(0[5-7]\d{8}|(\+?212)[5-7]\d{8})$/.test(nettoye);
 }
 
-function showAdminForm() {
-  document.getElementById("adminPinStep").style.display = "none";
-  document.getElementById("adminFormStep").style.display = "block";
+/**
+ * Construit le message de commande formaté pour WhatsApp.
+ * Contient : nom client, téléphone, liste des articles (quantité + prix
+ * unitaire), total, et mention "Retrait en boutique".
+ */
+function construireMessageWhatsapp(nomClient, telephoneClient) {
+  let lignes = [];
+
+  lignes.push(`🛍️ *Nouvelle commande — ${SHOP_NAME}*`);
+  lignes.push("");
+  lignes.push(`👤 *Client :* ${nomClient}`);
+  lignes.push(`📞 *Téléphone :* ${telephoneClient}`);
+  lignes.push("");
+  lignes.push("🧾 *Articles commandés :*");
+
+  Object.entries(panier).forEach(([idProduit, quantite]) => {
+    const produit = trouverProduitParId(Number(idProduit));
+    if (!produit) return;
+    const sousTotal = produit.prix * quantite;
+    lignes.push(`• ${produit.titre} — ${quantite} x ${formaterPrix(produit.prix)} MAD = ${formaterPrix(sousTotal)} MAD`);
+  });
+
+  lignes.push("");
+  lignes.push(`💰 *Total : ${formaterPrix(obtenirTotalPanier())} MAD*`);
+  lignes.push("");
+  lignes.push("📍 *Retrait en boutique*");
+  lignes.push(`(${SHOP_NAME} — ${SHOP_CITY})`);
+  lignes.push("");
+  lignes.push("Merci pour votre commande ! 🙏");
+
+  return lignes.join("\n");
 }
 
-// ---------- PHOTO UPLOAD (aperçu local, encodé en base64) ----------
-function handlePhotoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    uploadedPhotoDataUrl = e.target.result;
-    document.getElementById("afPhotoPreviewImg").src = uploadedPhotoDataUrl;
-    document.getElementById("afPhotoPreview").style.display = "block";
-  };
-  reader.readAsDataURL(file);
+function envoyerCommandeWhatsapp() {
+  const champNom = document.getElementById("champ-nom-client");
+  const champTelephone = document.getElementById("champ-telephone-client");
+
+  const nomClient = champNom.value.trim();
+  const telephoneClient = champTelephone.value.trim();
+
+  const nomValide = validerChampFormulaire("groupe-champ-nom", nomClient.length >= 2);
+  const telephoneValide = validerChampFormulaire("groupe-champ-telephone", validerNumeroTelephone(telephoneClient));
+
+  if (!nomValide || !telephoneValide) return;
+
+  const message = construireMessageWhatsapp(nomClient, telephoneClient);
+  const messageEncode = encodeURIComponent(message);
+  const lienWhatsapp = `https://wa.me/${WHATSAPP_NUMBER}?text=${messageEncode}`;
+
+  window.open(lienWhatsapp, "_blank");
+
+  // Réinitialisation après envoi
+  fermerFormulaireCommande();
+  fermerPanier();
+  panier = {};
+  sauvegarderPanierDansStockage();
+  rafraichirBadgeCompteur();
+  champNom.value = "";
+  champTelephone.value = "";
+  afficherToast("Commande envoyée sur WhatsApp 🎉");
 }
 
-// ---------- PUBLICATION D'UN NOUVEL ARTICLE ----------
-function submitNewProduct(event) {
-  event.preventDefault();
 
-  const name = document.getElementById("afName").value.trim();
-  const cat = document.getElementById("afCat").value;
-  const price = parseInt(document.getElementById("afPrice").value, 10);
-  const oldPriceRaw = document.getElementById("afOldPrice").value;
-  const oldPrice = oldPriceRaw ? parseInt(oldPriceRaw, 10) : Math.round(price * 1.8);
-  const etat = document.getElementById("afEtat").value;
-  const quartier = document.getElementById("afQuartier").value;
-  const brand = document.getElementById("afBrand").value.trim() || "—";
-  const size = document.getElementById("afSize").value.trim() || "—";
+/* ----------------------------------------------------------------------
+   12. ÉCOUTEURS D'ÉVÉNEMENTS
+   ---------------------------------------------------------------------- */
 
-  if (!name || !price || !uploadedPhotoDataUrl) {
-    showToast("Merci de remplir le nom, le prix et d'ajouter une photo");
-    return;
-  }
+function initialiserEcouteurs() {
+  // Recherche
+  document.getElementById("champ-recherche-nom").addEventListener("input", (e) => {
+    filtreRecherche = e.target.value;
+    rafraichirGrilleProduits();
+  });
 
-  const newId = Math.max(0, ...PRODUCTS.map((p) => p.id)) + 1;
-  const newProduct = {
-    id: newId,
-    cat, name, brand, size,
-    price, oldPrice, etat, quartier,
-    img: uploadedPhotoDataUrl,
-    seller: 6, // "Le Mahal" — compte du dépôt
-    likes: 0,
-    boost: true, // les nouveautés remontent en premier
-  };
+  // Filtre catégorie (select)
+  document.getElementById("select-categorie").addEventListener("change", (e) => {
+    filtreCategorie = e.target.value;
+    document.querySelectorAll(".chip").forEach(c => {
+      c.classList.toggle("actif", c.dataset.categorie === filtreCategorie);
+    });
+    rafraichirGrilleProduits();
+  });
 
-  PRODUCTS.unshift(newProduct);
-  renderRayonCounts();
-  visibleCount = PAGE_SIZE;
-  renderProducts();
+  // Tri
+  document.getElementById("select-tri").addEventListener("change", (e) => {
+    filtreTri = e.target.value;
+    rafraichirGrilleProduits();
+  });
 
-  document.getElementById("adminForm").reset();
-  document.getElementById("afPhotoPreview").style.display = "none";
-  uploadedPhotoDataUrl = null;
-  closeAdminGate();
-  showToast(`"${name}" publié sur cet appareil ✅`);
-  document.getElementById("produits").scrollIntoView({ behavior: "smooth" });
+  // Délégation d'événements sur la grille (clic carte = détail, clic "+" = ajout rapide)
+  document.getElementById("grille-produits").addEventListener("click", (e) => {
+    const boutonAjoutRapide = e.target.closest('[data-action="ajouter-rapide"]');
+    if (boutonAjoutRapide) {
+      e.stopPropagation();
+      e.preventDefault();
+      ajouterAuPanier(Number(boutonAjoutRapide.dataset.idProduit));
+      return;
+    }
+
+    const carte = e.target.closest('[data-action="ouvrir-detail"]');
+    if (carte) {
+      ouvrirDetailProduit(Number(carte.dataset.idProduit));
+    }
+  });
+
+  // Fermeture modale détail en cliquant sur la superposition
+  document.getElementById("superposition-detail").addEventListener("click", (e) => {
+    if (e.target.id === "superposition-detail") fermerDetailProduit();
+  });
+
+  // Panier — ouverture / fermeture
+  document.getElementById("bouton-ouvrir-panier").addEventListener("click", ouvrirPanier);
+  document.getElementById("bouton-fermer-panier").addEventListener("click", fermerPanier);
+  document.getElementById("panier-superposition").addEventListener("click", fermerPanier);
+
+  // Panier — délégation d'événements (stepper quantité, suppression)
+  document.getElementById("corps-panier").addEventListener("click", (e) => {
+    const boutonAction = e.target.closest("[data-action]");
+    if (!boutonAction) return;
+
+    const idProduit = Number(boutonAction.dataset.idProduit);
+    const action = boutonAction.dataset.action;
+
+    if (action === "augmenter") modifierQuantite(idProduit, 1);
+    else if (action === "diminuer") modifierQuantite(idProduit, -1);
+    else if (action === "supprimer") supprimerDuPanier(idProduit);
+  });
+
+  // Bouton "Commander sur WhatsApp" → ouvre le formulaire
+  document.getElementById("bouton-commander").addEventListener("click", ouvrirFormulaireCommande);
+
+  // Formulaire commande
+  document.getElementById("bouton-annuler-formulaire").addEventListener("click", fermerFormulaireCommande);
+  document.getElementById("bouton-envoyer-whatsapp").addEventListener("click", envoyerCommandeWhatsapp);
+  document.getElementById("superposition-formulaire").addEventListener("click", (e) => {
+    if (e.target.id === "superposition-formulaire") fermerFormulaireCommande();
+  });
+
+  // Fermeture des modales avec la touche Échap
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    fermerDetailProduit();
+    fermerFormulaireCommande();
+    fermerPanier();
+  });
 }
 
-// ---------- EXPORT DU CATALOGUE (pour mise à jour définitive du site) ----------
-function exportCatalog() {
-  const fileContent =
-`// Catalogue exporté le ${new Date().toLocaleString("fr-FR")}
-// Contient les articles d'origine + ceux ajoutés depuis l'espace vendeur.
-// Envoyez ce fichier pour mettre à jour le site pour tous les visiteurs.
 
-const QUARTIERS = ${JSON.stringify(QUARTIERS, null, 2)};
+/* ----------------------------------------------------------------------
+   13. INITIALISATION GÉNÉRALE
+   ---------------------------------------------------------------------- */
 
-const SELLERS = ${JSON.stringify(SELLERS, null, 2)};
-
-const PRODUCTS = ${JSON.stringify(PRODUCTS, null, 2)};
-`;
-  const blob = new Blob([fileContent], { type: "text/javascript" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `catalogue-mahal-${new Date().toISOString().slice(0, 10)}.js`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast("Catalogue exporté 📦");
+function initialiserApplication() {
+  chargerPanierDepuisStockage();
+  initialiserSelectCategorie();
+  initialiserChipsCategories();
+  rafraichirGrilleProduits();
+  rafraichirBadgeCompteur();
+  initialiserEcouteurs();
 }
 
+document.addEventListener("DOMContentLoaded", initialiserApplication);
 </script>
+
 </body>
 </html>
