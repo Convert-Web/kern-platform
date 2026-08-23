@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="titre-onglet">Produit — Bazar Al Madina</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="zone-header"></div>
+
+<nav class="fil-ariane" id="fil-ariane"></nav>
+
+<main class="centre-page" id="contenu-produit">
+  <!-- Rempli dynamiquement -->
+</main>
+
+<div id="zone-footer"></div>
+<div id="zone-panier-coulissant"></div>
+
+<script src="donnees.js"></script>
+<script src="commun.js"></script>
+<script>
+/* ============================================================================
+   produit.html — fiche produit complète : galerie, prix, avis, similaires
+   ============================================================================ */
+
+function obtenirIdDepuisUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return Number(params.get("id"));
+}
+
+function construireMiniCarteHtml(produit) {
+  const note = noteMoyenne(produit.id);
+  return `
+    <a href="produit.html?id=${produit.id}" class="carte-produit lien-carte-produit">
+      <div class="vignette-produit">
+        <img src="${produit.image}" alt="${echapperHtml(produit.titre)}" loading="lazy">
+        <div class="etiquettes-badges"><span class="etiquette-etat ${classeEtat(produit.etat)}">${echapperHtml(produit.etat)}</span></div>
+      </div>
+      <div class="infos-produit">
+        <span class="categorie-produit">${echapperHtml(produit.categorie)}</span>
+        <h3 class="titre-produit">${echapperHtml(produit.titre)}</h3>
+        ${note ? `<div class="ligne-note-mini">${construireEtoilesHtml(note, 12)}<span>${note}</span></div>` : ""}
+        <div class="bas-carte">
+          <span class="prix-produit">${formaterPrix(produit.prix)}<span> MAD</span></span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function rendreFilAriane(produit) {
+  document.getElementById("fil-ariane").innerHTML = `
+    <a href="index.html">Accueil</a> ›
+    <a href="catalogue.html">Catalogue</a> ›
+    <a href="catalogue.html?categorie=${encodeURIComponent(produit.categorie)}">${echapperHtml(produit.categorie)}</a> ›
+    <span>${echapperHtml(produit.titre)}</span>
+  `;
+}
+
+function rendreAvis(idProduit) {
+  const avis = obtenirAvisProduit(idProduit);
+  const note = noteMoyenne(idProduit);
+
+  if (avis.length === 0) {
+    return `
+      <section class="section-avis">
+        <h2 class="titre-section">Avis clients</h2>
+        <p class="pas-encore-avis">Aucun avis pour le moment sur cet article. Soyez le premier à le récupérer en boutique !</p>
+      </section>
+    `;
+  }
+
+  const listeAvisHtml = avis.map(a => `
+    <div class="carte-avis">
+      <div class="entete-avis">
+        <span class="auteur-avis">${echapperHtml(a.auteur)}</span>
+        <span class="date-avis">${echapperHtml(a.date)}</span>
+      </div>
+      ${construireEtoilesHtml(a.note, 14)}
+      <p class="commentaire-avis">${echapperHtml(a.commentaire)}</p>
+    </div>
+  `).join("");
+
+  return `
+    <section class="section-avis">
+      <h2 class="titre-section">Avis clients <span class="sous-titre-section">${avis.length} avis</span></h2>
+      <div class="resume-avis">
+        <span class="grosse-note">${note}</span>
+        <div class="grosse-note-details">
+          ${construireEtoilesHtml(note, 18)}
+          <span>${avis.length} avis vérifiés</span>
+        </div>
+      </div>
+      <div class="liste-avis">${listeAvisHtml}</div>
+    </section>
+  `;
+}
+
+function rendreProduit() {
+  const idProduit = obtenirIdDepuisUrl();
+  const produit = trouverProduitParId(idProduit);
+  const conteneur = document.getElementById("contenu-produit");
+
+  if (!produit) {
+    conteneur.innerHTML = `
+      <div class="etat-vide-page">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <strong>Ce produit est introuvable</strong>
+        Il a peut-être été retiré du catalogue.
+        <p><a href="catalogue.html">← Retour au catalogue</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById("titre-onglet").textContent = produit.titre + " — " + SHOP_NAME;
+  rendreFilAriane(produit);
+
+  const note = noteMoyenne(produit.id);
+  const nombreAvis = obtenirAvisProduit(produit.id).length;
+  const estFav = estFavori(produit.id);
+  const enComparaison = estEnComparaison(produit.id);
+  const economie = produit.prixAvant ? produit.prixAvant - produit.prix : 0;
+
+  conteneur.innerHTML = `
+    <div class="disposition-produit apparition">
+      <div class="galerie-produit-page">
+        <img src="${produit.image}" alt="${echapperHtml(produit.titre)}">
+        <div class="etiquettes-badges" style="position:absolute; top:12px; left:12px;">
+          <span class="etiquette-etat ${classeEtat(produit.etat)}">${echapperHtml(produit.etat)}</span>
+          ${produit.nouveau ? `<span class="etiquette-badge nouveau">Nouveau</span>` : ""}
+          ${produit.prixAvant ? `<span class="etiquette-badge promo">Promo</span>` : ""}
+        </div>
+      </div>
+
+      <div class="colonne-infos-produit">
+        <span class="categorie-produit">${echapperHtml(produit.categorie)}</span>
+        <h1>${echapperHtml(produit.titre)}</h1>
+
+        ${note ? `
+          <div class="ligne-note-page">
+            ${construireEtoilesHtml(note, 18)}
+            <span>${note} · <a href="#avis">${nombreAvis} avis</a></span>
+          </div>
+        ` : `<p class="ligne-note-page">Pas encore d'avis</p>`}
+
+        <div class="bloc-prix-page">
+          <span class="prix-page">${formaterPrix(produit.prix)} MAD</span>
+          ${produit.prixAvant ? `<span class="prix-avant-page">${formaterPrix(produit.prixAvant)} MAD</span><span class="economie-page">− ${formaterPrix(economie)} MAD</span>` : ""}
+        </div>
+
+        <span class="stock-produit">📦 ${echapperHtml(produit.stock || "Disponible en boutique")}</span>
+
+        <p class="description-produit-page">${echapperHtml(produit.descriptionLongue || produit.description)}</p>
+
+        <div class="actions-page-produit">
+          <button class="bouton-ajouter-page" id="bouton-ajouter-page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Ajouter au panier
+          </button>
+          <button class="bouton-secondaire-page ${estFav ? "actif-favori" : ""}" id="bouton-favori-page" data-favori-id="${produit.id}" aria-label="Ajouter aux favoris" aria-pressed="${estFav}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="${estFav ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+          </button>
+          <button class="bouton-secondaire-page ${enComparaison ? "actif-comparer" : ""}" id="bouton-comparer-page" data-comparer-id="${produit.id}" aria-label="Ajouter au comparateur" aria-pressed="${enComparaison}">⚖</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="avis">${rendreAvis(produit.id)}</div>
+
+    <section class="section-similaires">
+      <h2 class="titre-section">Articles similaires</h2>
+      <div class="grille-produits apparition-liste" id="grille-similaires"></div>
+    </section>
+  `;
+
+  document.getElementById("bouton-ajouter-page").addEventListener("click", () => ajouterAuPanier(produit.id));
+  document.getElementById("bouton-favori-page").addEventListener("click", (e) => {
+    basculerFavori(produit.id);
+    e.currentTarget.classList.toggle("actif-favori", estFavori(produit.id));
+  });
+  document.getElementById("bouton-comparer-page").addEventListener("click", (e) => {
+    basculerComparaison(produit.id);
+    e.currentTarget.classList.toggle("actif-comparer", estEnComparaison(produit.id));
+  });
+
+  // Articles similaires = même catégorie, produit courant exclu
+  const similaires = PRODUCTS.filter(p => p.categorie === produit.categorie && p.id !== produit.id).slice(0, 5);
+  document.getElementById("grille-similaires").innerHTML = similaires.length
+    ? similaires.map(construireMiniCarteHtml).join("")
+    : `<p style="color:var(--encre-soft);">Aucun autre article dans cette catégorie pour le moment.</p>`;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initialiserCommun();
+  rendreProduit();
+});
+</script>
+</body>
+</html>

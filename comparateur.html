@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparateur — Bazar Al Madina</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="zone-header"></div>
+
+<div class="bandeau-page motif-zellige">
+  <h1>⚖️ Comparateur d'articles</h1>
+  <p>Comparez jusqu'à 3 articles côte à côte avant de faire votre choix.</p>
+</div>
+
+<main class="centre-page" id="contenu-comparateur">
+  <!-- Rempli dynamiquement -->
+</main>
+
+<div id="zone-footer"></div>
+<div id="zone-panier-coulissant"></div>
+
+<script src="donnees.js"></script>
+<script src="commun.js"></script>
+<script>
+/* ============================================================================
+   comparateur.html — tableau comparatif des produits sélectionnés
+   ============================================================================ */
+
+function rendreComparateur() {
+  const conteneur = document.getElementById("contenu-comparateur");
+
+  if (comparateur.length === 0) {
+    conteneur.innerHTML = `
+      <div class="etat-vide-page">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2V9m6 12h10a2 2 0 0 0 2-2V9M3 9h18"/></svg>
+        <strong>Aucun article à comparer</strong>
+        Ajoutez jusqu'à 3 articles au comparateur depuis le catalogue en cliquant sur l'icône ⚖.
+        <p><a href="catalogue.html">→ Parcourir le catalogue</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  const produits = comparateur.map(id => trouverProduitParId(id)).filter(Boolean);
+
+  const ligneImages = produits.map(p => `
+    <th class="colonne-produit">
+      <img src="${p.image}" alt="${echapperHtml(p.titre)}">
+      <a href="produit.html?id=${p.id}" class="titre-comparateur">${echapperHtml(p.titre)}</a>
+      <button class="bouton-retirer-comparateur" data-retirer-id="${p.id}">Retirer</button>
+    </th>
+  `).join("");
+
+  const lignePrix = produits.map(p => `<td><span class="prix-comparateur">${formaterPrix(p.prix)} MAD</span>${p.prixAvant ? `<br><span class="prix-avant-carte">${formaterPrix(p.prixAvant)} MAD</span>` : ""}</td>`).join("");
+  const ligneCategorie = produits.map(p => `<td>${echapperHtml(p.categorie)}</td>`).join("");
+  const ligneEtat = produits.map(p => `<td><span class="etiquette-etat ${classeEtat(p.etat)}" style="position:static; display:inline-block;">${echapperHtml(p.etat)}</span></td>`).join("");
+  const ligneNote = produits.map(p => {
+    const note = noteMoyenne(p.id);
+    return `<td>${note ? construireEtoilesHtml(note, 14) + " " + note : "Pas encore d'avis"}</td>`;
+  }).join("");
+  const ligneStock = produits.map(p => `<td>${echapperHtml(p.stock || "Disponible")}</td>`).join("");
+  const ligneDescription = produits.map(p => `<td>${echapperHtml(p.description)}</td>`).join("");
+  const ligneAction = produits.map(p => `<td><button class="bouton-ajouter-modale" data-ajouter-id="${p.id}" style="width:100%; justify-content:center;">Ajouter au panier</button></td>`).join("");
+
+  conteneur.innerHTML = `
+    <div class="tableau-comparateur-scroll apparition">
+      <table class="tableau-comparateur">
+        <thead><tr><th></th>${ligneImages}</tr></thead>
+        <tbody>
+          <tr><td class="libelle-ligne">Prix</td>${lignePrix}</tr>
+          <tr><td class="libelle-ligne">Catégorie</td>${ligneCategorie}</tr>
+          <tr><td class="libelle-ligne">État</td>${ligneEtat}</tr>
+          <tr><td class="libelle-ligne">Note</td>${ligneNote}</tr>
+          <tr><td class="libelle-ligne">Disponibilité</td>${ligneStock}</tr>
+          <tr><td class="libelle-ligne">Description</td>${ligneDescription}</tr>
+          <tr><td class="libelle-ligne">Action</td>${ligneAction}</tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  conteneur.querySelectorAll("[data-retirer-id]").forEach(btn => {
+    btn.addEventListener("click", () => { basculerComparaison(btn.dataset.retirerId); rendreComparateur(); });
+  });
+  conteneur.querySelectorAll("[data-ajouter-id]").forEach(btn => {
+    btn.addEventListener("click", () => ajouterAuPanier(Number(btn.dataset.ajouterId)));
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initialiserCommun();
+  rendreComparateur();
+});
+</script>
+</body>
+</html>
