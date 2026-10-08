@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Le Touareg | Kebab · Tacos · Burgers — Montereau-Fault-Yonne</title>
+<meta name="description" content="Le Touareg à Montereau-Fault-Yonne : kebabs, tacos, burgers, sandwiches, pizzas et street-food. Commandez à emporter et découvrez nos spécialités.">
+<meta name="theme-color" content="#160F0B">
+<meta property="og:type" content="website"><meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Le Touareg | Kebab · Tacos · Burgers — Montereau-Fault-Yonne">
+<meta property="og:description" content="Kebabs, tacos, burgers, sandwiches, pizzas et street-food à Montereau-Fault-Yonne.">
+<!-- À AJOUTER : og:image (1200×630) et apple-touch-icon aux couleurs du Touareg. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B4482A'/%3E%3Cpath d='M14 16h36v10H37v24H27V26H14z' fill='%23FAF3E6'/%3E%3C/svg%3E">
+<style>
+:root{--sand:#F1E3CB;--cream:#FAF3E6;--terra:#B4482A;--brown:#2B1A12;--black:#160F0B;--cu:#C9893B;--green:#23402F;--d:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font:16px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--cream);color:var(--brown)}
+img{max-width:100%;display:block}a{color:inherit}button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--cu);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;z-index:99;background:#fff;padding:8px}
+.wrap{max-width:1160px;margin:auto;padding:0 20px}
+h1,h2,h3{font-family:var(--d);font-weight:400;letter-spacing:.02em;line-height:1.05}
+h2{font-size:clamp(2.2rem,7vw,3.6rem);margin-bottom:.35em}
+section{padding:64px 0}.mut{opacity:.75}.todo{background:#f6dcb0;padding:0 6px;border-radius:4px;font-style:italic}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:48px;padding:0 22px;border:2px solid var(--terra);border-radius:999px;background:var(--terra);color:var(--cream);font-weight:700;text-decoration:none;cursor:pointer;transition:transform .15s,background .2s}
+.btn:hover{transform:translateY(-2px);background:#8f3a21}.btn.alt{background:transparent;color:inherit;border-color:currentColor}.btn.sm{min-height:44px;padding:0 16px}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ib{display:inline-grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:transparent;cursor:pointer}.ib:hover{background:#0001}
+.i{width:1.3em;height:1.3em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}[aria-pressed=true] .i{fill:var(--terra);stroke:var(--terra)}
+#sp{position:fixed;top:0;left:0;height:3px;width:0;background:var(--cu);z-index:80}
+#top{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,box-shadow .3s;color:var(--sand)}
+#top.sc{background:rgba(22,15,11,.93);backdrop-filter:blur(10px);box-shadow:0 4px 20px #0006}#top.sc .ann{display:none}
+.ann{background:var(--terra);color:#fff;text-align:center;font-size:.85rem;padding:6px 12px;font-weight:600}
+#hd{display:flex;align-items:center;gap:14px;padding:8px 20px}
+.logo{font:400 1.8rem var(--d);letter-spacing:.05em;text-decoration:none}.logo b{color:var(--cu);font-weight:400;font-size:.75em;margin-right:.3em}
+.dk{margin-left:auto;display:flex;gap:22px}.dk a{text-decoration:none;font-weight:600}.dk a:hover{color:var(--cu)}
+.tel{display:flex;align-items:center;gap:6px;text-decoration:none;font-weight:700}
+.cb2{position:relative}.bdg{position:absolute;top:2px;right:0;min-width:20px;height:20px;border-radius:10px;background:var(--cu);color:var(--black);font:700 .75rem/20px system-ui;text-align:center}.bump{animation:bump .3s}@keyframes bump{50%{transform:scale(1.5)}}
+#bur{display:none}
+@media(max-width:820px){.dk,.tel span{display:none}#bur{display:inline-grid}#hd{gap:6px}.logo{margin-right:auto}}
+.ov{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:#160f0b99}.ov[hidden]{display:none}
+.sheet{background:var(--cream);width:min(560px,100%);max-height:92svh;overflow:auto;border-radius:22px 22px 0 0;padding:20px;animation:up .25s ease}@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sh{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:12px}.sh h2{font-size:2rem;margin:0}
+.sf{position:sticky;bottom:-20px;background:var(--cream);padding:12px 0 4px;display:grid;gap:8px}
+@media(min-width:821px){.ov{align-items:center}.sheet{border-radius:22px}.ov.side{justify-content:flex-end;align-items:stretch}.ov.side .sheet{border-radius:0;max-height:none;width:430px;animation:sl .25s}@keyframes sl{from{transform:translateX(60px);opacity:0}}}
+#mn{background:var(--black);color:var(--sand);flex-direction:column;align-items:center;justify-content:center;gap:22px}#mn a{font:2.6rem var(--d);text-decoration:none}
+#hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:150px 0 70px;background:var(--black);color:var(--sand);overflow:hidden}
+#hero .bgi{position:absolute;inset:0}#hero .bgi img{width:100%;height:100%;object-fit:cover;opacity:.5}#hero .bgi:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--black) 8%,#160f0b66)}
+#hero .wrap{position:relative}.eb{color:var(--cu);font-weight:700;letter-spacing:.12em}
+h1{font-size:clamp(4rem,19vw,10.5rem);line-height:.9;margin:.1em 0}h1 span{display:block;color:var(--cu);font-size:.32em;letter-spacing:.3em}
+.sub{font-size:clamp(1.1rem,3vw,1.6rem);max-width:30ch}.big{font-weight:800;margin:.5em 0}
+.bgs{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:14px 0 22px}.bgs li{border:1px solid #f1e3cb66;border-radius:999px;padding:5px 14px;font-size:.88rem}
+.cta{display:flex;flex-wrap:wrap;gap:12px}.hm{margin-top:20px;opacity:.85}
+@media(max-width:600px){.cta .btn{width:100%}#hero{padding-top:130px}}
+#show{display:grid;grid-template-columns:repeat(4,1fr);min-height:440px;padding:0}.pan{position:relative;overflow:hidden;color:#fff;text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;min-height:300px;isolation:isolate}
+.pan img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .6s}.pan:hover img{transform:scale(1.07)}.pan:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,var(--a) 0,#160f0b55 70%)}
+.pan b{font:3rem var(--d)}.pan h3{font-size:2rem}.pan p{font-size:.9rem}
+@media(max-width:900px){#show{grid-template-columns:1fr 1fr}}@media(max-width:520px){#show{grid-template-columns:1fr}}
+#trust{background:var(--sand);padding:30px 0}.tr{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;font-weight:700;list-style:none;padding:0}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;text-align:center;margin-top:26px}.st strong{display:block;font:2.8rem var(--d);color:var(--terra)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}.chips button{flex:none;min-height:44px;padding:0 16px;border:2px solid var(--brown);border-radius:999px;background:transparent;cursor:pointer;font-weight:600}.chips [aria-pressed=true]{background:var(--brown);color:var(--cream)}
+#q{width:100%;min-height:52px;border:2px solid var(--brown);border-radius:999px;padding:0 22px;background:#fff;margin-bottom:10px}
+.gh{font-size:2rem;margin:28px 0 12px;color:var(--terra)}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.card{display:grid;grid-template-columns:96px 1fr;gap:12px;background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 10px #2b1a1214;transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px #2b1a1224}.card.off{opacity:.55}
+.th{border-radius:12px;overflow:hidden;background:var(--c);display:grid;place-items:center;min-height:96px;color:var(--sand);font:1.1rem var(--d);text-align:center;padding:4px}.th img{width:100%;height:100%;object-fit:cover}
+.card h3{font:700 1.02rem/1.25 system-ui;letter-spacing:0}.card p{font-size:.88rem;opacity:.8;margin:2px 0 6px}.cf{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}.cf strong{font-size:1.15rem}.ca{display:flex;align-items:center}.ca .ib{width:40px;height:40px}
+.bd{margin-left:6px;font-size:.68rem;background:var(--cu);color:var(--black);padding:2px 8px;border-radius:99px;vertical-align:middle}
+.hs{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px}.hs .card{flex:0 0 min(330px,86%);scroll-snap-align:start}
+#best,#avis{background:var(--sand)}.rv{opacity:0;transform:translateY(18px);transition:.6s}.rv.in{opacity:1;transform:none}
+.av{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.av div{background:#fff;border-radius:16px;padding:24px}.av strong{font:3.2rem var(--d);color:var(--terra)}
+.cl{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.cl article{position:relative;min-height:340px;border-radius:20px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;isolation:isolate;background:var(--black)}.cl img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}.cl article:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#160f0bee,#160f0b22 70%)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}@media(max-width:820px){.two{grid-template-columns:1fr}}
+#map{min-height:320px;border-radius:18px;background:var(--sand);display:grid;place-items:center;text-align:center;padding:20px;overflow:hidden}#map iframe{width:100%;height:100%;min-height:360px;border:0}
+.ht{width:100%;border-collapse:collapse;margin:10px 0}.ht td{padding:4px 0;border-bottom:1px solid #2b1a121f}.ht tr.now{font-weight:800}
+details{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:10px}summary{cursor:pointer;font-weight:700;min-height:28px}details p{margin-top:8px}
+footer{background:var(--black);color:var(--sand);padding:56px 0 100px}footer .wm{font:clamp(3rem,16vw,9rem) var(--d);color:#f1e3cb1f;line-height:1}.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:26px;margin:20px 0}footer a{display:block;padding:3px 0}footer small{opacity:.65}footer button{background:none;border:0;padding:3px 0;cursor:pointer;text-decoration:underline}
+.fab{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;max-width:520px;margin:auto;box-shadow:0 8px 24px #0006}
+.opt{display:flex;align-items:center;gap:10px;min-height:46px;padding:6px 12px;border:2px solid #2b1a1226;border-radius:12px;margin-bottom:6px;cursor:pointer}.opt:has(input:checked){border-color:var(--terra);background:#b4482a14}.opt input{width:20px;height:20px;accent-color:var(--terra)}.opt input:disabled+span{opacity:.4}
+.ci{display:grid;grid-template-columns:1fr auto;gap:6px;padding:12px 0;border-bottom:1px solid #2b1a121f}.ci small{display:block;opacity:.8}.q{display:flex;align-items:center;gap:6px}.q button{width:40px;height:40px;border-radius:50%;border:2px solid var(--brown);background:none;cursor:pointer;font-weight:700}
+.sheet input[type=text],.sheet input[type=password],textarea{width:100%;padding:12px;border:2px solid #2b1a1233;border-radius:12px;background:#fff}
+#ck{position:fixed;left:12px;right:12px;bottom:12px;z-index:90;max-width:640px;margin:auto;background:var(--black);color:var(--sand);padding:16px;border-radius:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}#ck[hidden]{display:none}
+#toast{position:fixed;top:90px;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:10px 18px;border-radius:99px;z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}#toast.on{opacity:1}
+.prose h3{font-size:1.4rem;margin:14px 0 4px}.prose p,.prose li{margin-bottom:6px}.err{color:#b00020}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#carte">Aller à la carte</a><div id="sp"></div>
+<div id="top"><div class="ann" id="ann"></div>
+<header id="hd"><a class="logo" href="#hero" aria-label="Le Touareg, accueil"><b>LE</b>TOUAREG</a>
+<nav class="dk" aria-label="Navigation"><a href="#carte">La Carte</a><a href="#best">Best-sellers</a><a href="#avis">Avis</a><a href="#infos">Infos &amp; Accès</a></nav>
+<a class="tel" id="tel" aria-label="Appeler Le Touareg"></a>
+<button class="btn sm" data-act="cart" id="cb">Commander</button>
+<button class="ib cb2" data-act="cart" aria-label="Ouvrir le panier"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h3l2 11h10l2-8H7M9 20h.01M17 20h.01"/></svg><span class="bdg" id="bd" aria-live="polite">0</span></button>
+<button class="ib" id="bur" data-act="menu" aria-label="Ouvrir le menu" aria-expanded="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></header></div>
+<div class="ov" id="mn" hidden role="dialog" aria-modal="true" aria-label="Menu"><button class="ib" data-act="close" aria-label="Fermer le menu" style="position:absolute;top:14px;right:14px;color:var(--sand)">✕</button><a href="#carte" data-act="close">La Carte</a><a href="#best" data-act="close">Best-sellers</a><a href="#avis" data-act="close">Avis</a><a href="#infos" data-act="close">Infos &amp; Accès</a><a class="btn" id="tel2" style="font:700 1rem system-ui"></a></div>
+<main>
+<section id="hero"><div class="bgi"><img src="plateau-840.webp" alt="Illustration temporaire : kebab, burger, pizza, wrap et frites" fetchpriority="high"></div>
+<div class="wrap"><p class="eb">Street food · 77130</p><h1><span>LE</span>TOUAREG</h1><p class="sub">Kebab, tacos, burgers, sandwichs et plus encore.</p><p class="big">Plus de 100 possibilités gourmandes</p>
+<ul class="bgs"><li id="hs">…</li><li>Sur place · À emporter · Livraison</li><li>Montereau-Fault-Yonne</li><li>Livraison disponible</li></ul>
+<div class="cta"><a class="btn" href="#carte">Voir la carte</a><button class="btn alt" data-act="wa">Commander sur WhatsApp</button><a class="btn alt" id="ue" hidden target="_blank" rel="noopener">Commander sur Uber Eats</a><button class="btn alt" id="reo" hidden data-act="reorder">Reprendre ma dernière commande</button></div>
+<p class="hm" id="hm"></p></div></section>
+<div id="show"></div>
+<section id="trust"><div class="wrap"><ul class="tr" id="tr"></ul><div class="st" id="st"></div></div></section>
+<section id="best"><div class="wrap"><h2 class="rv">Les incontournables</h2><div class="hs" id="hsb"></div></div></section>
+<section id="carte"><div class="wrap"><h2 class="rv">La carte</h2>
+<input id="q" type="search" placeholder="Chercher un plat..." aria-label="Chercher un plat" autocomplete="off">
+<div class="chips" id="catF" role="group" aria-label="Catégories"></div><div class="chips" id="priF" role="group" aria-label="Prix"></div>
+<p class="mut" id="info" aria-live="polite"></p><div id="grid"></div></div></section>
+<section id="avis"><div class="wrap"><h2 class="rv">Les avis</h2><div class="av" id="avb"></div></div></section>
+<section id="classiques"><div class="wrap"><h2 class="rv">Les classiques de la maison</h2><div class="cl" id="clb"></div></div></section>
+<section id="infos"><div class="wrap two"><div><h2 class="rv">Infos &amp; accès</h2><div id="inf"></div></div><div id="map"></div></div></section>
+<section id="faq" style="padding-top:0"><div class="wrap"><h2 class="rv">Questions fréquentes</h2><div id="fq"></div></div></section>
+</main>
+<footer><div class="wrap"><div class="wm" aria-hidden="true">TOUAREG</div><div class="fg" id="ft"></div></div></footer>
+<button class="btn fab" id="fab" data-act="cart" hidden></button>
+<div class="ov" id="cfg" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div class="sh"><div><h2 id="cfgT"></h2><p class="mut" id="cfgD"></p></div><button class="ib" data-act="close" aria-label="Fermer">✕</button></div><div id="cfgB"></div><div class="sf"><button class="btn" id="cfgA" data-act="cfgAdd">Ajouter</button></div></div></div>
+<div class="ov side" id="cart" hidden><aside class="sheet" role="dialog" aria-modal="true" aria-labelledby="cartT"><div class="sh"><h2 id="cartT">Mon panier</h2><button class="ib" data-act="close" aria-label="Fermer le panier">✕</button></div><div id="cartB"></div>
+<div class="sf" id="cartF"><input type="text" id="cn" placeholder="Prénom" aria-label="Prénom" autocomplete="given-name"><textarea id="cr" rows="2" placeholder="Remarque, allergie…" aria-label="Remarque ou allergie"></textarea><p><strong>Total estimé : <span id="ct"></span></strong></p><button class="btn" data-act="send">Envoyer sur WhatsApp</button><p class="mut" style="font-size:.8rem">Aucun paiement en ligne : la commande est transmise au restaurant par WhatsApp.</p></div></aside></div>
+<div class="ov" id="lg" hidden><div class="sheet prose" role="dialog" aria-modal="true" aria-labelledby="lgT"><div class="sh"><h2 id="lgT"></h2><button class="ib" data-act="close" aria-label="Fermer">✕</button></div><div id="lgB"></div></div></div>
+<div id="ck" hidden role="region" aria-label="Cookies"><p style="flex:1 1 260px;font-size:.9rem">Aucun cookie publicitaire. Google Maps ne se charge qu'avec votre accord.</p><button class="btn sm" data-act="ck-yes">Accepter</button><button class="btn sm alt" data-act="ck-no">Refuser</button><button class="btn sm alt" data-act="legal" data-k="cookies">Préférences</button></div>
+<div id="toast" role="status"></div>
+<script src="app.js" defer></script>
+</body>
+</html>
