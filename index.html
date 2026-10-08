@@ -9,10 +9,13 @@
 <meta property="og:type" content="website"><meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="Le Touareg | Kebab · Tacos · Burgers — Montereau-Fault-Yonne">
 <meta property="og:description" content="Kebabs, tacos, burgers, sandwiches, pizzas et street-food à Montereau-Fault-Yonne.">
-<!-- À AJOUTER : og:image (1200×630) et apple-touch-icon aux couleurs du Touareg. -->
+<meta property="og:image" content="og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<!-- Une fois le domaine connu : remplacer og:image par l'URL absolue (https://votre-domaine/og-image.jpg). -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="preload" href="anton.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B4482A'/%3E%3Cpath d='M14 16h36v10H37v24H27V26H14z' fill='%23FAF3E6'/%3E%3C/svg%3E">
 <style>
-:root{--sand:#F1E3CB;--cream:#FAF3E6;--terra:#B4482A;--brown:#2B1A12;--black:#160F0B;--cu:#C9893B;--green:#23402F;--d:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif}
+@font-face{font-family:Anton;src:url(anton.woff2) format('woff2');font-weight:400;font-display:swap}
+:root{--sand:#F1E3CB;--cream:#FAF3E6;--terra:#B4482A;--brown:#2B1A12;--black:#160F0B;--cu:#C9893B;--green:#23402F;--d:Anton,Impact,'Arial Narrow Bold',sans-serif}
 *{box-sizing:border-box;margin:0}[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{font:16px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--cream);color:var(--brown)}
@@ -82,9 +85,14 @@ footer{background:var(--black);color:var(--sand);padding:56px 0 100px}footer .wm
 #toast{position:fixed;top:90px;left:50%;transform:translateX(-50%);background:var(--brown);color:#fff;padding:10px 18px;border-radius:99px;z-index:99;opacity:0;pointer-events:none;transition:opacity .3s}#toast.on{opacity:1}
 .prose h3{font-size:1.4rem;margin:14px 0 4px}.prose p,.prose li{margin-bottom:6px}.err{color:#b00020}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+#hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,#c9893b14 0 2px,transparent 2px 26px),repeating-linear-gradient(-45deg,#c9893b14 0 2px,transparent 2px 26px)}
+.th:not(:has(img)){background:repeating-linear-gradient(45deg,#ffffff14 0 5px,transparent 5px 12px),var(--c)}.th i{font-style:normal;font-size:2.1rem;line-height:1}
+.dr{width:100%;height:100%;min-height:96px;background-size:auto 250%;background-repeat:no-repeat}
+.wa{position:fixed;right:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:59;width:54px;height:54px;border-radius:50%;background:#1d8f4e;color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px #0005;transition:transform .2s}.wa:hover{transform:scale(1.08)}.wa .i{width:28px;height:28px}
 </style>
 </head>
 <body>
+<noscript><p style="padding:100px 20px 20px;text-align:center">Le Touareg · 11 Bis Pl. Diderot, 77130 Montereau-Fault-Yonne · 01 64 24 87 54. Activez JavaScript pour consulter la carte et commander.</p></noscript>
 <a class="skip" href="#carte">Aller à la carte</a><div id="sp"></div>
 <div id="top"><div class="ann" id="ann"></div>
 <header id="hd"><a class="logo" href="#hero" aria-label="Le Touareg, accueil"><b>LE</b>TOUAREG</a>
@@ -95,7 +103,7 @@ footer{background:var(--black);color:var(--sand);padding:56px 0 100px}footer .wm
 <button class="ib" id="bur" data-act="menu" aria-label="Ouvrir le menu" aria-expanded="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></header></div>
 <div class="ov" id="mn" hidden role="dialog" aria-modal="true" aria-label="Menu"><button class="ib" data-act="close" aria-label="Fermer le menu" style="position:absolute;top:14px;right:14px;color:var(--sand)">✕</button><a href="#carte" data-act="close">La Carte</a><a href="#best" data-act="close">Best-sellers</a><a href="#avis" data-act="close">Avis</a><a href="#infos" data-act="close">Infos &amp; Accès</a><a class="btn" id="tel2" style="font:700 1rem system-ui"></a></div>
 <main>
-<section id="hero"><div class="bgi"><img src="plateau-840.webp" alt="Illustration temporaire : kebab, burger, pizza, wrap et frites" fetchpriority="high"></div>
+<section id="hero"><div class="bgi"><img src="plateau-840.webp" alt="Kebab, burger, pizza, wrap et frites — illustration" fetchpriority="high"></div>
 <div class="wrap"><p class="eb">Street food · 77130</p><h1><span>LE</span>TOUAREG</h1><p class="sub">Kebab, tacos, burgers, sandwichs et plus encore.</p><p class="big">Plus de 100 possibilités gourmandes</p>
 <ul class="bgs"><li id="hs">…</li><li>Sur place · À emporter · Livraison</li><li>Montereau-Fault-Yonne</li><li>Livraison disponible</li></ul>
 <div class="cta"><a class="btn" href="#carte">Voir la carte</a><button class="btn alt" data-act="wa">Commander sur WhatsApp</button><a class="btn alt" id="ue" hidden target="_blank" rel="noopener">Commander sur Uber Eats</a><button class="btn alt" id="reo" hidden data-act="reorder">Reprendre ma dernière commande</button></div>
@@ -114,6 +122,7 @@ footer{background:var(--black);color:var(--sand);padding:56px 0 100px}footer .wm
 </main>
 <footer><div class="wrap"><div class="wm" aria-hidden="true">TOUAREG</div><div class="fg" id="ft"></div></div></footer>
 <button class="btn fab" id="fab" data-act="cart" hidden></button>
+<a class="wa" id="waf" aria-label="Commander sur WhatsApp" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.4 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12z"/></svg></a>
 <div class="ov" id="cfg" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div class="sh"><div><h2 id="cfgT"></h2><p class="mut" id="cfgD"></p></div><button class="ib" data-act="close" aria-label="Fermer">✕</button></div><div id="cfgB"></div><div class="sf"><button class="btn" id="cfgA" data-act="cfgAdd">Ajouter</button></div></div></div>
 <div class="ov side" id="cart" hidden><aside class="sheet" role="dialog" aria-modal="true" aria-labelledby="cartT"><div class="sh"><h2 id="cartT">Mon panier</h2><button class="ib" data-act="close" aria-label="Fermer le panier">✕</button></div><div id="cartB"></div>
 <div class="sf" id="cartF"><input type="text" id="cn" placeholder="Prénom" aria-label="Prénom" autocomplete="given-name"><textarea id="cr" rows="2" placeholder="Remarque, allergie…" aria-label="Remarque ou allergie"></textarea><p><strong>Total estimé : <span id="ct"></span></strong></p><button class="btn" data-act="send">Envoyer sur WhatsApp</button><p class="mut" style="font-size:.8rem">Aucun paiement en ligne : la commande est transmise au restaurant par WhatsApp.</p></div></aside></div>
